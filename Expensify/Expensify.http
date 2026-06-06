@@ -1,0 +1,6 @@
+@Expensify_HostAddress = http://localhost:5073
+
+GET {{Expensify_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

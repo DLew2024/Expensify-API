@@ -1,0 +1,137 @@
+# ==========================
+# Build Results
+# ==========================
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# ==========================
+# Visual Studio
+# ==========================
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.cache
+*.VC.db
+*.VC.opendb
+
+# Visual Studio Code
+.vscode/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# ==========================
+# NuGet
+# ==========================
+packages/
+*.nupkg
+*.snupkg
+
+# Keep build targets
+!packages/build/
+!packages/repositories.config
+
+# ==========================
+# Test Results
+# ==========================
+[Tt]est[Rr]esult*/
+[Bb]enchmarkDotNet.Artifacts/
+
+# ==========================
+# Publish Output
+# ==========================
+publish/
+wwwroot/dist/
+wwwroot/lib/
+
+# ==========================
+# Entity Framework
+# ==========================
+*.mdf
+*.ldf
+
+# ==========================
+# ASP.NET Scaffolding
+# ==========================
+ScaffoldingReadMe.txt
+
+# ==========================
+# IIS Express
+# ==========================
+/.vs/config/
+applicationhost.config
+
+# ==========================
+# Azure
+# ==========================
+.publishsettings
+.azure/
+
+# ==========================
+# Secrets
+# ==========================
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+.env
+.env.*
+!.env.example
+
+# ==========================
+# OS Files
+# ==========================
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ==========================
+# ReSharper
+# ==========================
+_ReSharper*/
+*.DotSettings.user
+
+# ==========================
+# Coverage Reports
+# ==========================
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+
+# ==========================
+# Generated Files
+# ==========================
+Generated/
+*.generated.cs
+
+# ==========================
+# Temporary Files
+# ==========================
+*.tmp
+*.temp
+*.bak
+*.old
+
+# ==========================
+# Node (if using React/Angular/Vue)
+# ==========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================
+# SQL LocalDB
+# ==========================
+*.dbmdl
+
+# ==========================
+# GitHub Copilot
+# ==========================
+.copilot/
