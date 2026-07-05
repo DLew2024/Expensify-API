@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class IncomeController(IIncomeService service) : ControllerBase
     {
         [HttpPost(Name = "AddIncomeSource")]
@@ -23,7 +25,7 @@ namespace Expensify.Controllers
         {
         }
 
-        [HttpDelete(Name = ":id")]
+        [HttpDelete(":{id}")]
         public void DeleteIncomeSource()
         {
 
