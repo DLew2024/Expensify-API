@@ -11,8 +11,12 @@ namespace Expensify.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "public");
+
             migrationBuilder.CreateTable(
                 name: "Users",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -35,6 +39,7 @@ namespace Expensify.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Expenses",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -57,6 +62,7 @@ namespace Expensify.Migrations
                     table.ForeignKey(
                         name: "FK_Expenses_Users_UserId",
                         column: x => x.UserId,
+                        principalSchema: "public",
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -64,6 +70,7 @@ namespace Expensify.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Incomes",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -86,6 +93,7 @@ namespace Expensify.Migrations
                     table.ForeignKey(
                         name: "FK_Incomes_Users_UserId",
                         column: x => x.UserId,
+                        principalSchema: "public",
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -93,11 +101,13 @@ namespace Expensify.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Expenses_UserId",
+                schema: "public",
                 table: "Expenses",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Incomes_UserId",
+                schema: "public",
                 table: "Incomes",
                 column: "UserId");
         }
@@ -106,13 +116,16 @@ namespace Expensify.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Expenses");
+                name: "Expenses",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "Incomes");
+                name: "Incomes",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Users",
+                schema: "public");
         }
     }
 }

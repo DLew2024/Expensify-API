@@ -8,5 +8,12 @@ namespace Expensify.Data
         public DbSet<User> Users => Set<User>();
         public DbSet<Expense> Expenses => Set<Expense>();
         public DbSet<Income> Incomes => Set<Income>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("public");
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace Expensify.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("public")
                 .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -70,7 +71,7 @@ namespace Expensify.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", "public");
                 });
 
             modelBuilder.Entity("Expensify.Models.Income", b =>
@@ -121,7 +122,7 @@ namespace Expensify.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Incomes");
+                    b.ToTable("Incomes", "public");
                 });
 
             modelBuilder.Entity("Expensify.Models.User", b =>
@@ -169,7 +170,7 @@ namespace Expensify.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "public");
                 });
 
             modelBuilder.Entity("Expensify.Models.Expense", b =>
