@@ -1,6 +1,2 @@
-@Expensify_HostAddress = http://localhost:5073
+@Expensify_HostAddress = http://localhost:8000
 
-GET {{Expensify_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
