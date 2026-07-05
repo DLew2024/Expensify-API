@@ -1,9 +1,10 @@
-﻿using Expensify.DTOs.IncomeDTOs;
+﻿using Expensify.Data;
+using Expensify.DTOs.IncomeDTOs;
 using Expensify.Services.Interfaces;
 
 namespace Expensify.Services
 {
-    public class IncomeService : IIncomeService
+    public class IncomeService(AppDbContext _context) : IIncomeService
     {
         public void AddIncome(AddIncomeDTO request, CancellationToken cancellationToken)
         {

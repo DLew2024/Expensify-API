@@ -1,9 +1,10 @@
-﻿using Expensify.DTOs.ExpenseDTOs;
+﻿using Expensify.Data;
+using Expensify.DTOs.ExpenseDTOs;
 using Expensify.Services.Interfaces;
 
 namespace Expensify.Services
 {
-    public class ExpenseService : IExpenseService
+    public class ExpenseService(AppDbContext _context) : IExpenseService
     {
         public void AddExpense(AddExpenseDTO request, CancellationToken cancellationToken)
         {

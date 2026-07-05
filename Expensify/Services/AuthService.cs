@@ -1,12 +1,11 @@
-﻿using Expensify.DTOs.AuthDTOs;
-using Expensify.Models;
+﻿using Expensify.Data;
+using Expensify.DTOs.AuthDTOs;
 using Expensify.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService(AppDbContext _context) : IAuthService
     {
         public Task<ActionResult> GetUserInfo(CancellationToken cancellationToken
 )
@@ -26,7 +25,7 @@ namespace Expensify.Services
             throw new NotImplementedException();
         }
 
-        public Task<ActionResult> LoginUser(LoginUserDto request, CancellationToken cancellationToken
+        public Task<ActionResult> LoginUser(LoginUserDTO request, CancellationToken cancellationToken
 )
         {
             // Check for email and passowrd 

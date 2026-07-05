@@ -21,7 +21,7 @@ namespace Expensify.Controllers
 
         [HttpPost(Name = "Login")]
         public void LoginUser(
-            LoginUserDto request,
+            LoginUserDTO request,
             CancellationToken cancellationToken
         )
         {

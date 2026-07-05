@@ -2,6 +2,7 @@
 
 namespace Expensify.Services.Interfaces
 {
+    // Use DTOS
     public interface IExpenseService
     {
         void AddExpense(AddExpenseDTO request, CancellationToken cancellationToken);

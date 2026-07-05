@@ -2,6 +2,7 @@
 
 namespace Expensify.Services.Interfaces
 {
+    // Use DTOS
     public interface IIncomeService
     {
         void AddIncome(AddIncomeDTO request, CancellationToken cancellationToken);
