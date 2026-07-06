@@ -1,6 +1,4 @@
-﻿using Expensify.DTOs;
-using Expensify.DTOs.AuthDTOs;
-using Expensify.Models;
+﻿using Expensify.DTOs.AuthDTOs;
 using Microsoft.AspNetCore.Mvc;
 namespace Expensify.Services.Interfaces
 {

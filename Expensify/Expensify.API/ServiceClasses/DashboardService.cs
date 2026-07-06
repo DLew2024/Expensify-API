@@ -1,9 +1,9 @@
-﻿using Expensify.Data;
+﻿using Expensify.DataAccessLayer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Services.Interfaces
 {
-    public class DashboardService(AppDbContext _context) : IDashboardService
+    public class DashboardService(ApplicationDbContext _context) : IDashboardService
     {
         public Task<IActionResult> GetDashboardData(CancellationToken cancellationToken)
         {

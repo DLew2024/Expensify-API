@@ -1,11 +1,12 @@
-﻿using Expensify.Services.Interfaces;
+﻿using Expensify.API.ServicesClasses.Interfaces;
+using Expensify.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Controllers
 {
     [ApiController]
     [Route("")]
-    public class DashboardController(IService service) : ControllerBase
+    public class DashboardController : ControllerBase
     {
         private readonly IService _service;
 
@@ -17,7 +18,7 @@ namespace Expensify.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
-            var dashboard = await service.Dashboard.GetDashboardData(cancellationToken);
+            var dashboard = await _service.DashboardService.GetDashboardData(cancellationToken);
             return Ok(dashboard);
         }
     }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Expensify.Models
+namespace Expensify.Entities.Models
 {
-    public class Expense : BaseEntity
+    public class Expense 
     {
         [Required]
         public Guid UserId { get; set; } 

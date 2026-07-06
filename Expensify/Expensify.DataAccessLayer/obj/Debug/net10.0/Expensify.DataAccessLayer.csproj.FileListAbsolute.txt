@@ -1,8 +1,15 @@
+C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\bin\Debug\net10.0\Expensify.DataAccessLayer.deps.json
+C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\bin\Debug\net10.0\Expensify.DataAccessLayer.runtimeconfig.json
+C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\bin\Debug\net10.0\Expensify.DataAccessLayer.dll
+C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\bin\Debug\net10.0\Expensify.DataAccessLayer.pdb
 C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.csproj.AssemblyReference.cache
-C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\rpswa.dswa.cache.json
 C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.AssemblyInfoInputs.cache
 C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.AssemblyInfo.cs
 C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.csproj.CoreCompileInputs.cache
-C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.sourcelink.json
+C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.dll
+C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\refint\Expensify.DataAccessLayer.dll
+C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.pdb
+C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\Expensify.DataAccessLayer.genruntimeconfig.cache
+C:\Users\dlewis\Desktop\Expensify-API\Expensify\Expensify.DataAccessLayer\obj\Debug\net10.0\ref\Expensify.DataAccessLayer.dll

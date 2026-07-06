@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Expensify.Entities.Interfaces;
 
 namespace Expensify.DataAccessLater.Entities;
 

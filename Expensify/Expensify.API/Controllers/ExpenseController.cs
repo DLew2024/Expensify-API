@@ -1,12 +1,11 @@
-﻿using Expensify.Models;
-using Expensify.Services.Interfaces;
+﻿using Expensify.API.ServicesClasses.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ExpenseController(IService service) : ControllerBase
+    public class ExpenseController : ControllerBase
     {
         private readonly IService _service;
 

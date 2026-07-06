@@ -11,11 +11,10 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("21e096c0-1cdb-4e7d-a04a-0fab22d6fb30")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Expensify.DataAccessLayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18fc9f46ff5ae3d93a77fcfd37e6dccac026860f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2631ce15fac6a45116d8c8a7566403bf6d2c3f5")]
 [assembly: System.Reflection.AssemblyProductAttribute("Expensify.DataAccessLayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Expensify.DataAccessLayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,13 +1,12 @@
-﻿using Expensify.DTOs.AuthDTOs;
-using Expensify.Models;
-using Expensify.Services.Interfaces;
+﻿using Expensify.API.ServicesClasses.Interfaces;
+using Expensify.DTOs.AuthDTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController(IService service) : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IService _service;
 
@@ -21,8 +20,7 @@ namespace Expensify.Controllers
             RegisterUserDTO request,
             CancellationToken cancellationToken)
         {
-            var result = await service.RegisterUser(request, cancellationToken);
-
+            var result = await _service.AuthService.RegisterUser(request, cancellationToken);
             return Ok(result);
         }
 

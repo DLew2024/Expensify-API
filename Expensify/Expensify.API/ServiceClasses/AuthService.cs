@@ -1,4 +1,5 @@
-﻿using Expensify.DTOs.AuthDTOs;
+﻿using Expensify.DataAccessLayer;
+using Expensify.DTOs.AuthDTOs;
 using Expensify.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

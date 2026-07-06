@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Expensify.Models
+namespace Expensify.Entities.Models
 {
     public class User 
     {
