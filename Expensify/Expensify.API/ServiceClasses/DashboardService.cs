@@ -1,10 +1,18 @@
-﻿using Expensify.DataAccessLayer;
+﻿using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.DataAccessLayer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Services.Interfaces
 {
-    public class DashboardService(ApplicationDbContext _context) : IDashboardService
+    public class DashboardService : IDashboardService
     {
+        private readonly ApplicationDbContext _context;
+
+        public DashboardService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<IActionResult> GetDashboardData(CancellationToken cancellationToken)
         {
             // Try to get user id

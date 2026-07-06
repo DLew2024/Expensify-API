@@ -1,0 +1,8 @@
+﻿namespace Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions
+{
+    public sealed class ConflictException : Exception
+    {
+        public ConflictException(string message)
+            : base(message) { }
+    }
+}

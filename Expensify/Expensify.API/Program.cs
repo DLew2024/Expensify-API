@@ -1,5 +1,6 @@
 using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.ServicesClasses.Interfaces;
 using Expensify.DataAccessLayer;
 using Expensify.Services;
 using Expensify.Services.Interfaces;
@@ -59,10 +60,13 @@ builder.Services
 builder.Services.AddAuthorization();
 
 // Scoped services lives throughout whole request 
-builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IIncomeService, IncomeService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IService, Service>();
 
 var app = builder.Build();
 

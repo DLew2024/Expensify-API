@@ -17,11 +17,17 @@ namespace Expensify.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IJwtService _jwtService;
+        private readonly IPasswordService _passwordService;
 
-        public AuthService(ApplicationDbContext context, IJwtService jwtService)
+        public AuthService(
+            ApplicationDbContext context,
+            IJwtService jwtService,
+            IPasswordService passwordService
+        )
         {
             _context = context;
             _jwtService = jwtService;
+            _passwordService = passwordService;
         }
 
         public async Task<Result<UserResponseDTO>> GetUserInfo(
@@ -31,24 +37,23 @@ namespace Expensify.Services
         {
             try
             {
-                var foundUser = await _context.Users.FirstOrDefaultAsync(
-                    user => user.Id == id,
-                    cancellationToken
-                );
+                var userInfo = await _context
+                    .Users.AsNoTracking()
+                    .Where(user => user.Id == id)
+                    .Select(user => new UserResponseDTO
+                    {
+                        FullName = user.FullName,
+                        Email = user.Email,
+                        ProfileImageURl = user.ProfileImageURl,
+                    })
+                    .FirstOrDefaultAsync(cancellationToken);
 
-                if (foundUser == null)
+                if (userInfo == null)
                 {
                     return new Result<UserResponseDTO>(
                         new EntityNotFoundException("User with id was not found" + id)
                     );
                 }
-
-                var userInfo = new UserResponseDTO
-                {
-                    FullName = foundUser.FullName,
-                    Email = foundUser.Email,
-                    ProfileImageURl = foundUser.ProfileImageURl,
-                };
 
                 return new Result<UserResponseDTO>(userInfo);
             }
@@ -58,98 +63,115 @@ namespace Expensify.Services
             }
         }
 
-        public async Task<Result<LoginUserResponseDTO>> LoginUser(
+        public async Task<Result<UserTokenResponseDTO>> LoginUser(
             LoginUserDTO request,
             CancellationToken cancellationToken
         )
         {
-            if (
-                string.IsNullOrWhiteSpace(request.Email)
-                || string.IsNullOrWhiteSpace(request.Password)
-            )
+            if (ValidationHelpers.HasEmptyOrWhiteSpace(request.Email, request.Password))
             {
-                return new Result<LoginUserResponseDTO>(
+                return new Result<UserTokenResponseDTO>(
                     new ValidationException("Email and password are required.")
                 );
             }
 
             try
             {
-                User? foundUser = await _context.Users.FirstOrDefaultAsync(
-                    user => user.Email == request.Email,
-                    cancellationToken
-                );
+                var foundUser = await _context
+                    .Users.AsNoTracking()
+                    .Where(user => user.Email == request.Email)
+                    .FirstOrDefaultAsync(cancellationToken);
 
                 if (foundUser == null)
                 {
-                    return new Result<LoginUserResponseDTO>(
+                    return new Result<UserTokenResponseDTO>(
                         new EntityNotFoundException(
                             "No user could be found with the email:" + request.Email
                         )
                     );
                 }
-                else if (!PasswordValidation.ValidatePassword(request.Password, foundUser.Password))
+                else if (!_passwordService.VerifyPassword(request.Password, foundUser.Password))
                 {
-                    return new Result<LoginUserResponseDTO>(
+                    return new Result<UserTokenResponseDTO>(
                         new UnauthorizedAccessException("Invalid email or password.")
                     );
                 }
 
                 var token = _jwtService.GenerateToken(foundUser);
 
-                return new Result<LoginUserResponseDTO>(
-                    new LoginUserResponseDTO { UserId = foundUser.Id, Token = token }
+                return new Result<UserTokenResponseDTO>(
+                    new UserTokenResponseDTO { UserId = foundUser.Id, Token = token }
                 );
             }
             catch (Exception ex)
             {
-                return new Result<LoginUserResponseDTO>(ex);
+                return new Result<UserTokenResponseDTO>(ex);
             }
         }
 
-        public Task<Result<bool>> RegisterUser(
+        public async Task<Result<UserTokenResponseDTO>> RegisterUser(
             RegisterUserDTO request,
             CancellationToken cancellationToken
         )
         {
-            // Validation check for missing fields
-            // Return a bad request response if any field is missing
+            if (
+                ValidationHelpers.HasEmptyOrWhiteSpace(
+                    request.FirstName,
+                    request.LastName,
+                    request.Email,
+                    request.Password
+                )
+            )
+            {
+                return new Result<UserTokenResponseDTO>(
+                    new ValidationException("All required fields must be provided.")
+                );
+            }
 
-            //try
-            //{
-            // Try to find a a;ready existing user based on email
-            // If one exists return the 409 code
+            try
+            {
+                var userExists = await _context.Users.AnyAsync(
+                    user => user.Email == request.Email,
+                    cancellationToken
+                );
 
-            // If that's not the case go ahead and create a new user
-            // Resposne 201 with token generated and added
+                if (userExists)
+                {
+                    return new Result<UserTokenResponseDTO>(
+                        new ConflictException("A user with this email already exists.")
+                    );
+                }
 
-            //    return Ok(200);
+                var newUser = new User
+                {
+                    Id = Guid.NewGuid(),
+                    FullName = $"{request.FirstName} {request.LastName}",
+                    Email = request.Email,
+                    Password = _passwordService.HashPassword(request.Password),
+                    ProfileImageURl = request.ProfileImageURl,
+                };
 
-            //}
-            //catch
-            //{
-            //    // Catch any error that occurs in the try block
-            //}
-            throw new NotImplementedException();
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync();
+
+                var token = _jwtService.GenerateToken(newUser);
+
+                return new Result<UserTokenResponseDTO>(
+                    new UserTokenResponseDTO { UserId = newUser.Id, Token = token }
+                );
+            }
+            catch (Exception ex)
+            {
+                return new Result<UserTokenResponseDTO>(ex);
+            }
         }
 
-        public Task<Result<bool>> UploadImage(CancellationToken cancellationToken)
+        public async Task<Result<bool>> UploadImage(CancellationToken cancellationToken)
         {
             // Check if file exist in request
             // Create image URL
             // Return 200
             throw new NotImplementedException();
         }
-
-        //const generateToken = (string userId, string secretKey) =>
-        //{
-        //    // Implement token generation logic here
-        //    return "generated_token";
-        //};
-
-        //const isValidUser = (User user) =>
-        //{
-        //    return;
-        //};
     }
 }
