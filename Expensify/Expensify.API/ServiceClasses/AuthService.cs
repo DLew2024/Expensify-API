@@ -1,11 +1,10 @@
-﻿using Expensify.Data;
-using Expensify.DTOs.AuthDTOs;
+﻿using Expensify.DTOs.AuthDTOs;
 using Expensify.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Services
 {
-    public class AuthService(AppDbContext _context) : IAuthService
+    public class AuthService(ApplicationDbContext _context) : IAuthService
     {
         public Task<ActionResult> GetUserInfo(CancellationToken cancellationToken
 )

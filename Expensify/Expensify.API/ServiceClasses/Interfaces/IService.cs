@@ -1,4 +1,5 @@
-namespace Expensify.API.Services.Interfaces
+using Expensify.API.Services;
+namespace Expensify.API.ServicesClasses.Interfaces;
 
 public interface IService
 {
