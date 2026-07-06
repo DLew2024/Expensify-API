@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class ExpenseController : AuthorizationController
     {
         private readonly IService _service;

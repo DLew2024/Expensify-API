@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Expensify.API.DTOs.AuthDTOs;
+using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.Functions;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
@@ -15,27 +16,46 @@ namespace Expensify.Services
     public class AuthService : IAuthService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IJwtService _jwtService;
 
-        public AuthService(ApplicationDbContext context)
+        public AuthService(ApplicationDbContext context, IJwtService jwtService)
         {
             _context = context;
+            _jwtService = jwtService;
         }
 
-        public Task<ActionResult> GetUserInfo(CancellationToken cancellationToken)
+        public async Task<Result<UserResponseDTO>> GetUserInfo(
+            Guid id,
+            CancellationToken cancellationToken
+        )
         {
-            //try
-            //{
-            //    // Get user by ID and select everything but password
-            //    // Validate user exists
-            //    return;
+            try
+            {
+                var foundUser = await _context.Users.FirstOrDefaultAsync(
+                    user => user.Id == id,
+                    cancellationToken
+                );
 
-            //}
-            //catch
-            //{
+                if (foundUser == null)
+                {
+                    return new Result<UserResponseDTO>(
+                        new EntityNotFoundException("User with id was not found" + id)
+                    );
+                }
 
-            //}
+                var userInfo = new UserResponseDTO
+                {
+                    FullName = foundUser.FullName,
+                    Email = foundUser.Email,
+                    ProfileImageURl = foundUser.ProfileImageURl,
+                };
 
-            throw new NotImplementedException();
+                return new Result<UserResponseDTO>(userInfo);
+            }
+            catch (Exception ex)
+            {
+                return new Result<UserResponseDTO>(ex);
+            }
         }
 
         public async Task<Result<LoginUserResponseDTO>> LoginUser(
@@ -87,7 +107,7 @@ namespace Expensify.Services
             }
         }
 
-        public Task<ActionResult> RegisterUser(
+        public Task<Result<bool>> RegisterUser(
             RegisterUserDTO request,
             CancellationToken cancellationToken
         )
@@ -113,7 +133,7 @@ namespace Expensify.Services
             throw new NotImplementedException();
         }
 
-        public Task<ActionResult> UploadImage(CancellationToken cancellationToken)
+        public Task<Result<bool>> UploadImage(CancellationToken cancellationToken)
         {
             // Check if file exist in request
             // Create image URL

@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.Controllers
 {
-    [ApiController]
-    [Route("")]
     public class DashboardController : AuthorizationController
     {
         private readonly IService _service;
