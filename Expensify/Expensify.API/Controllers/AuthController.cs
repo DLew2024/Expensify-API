@@ -7,8 +7,15 @@ namespace Expensify.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController(IAuthService service) : ControllerBase
+    public class AuthController(IService service) : ControllerBase
     {
+        private readonly IService _service;
+
+        public AuthController(IService service)
+        {
+            _service = service;
+        }
+
         [HttpPost(Name = "Register")]
         public async Task<ActionResult> RegisterUser(
             RegisterUserDTO request,

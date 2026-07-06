@@ -2,8 +2,11 @@
 
 namespace Expensify.Models
 {
-    public class User : BaseEntity
+    public class User 
     {
+        [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Pid { get; set; } = string.Empty;
         [Required]
         public string FullName { get; set; } = string.Empty;
         [Required]

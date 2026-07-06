@@ -6,8 +6,15 @@ namespace Expensify.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ExpenseController(IExpenseService service) : ControllerBase
+    public class ExpenseController(IService service) : ControllerBase
     {
+        private readonly IService _service;
+
+        public ExpenseController(IService service)
+        {
+            _service = service;
+        }
+
         [HttpPost(Name = "AddExpense")]
         public void AddExpense()
         {
