@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.DTOs.AuthDTOs;
 using Expensify.API.ServicesClasses.Interfaces;
 using Expensify.DTOs.AuthDTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -27,20 +28,21 @@ namespace Expensify.Controllers
         }
 
         [HttpPost(Name = "Login")]
-        public async Task<ActionResult<bool>> LoginUser(
+        public async Task<ActionResult<LoginUserResponseDTO>> LoginUser(
             LoginUserDTO request,
             CancellationToken cancellationToken
         )
         {
             var result = await _service.AuthService.LoginUser(request, cancellationToken);
 
-            return result.Match<ActionResult>(
+            return result.Match<ActionResult<LoginUserResponseDTO>>(
                 succees => Ok(succees),
                 error =>
                     error switch
                     {
+                        UnauthorizedAccessException ex => Unauthorized(ex.Message),
                         ValidationException ex => BadRequest(ex.Message),
-                        _ => StatusCode(500),
+                        _ => StatusCode(500, error.Message),
                     }
             );
         }

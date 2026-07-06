@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.DTOs.AuthDTOs;
+using Expensify.API.Utility.Functions;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
 using Expensify.DTOs.AuthDTOs;
+using Expensify.Entities.Models;
 using Expensify.Services.Interfaces;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -35,51 +38,52 @@ namespace Expensify.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Result<bool>> LoginUser(
+        public async Task<Result<LoginUserResponseDTO>> LoginUser(
             LoginUserDTO request,
             CancellationToken cancellationToken
         )
         {
-            // Check for email and passowrd
-            // If no email exists for that user than return 400
             if (
                 string.IsNullOrWhiteSpace(request.Email)
                 || string.IsNullOrWhiteSpace(request.Password)
             )
             {
-                throw new ValidationException("Email and password are required.");
+                return new Result<LoginUserResponseDTO>(
+                    new ValidationException("Email and password are required.")
+                );
             }
 
             try
             {
-                // Find user by email
-                var foundUser = await _context.Users.FirstOrDefaultAsync(
-                    _ => _.Email == request.Email,
+                User? foundUser = await _context.Users.FirstOrDefaultAsync(
+                    user => user.Email == request.Email,
                     cancellationToken
                 );
 
-                // If user not found
-                // Return 400
                 if (foundUser == null)
                 {
-                    return new Result<bool>(
+                    return new Result<LoginUserResponseDTO>(
                         new EntityNotFoundException(
                             "No user could be found with the email:" + request.Email
                         )
                     );
                 }
+                else if (!PasswordValidation.ValidatePassword(request.Password, foundUser.Password))
+                {
+                    return new Result<LoginUserResponseDTO>(
+                        new UnauthorizedAccessException("Invalid email or password.")
+                    );
+                }
 
-                // Passed password does not match the stored passcode
-                // Return 400
+                var token = _jwtService.GenerateToken(foundUser);
 
-                // Else return the user the id and the token
-
-                //return Ok();
-                return new Result<bool>(true);
+                return new Result<LoginUserResponseDTO>(
+                    new LoginUserResponseDTO { UserId = foundUser.Id, Token = token }
+                );
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new Result<bool>(new Exception(e.Message));
+                return new Result<LoginUserResponseDTO>(ex);
             }
         }
 

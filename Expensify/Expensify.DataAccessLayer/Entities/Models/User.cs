@@ -16,8 +16,5 @@ namespace Expensify.Entities.Models
         public string ProfileimageURl { get; set; } = string.Empty;
         public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
         public ICollection<Income> Incomes { get; set; } = new List<Income>();
-
-        // Hash password before storing  
-        // Compare passwords
     }
 }
