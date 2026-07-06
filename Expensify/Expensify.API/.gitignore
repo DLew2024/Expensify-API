@@ -18,6 +18,10 @@
 *.VC.db
 *.VC.opendb
 
+# Build folders
+bin/
+obj/
+
 # Visual Studio Code
 .vscode/
 
@@ -135,3 +139,4 @@ pnpm-debug.log*
 # GitHub Copilot
 # ==========================
 .copilot/
+
