@@ -17,28 +17,25 @@ namespace Expensify.Services.Interfaces
 
             // Find last 60 days Income Transactions
 
-            // Find income from last 60 days 
+            // Find income from last 60 days
 
             // Find last 30 days for Expenses Transactions
 
-            // Find Expenses from last 30 days 
+            // Find Expenses from last 30 days
 
-            // Find last five transactions (income + expenses) sort the latest first 
+            // Find last five transactions (income + expenses) sort the latest first
 
-            // Final Response 
+            // Final Response
 
-            // Total Balance 
+            // Total Balance
             // Total Income
             // Total Expenses
             // Last 30 Days Expenses - {total, transactions}
             // Last 60 Days Expeses - {total, transactions}
-            // recent 
-
+            // recent
 
             // Catch errors
             throw new NotImplementedException();
         }
-
-        
     }
 }

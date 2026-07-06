@@ -3,6 +3,5 @@
     public class DownloadIncomeExcelDTO
     {
         public Guid UserID { get; set; }
-
     }
 }

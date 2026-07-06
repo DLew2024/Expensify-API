@@ -8,6 +8,9 @@ namespace Expensify.Services.Interfaces
         void AddExpense(AddExpenseDTO request, CancellationToken cancellationToken);
         void GetAllExpense(GetAllExpenseDTO request, CancellationToken cancellationToken);
         void DeleteExpense(Guid id, CancellationToken cancellationToken);
-        void DownloadExpenseExcel(DownloadExpenseExcelDTO request, CancellationToken cancellationToken);
+        void DownloadExpenseExcel(
+            DownloadExpenseExcelDTO request,
+            CancellationToken cancellationToken
+        );
     }
 }

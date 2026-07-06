@@ -15,26 +15,15 @@ namespace Expensify.Controllers
         }
 
         [HttpPost(Name = "AddExpense")]
-        public void AddExpense()
-        {
-            
-        }
+        public void AddExpense() { }
 
         [HttpGet(Name = "GetAllExpenses")]
-        public void GetAllExpenses()
-        {
-
-        }
+        public void GetAllExpenses() { }
 
         [HttpGet(Name = "DownloadExpenseExcel")]
-        public void DownloadExpenseExcel()
-        {
-        }
+        public void DownloadExpenseExcel() { }
 
         [HttpDelete(":{id}")]
-        public void DeleteExpense()
-        {
-
-        }
+        public void DeleteExpense() { }
     }
 }

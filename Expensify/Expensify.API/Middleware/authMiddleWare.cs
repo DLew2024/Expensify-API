@@ -5,6 +5,6 @@
         // Protect
         // Grab token
         // Verify tokens
-        // Go to next 
+        // Go to next
     }
 }

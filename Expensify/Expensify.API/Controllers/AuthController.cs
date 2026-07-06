@@ -1,4 +1,5 @@
-﻿using Expensify.API.ServicesClasses.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.ServicesClasses.Interfaces;
 using Expensify.DTOs.AuthDTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,31 +19,36 @@ namespace Expensify.Controllers
         [HttpPost(Name = "Register")]
         public async Task<ActionResult> RegisterUser(
             RegisterUserDTO request,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken
+        )
         {
             var result = await _service.AuthService.RegisterUser(request, cancellationToken);
             return Ok(result);
         }
 
         [HttpPost(Name = "Login")]
-        public void LoginUser(
+        public async Task<ActionResult<bool>> LoginUser(
             LoginUserDTO request,
             CancellationToken cancellationToken
         )
         {
-            
+            var result = await _service.AuthService.LoginUser(request, cancellationToken);
+
+            return result.Match<ActionResult>(
+                succees => Ok(succees),
+                error =>
+                    error switch
+                    {
+                        ValidationException ex => BadRequest(ex.Message),
+                        _ => StatusCode(500),
+                    }
+            );
         }
 
         [HttpGet(Name = "GetUser")]
-        public void GetUserInfo(CancellationToken cancellationToken)
-        {
-            
-        }
+        public void GetUserInfo(CancellationToken cancellationToken) { }
 
         [HttpPost(Name = "Upload-Image")]
-        public void UploadImage(CancellationToken cancellationToken)
-        {
-            
-        }
+        public void UploadImage(CancellationToken cancellationToken) { }
     }
 }

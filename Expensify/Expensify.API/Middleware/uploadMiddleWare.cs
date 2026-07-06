@@ -6,9 +6,6 @@
 
         // Filter allowed file types
 
-
         // Error if user uploads a different document
-
-
     }
 }
