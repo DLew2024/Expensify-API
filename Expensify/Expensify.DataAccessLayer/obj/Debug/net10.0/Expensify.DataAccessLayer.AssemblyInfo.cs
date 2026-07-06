@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Expensify.DataAccessLayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c5be4b8a647a8b738658e8c8e06e6d570ef7bb31")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18fc9f46ff5ae3d93a77fcfd37e6dccac026860f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Expensify.DataAccessLayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Expensify.DataAccessLayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

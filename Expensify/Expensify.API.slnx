@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Expensify.API/Expensify.API.csproj" />
   <Project Path="Expensify.DataAccessLayer/Expensify.DataAccessLayer.csproj" />
 </Solution>
