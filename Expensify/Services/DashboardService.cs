@@ -35,6 +35,7 @@ namespace Expensify.Services.Interfaces
             // recent 
 
 
+            // Catch errors
             throw new NotImplementedException();
         }
 
