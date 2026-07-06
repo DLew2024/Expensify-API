@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Expensify.API",
-    "\\Expensify.DataAccessLayer\\Entities\\Interfaces"
+    "\\Expensify.API"
   ],
-  "SelectedNode": "\\Expensify.API\\Expensify.API.csproj",
+  "SelectedNode": "\\Expensify.API\\Expensify.slnx",
   "PreviewInSolutionExplorer": false
 }
