@@ -1,4 +1,4 @@
-﻿using Expensify.DataAccessLayer.Entities.Enums;
+﻿using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.API.DTOs.DashboardDTOs
 {

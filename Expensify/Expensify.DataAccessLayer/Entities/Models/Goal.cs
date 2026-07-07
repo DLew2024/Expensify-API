@@ -1,5 +1,4 @@
-﻿using Expensify.DataAccessLayer.Entities.Enums;
-using Expensify.Entities.Interfaces;
+﻿using Expensify.Entities.Interfaces;
 
 namespace Expensify.DataAccessLayer.Entities.Models
 {
@@ -93,13 +92,13 @@ namespace Expensify.DataAccessLayer.Entities.Models
         /// The user who last updated the goal.
         /// Null if the goal has never been modified.
         /// </summary>
-        public Guid? LastUpdatedBy { get; set; }
+        public Guid LastUpdatedBy { get; set; }
 
         /// <summary>
         /// The date the goal was last updated.
         /// Null if the goal has never been modified.
         /// Stored as a long timestamp.
         /// </summary>
-        public long? UpdatedDate { get; set; }
+        public long UpdatedDate { get; set; }
     }
 }

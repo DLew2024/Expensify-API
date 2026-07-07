@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿namespace Expensify.DataAccessLayer.Enums;
+
+/// <summary>
 /// Represents the type of financial goal.
 /// </summary>
 public enum GoalType

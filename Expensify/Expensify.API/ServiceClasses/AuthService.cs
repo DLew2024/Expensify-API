@@ -4,7 +4,7 @@ using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.Functions;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
-using Expensify.Entities.Models;
+using Expensify.DataAccessLayer.Entities.Models;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,7 +41,7 @@ namespace Expensify.API.ServiceClasses
                     {
                         FullName = user.FullName,
                         Email = user.Email,
-                        ProfileImageURl = user.ProfileImageURl,
+                        ProfileImageURl = user.ProfileImageUrl,
                     })
                     .FirstOrDefaultAsync(cancellationToken);
 
@@ -145,7 +145,7 @@ namespace Expensify.API.ServiceClasses
                     FullName = $"{request.FirstName} {request.LastName}",
                     Email = request.Email,
                     Password = _passwordService.HashPassword(request.Password),
-                    ProfileImageURl = request.ProfileImageURl,
+                    ProfileImageUrl = request.ProfileImageURl,
                 };
 
                 _context.Users.Add(newUser);

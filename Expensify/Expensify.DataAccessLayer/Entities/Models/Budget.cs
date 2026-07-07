@@ -1,4 +1,4 @@
-﻿using Expensify.DataAccessLayer.Entities.Enums;
+﻿using Expensify.DataAccessLayer.Enums;
 using Expensify.Entities.Interfaces;
 
 namespace Expensify.DataAccessLayer.Entities.Models
@@ -39,7 +39,7 @@ namespace Expensify.DataAccessLayer.Entities.Models
         /// How often the budget resets.
         /// Example: Weekly, Monthly, Yearly.
         /// </summary>
-        public BudgetPeriod Period { get; set; }
+        public BudgetPeriod Period { get; set; } //Fix
 
         /// <summary>
         /// The date the budget starts.
@@ -75,12 +75,12 @@ namespace Expensify.DataAccessLayer.Entities.Models
         /// <summary>
         /// The user who last updated the budget.
         /// </summary>
-        public Guid? LastUpdatedBy { get; set; }
+        public Guid LastUpdatedBy { get; set; }
 
         /// <summary>
         /// Date the budget was last updated.
         /// </summary>
-        public long? UpdatedDate { get; set; }
+        public long UpdatedDate { get; set; }
 
         /// <summary>
         /// The owner navigation property.

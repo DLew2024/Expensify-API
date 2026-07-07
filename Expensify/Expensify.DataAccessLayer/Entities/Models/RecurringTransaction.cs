@@ -1,4 +1,4 @@
-﻿using Expensify.DataAccessLayer.Entities.Enums;
+﻿using Expensify.DataAccessLayer.Enums;
 using Expensify.Entities.Interfaces;
 
 namespace Expensify.DataAccessLayer.Entities.Models
@@ -131,13 +131,13 @@ namespace Expensify.DataAccessLayer.Entities.Models
         /// The user who last updated the recurring transaction.
         /// Null if it has never been modified.
         /// </summary>
-        public Guid? LastUpdatedBy { get; set; }
+        public Guid LastUpdatedBy { get; set; }
 
         /// <summary>
         /// The date the recurring transaction was last updated.
         /// Null if it has never been modified.
         /// Stored as a long timestamp.
         /// </summary>
-        public long? UpdatedDate { get; set; }
+        public long UpdatedDate { get; set; }
     }
 }

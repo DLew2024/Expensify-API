@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Expensify.DataAccessLayer.Entities.Enums;
+﻿
+using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.DataAccessLayer.Entities.Models
 {

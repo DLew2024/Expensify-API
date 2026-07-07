@@ -1,4 +1,4 @@
-﻿using Expensify.DataAccessLayer.Entities.Enums;
+﻿using Expensify.DataAccessLayer.Enums;
 using Expensify.Entities.Interfaces;
 
 namespace Expensify.DataAccessLayer.Entities.Models
@@ -133,14 +133,14 @@ namespace Expensify.DataAccessLayer.Entities.Models
         /// The user who last updated the transaction.
         /// Null if the transaction has never been modified.
         /// </summary>
-        public Guid? LastUpdatedBy { get; set; }
+        public Guid LastUpdatedBy { get; set; }
 
         /// <summary>
         /// The date the transaction was last updated.
         /// Null if the transaction has never been modified.
         /// Stored as a long timestamp.
         /// </summary>
-        public long? UpdatedDate { get; set; }
+        public long UpdatedDate { get; set; }
 
         /// <summary>
         /// The related transaction created as part of the same transfer.
