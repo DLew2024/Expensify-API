@@ -1,8 +1,8 @@
-﻿using Expensify.DataAccessLayer;
-using Expensify.DTOs.ExpenseDTOs;
-using Expensify.Services.Interfaces;
+﻿using Expensify.API.DTOs.ExpenseDTOs;
+using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.DataAccessLayer;
 
-namespace Expensify.Services
+namespace Expensify.API.ServiceClasses
 {
     public class ExpenseService(ApplicationDbContext _context) : IExpenseService
     {

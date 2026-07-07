@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Expensify.API.Controllers;
 using Expensify.API.DTOs.AuthDTOs;
-using Expensify.API.ServicesClasses.Interfaces;
+using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
-using Expensify.DTOs.AuthDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Expensify.Controllers
+namespace Expensify.API.Controllers
 {
     public class AuthController : AuthorizationController
     {
@@ -18,21 +16,20 @@ namespace Expensify.Controllers
             _service = service;
         }
 
-        [AllowAnonymous]
-        [HttpPost(Name = "Register")]
-        public async Task<ActionResult<UserTokenResponseDTO>> RegisterUser(
-            RegisterUserDTO request,
+        [HttpGet(Name = "GetUser")]
+        public async Task<ActionResult<UserResponseDTO>> GetUserInfo(
+            Guid id,
             CancellationToken cancellationToken
         )
         {
-            var result = await _service.AuthService.RegisterUser(request, cancellationToken);
-            return result.Match<ActionResult>(
-                succees => StatusCode(StatusCodes.Status201Created),
+            var result = await _service.AuthService.GetUserInfo(id, cancellationToken);
+
+            return result.Match<ActionResult<UserResponseDTO>>(
+                success => Ok(),
                 error =>
                     error switch
                     {
-                        ValidationException ex => BadRequest(ex.Message),
-                        ConflictException ex => Conflict(ex.Message),
+                        EntityNotFoundException ex => BadRequest(ex.Message),
                         _ => StatusCode(500, error.Message),
                     }
             );
@@ -53,27 +50,29 @@ namespace Expensify.Controllers
                 error =>
                     error switch
                     {
-                        UnauthorizedAccessException ex => Unauthorized(ex.Message),
                         ValidationException ex => BadRequest(ex.Message),
+                        EntityNotFoundException ex => BadRequest(ex.Message),
+                        UnauthorizedAccessException ex => Unauthorized(ex.Message),
                         _ => StatusCode(500, error.Message),
                     }
             );
         }
 
-        [HttpGet(Name = "GetUser")]
-        public async Task<ActionResult<UserResponseDTO>> GetUserInfo(
-            Guid id,
+        [AllowAnonymous]
+        [HttpPost(Name = "Register")]
+        public async Task<ActionResult<UserTokenResponseDTO>> RegisterUser(
+            RegisterUserDTO request,
             CancellationToken cancellationToken
         )
         {
-            var result = await _service.AuthService.GetUserInfo(id, cancellationToken);
-
-            return result.Match<ActionResult<UserResponseDTO>>(
-                success => Ok(),
+            var result = await _service.AuthService.RegisterUser(request, cancellationToken);
+            return result.Match<ActionResult>(
+                succees => StatusCode(StatusCodes.Status201Created),
                 error =>
                     error switch
                     {
                         ValidationException ex => BadRequest(ex.Message),
+                        ConflictException ex => Conflict(ex.Message),
                         _ => StatusCode(500, error.Message),
                     }
             );

@@ -1,8 +1,7 @@
-﻿using Expensify.DTOs.IncomeDTOs;
+﻿using Expensify.API.DTOs.IncomeDTOs;
 
-namespace Expensify.Services.Interfaces
+namespace Expensify.API.ServiceClasses.Interfaces
 {
-    // Use DTOS
     public interface IIncomeService
     {
         void AddIncome(AddIncomeDTO request, CancellationToken cancellationToken);

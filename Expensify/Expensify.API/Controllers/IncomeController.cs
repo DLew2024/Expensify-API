@@ -1,8 +1,7 @@
-﻿using Expensify.API.Controllers;
-using Expensify.API.ServicesClasses.Interfaces;
+﻿using Expensify.API.ServiceClasses.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Expensify.Controllers
+namespace Expensify.API.Controllers
 {
     public class IncomeController : AuthorizationController
     {

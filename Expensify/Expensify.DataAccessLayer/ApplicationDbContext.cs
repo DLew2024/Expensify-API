@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Expensify.Entities.Models;
+using Expensify.DataAccessLayer.Entities.Models;
 
 namespace Expensify.DataAccessLayer
 {

@@ -1,4 +1,4 @@
-﻿namespace Expensify.DTOs.ExpenseDTOs
+﻿namespace Expensify.API.DTOs.ExpenseDTOs
 {
     public class DownloadExpenseExcelDTO
     {

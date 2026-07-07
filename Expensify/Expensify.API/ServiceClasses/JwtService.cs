@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Expensify.API.ServiceClasses.Interfaces;
-using Expensify.Entities.Models;
+using Expensify.DataAccessLayer.Entities.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Expensify.API.ServiceClasses

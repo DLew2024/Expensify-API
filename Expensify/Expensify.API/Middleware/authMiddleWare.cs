@@ -1,4 +1,4 @@
-﻿namespace Expensify.Middleware
+﻿namespace Expensify.API.Middleware
 {
     public class authMiddleWare
     {

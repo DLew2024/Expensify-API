@@ -1,9 +1,8 @@
-﻿using Expensify.API.Controllers;
-using Expensify.API.ServicesClasses.Interfaces;
-using Expensify.Services.Interfaces;
+﻿using Expensify.API.DTOs.DashboardDTOs;
+using Expensify.API.ServiceClasses.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Expensify.Controllers
+namespace Expensify.API.Controllers
 {
     public class DashboardController : AuthorizationController
     {
@@ -15,7 +14,7 @@ namespace Expensify.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(CancellationToken cancellationToken)
+        public async Task<ActionResult<DashboardDataResponseDTO>> Get(CancellationToken cancellationToken)
         {
             var dashboard = await _service.DashboardService.GetDashboardData(cancellationToken);
             return Ok(dashboard);

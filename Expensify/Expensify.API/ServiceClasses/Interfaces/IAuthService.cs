@@ -1,9 +1,7 @@
 ﻿using Expensify.API.DTOs.AuthDTOs;
-using Expensify.DTOs.AuthDTOs;
 using LanguageExt.Common;
-using Microsoft.AspNetCore.Mvc;
 
-namespace Expensify.Services.Interfaces
+namespace Expensify.API.ServiceClasses.Interfaces
 {
     public interface IAuthService
     {

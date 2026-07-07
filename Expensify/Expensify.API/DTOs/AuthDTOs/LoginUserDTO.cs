@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Expensify.DTOs.AuthDTOs
+namespace Expensify.API.DTOs.AuthDTOs
 {
     public class LoginUserDTO
     {

@@ -1,8 +1,6 @@
 using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
-using Expensify.API.ServicesClasses.Interfaces;
 using Expensify.DataAccessLayer;
-using Expensify.Services;
 using Expensify.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,7 @@
-﻿using Expensify.API.ServiceClasses.Interfaces;
+﻿using Expensify.API.DTOs.DashboardDTOs;
+using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.DataAccessLayer;
-using Microsoft.AspNetCore.Mvc;
+using LanguageExt.Common;
 
 namespace Expensify.Services.Interfaces
 {
@@ -13,7 +14,7 @@ namespace Expensify.Services.Interfaces
             _context = context;
         }
 
-        public Task<IActionResult> GetDashboardData(CancellationToken cancellationToken)
+        public Task<Result<DashboardDataResponseDTO>> GetDashboardData(CancellationToken cancellationToken)
         {
             // Try to get user id
 

@@ -1,6 +1,6 @@
-﻿using Expensify.DTOs.ExpenseDTOs;
+﻿using Expensify.API.DTOs.ExpenseDTOs;
 
-namespace Expensify.Services.Interfaces
+namespace Expensify.API.ServiceClasses.Interfaces
 {
     // Use DTOS
     public interface IExpenseService

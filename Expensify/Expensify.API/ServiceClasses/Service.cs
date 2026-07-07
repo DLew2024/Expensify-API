@@ -1,7 +1,5 @@
 ﻿using Expensify.API.ServiceClasses.Interfaces;
-using Expensify.API.ServicesClasses.Interfaces;
 using Expensify.DataAccessLayer;
-using Expensify.Services;
 using Expensify.Services.Interfaces;
 
 namespace Expensify.API.ServiceClasses

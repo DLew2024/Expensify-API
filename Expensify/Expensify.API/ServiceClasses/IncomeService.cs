@@ -1,8 +1,8 @@
-﻿using Expensify.DataAccessLayer;
-using Expensify.DTOs.IncomeDTOs;
-using Expensify.Services.Interfaces;
+﻿using Expensify.API.DTOs.IncomeDTOs;
+using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.DataAccessLayer;
 
-namespace Expensify.Services
+namespace Expensify.API.ServiceClasses
 {
     public class IncomeService(ApplicationDbContext _context) : IIncomeService
     {

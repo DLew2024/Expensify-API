@@ -4,14 +4,11 @@ using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.Functions;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
-using Expensify.DTOs.AuthDTOs;
 using Expensify.Entities.Models;
-using Expensify.Services.Interfaces;
 using LanguageExt.Common;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Expensify.Services
+namespace Expensify.API.ServiceClasses
 {
     public class AuthService : IAuthService
     {
@@ -93,7 +90,7 @@ namespace Expensify.Services
                 else if (!_passwordService.VerifyPassword(request.Password, foundUser.Password))
                 {
                     return new Result<UserTokenResponseDTO>(
-                        new UnauthorizedAccessException("Invalid email or password.")
+                        new UnauthorizedAccessException("Incorrect Password")
                     );
                 }
 
@@ -152,7 +149,7 @@ namespace Expensify.Services
                 };
 
                 _context.Users.Add(newUser);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
 
                 var token = _jwtService.GenerateToken(newUser);
 

@@ -1,4 +1,4 @@
-﻿namespace Expensify.DTOs.IncomeDTOs
+﻿namespace Expensify.API.DTOs.IncomeDTOs
 {
     public class AddIncomeDTO
     {

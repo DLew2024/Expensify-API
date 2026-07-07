@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Expensify.API.DTOs.DashboardDTOs;
+using LanguageExt.Common;
 
-namespace Expensify.Services.Interfaces
+namespace Expensify.API.ServiceClasses.Interfaces
 {
     public interface IDashboardService
     {
-        Task<IActionResult> GetDashboardData(CancellationToken cancellationToken);
+        Task<Result<DashboardDataResponseDTO>> GetDashboardData(CancellationToken cancellationToken);
     }
 }
