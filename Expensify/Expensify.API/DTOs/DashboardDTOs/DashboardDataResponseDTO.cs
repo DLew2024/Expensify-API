@@ -7,8 +7,8 @@ namespace Expensify.API.DTOs.DashboardDTOs
         public int TotalBalance { get; set; }
         public int TotalIncome { get; set; }
         public int TotalExpenses { get; set; }
-        public DaysOfExpensesDTO? Last30DaysOfExpenses { get; set; } 
-        public DaysOfExpensesDTO? Last60DaysOfExpenses { get; set; } 
+        public DaysOfExpensesDTO? Last30DaysOfExpenses { get; set; }
+        public DaysOfExpensesDTO? Last60DaysOfExpenses { get; set; }
         public TransactionDTO[] RecentTransactions { get; set; } = [];
     }
 
@@ -18,7 +18,7 @@ namespace Expensify.API.DTOs.DashboardDTOs
         public TransactionDTO[] Transactions { get; set; } = [];
     }
 
-    public class TransactionDTO 
+    public class TransactionDTO
     {
         public Guid Id { get; set; }
         public decimal Amount { get; set; }

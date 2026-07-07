@@ -1,3 +1,4 @@
+using System.Text;
 using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.DataAccessLayer;
@@ -6,13 +7,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -22,7 +23,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         npgsqlOptions =>
         {
             npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "public");
-        });
+        }
+    );
 });
 
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -34,15 +36,14 @@ if (string.IsNullOrWhiteSpace(jwtKey))
     throw new InvalidOperationException("JWT key is missing.");
 }
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtKey)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
 
             ValidateIssuer = true,
             ValidIssuer = jwtIssuer,
@@ -51,13 +52,13 @@ builder.Services
             ValidAudience = jwtAudience,
 
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
         };
     });
 
 builder.Services.AddAuthorization();
 
-// Scoped services lives throughout whole request 
+// Scoped services lives throughout whole request
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();

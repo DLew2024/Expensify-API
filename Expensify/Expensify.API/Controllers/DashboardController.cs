@@ -14,7 +14,9 @@ namespace Expensify.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<DashboardDataResponseDTO>> Get(CancellationToken cancellationToken)
+        public async Task<ActionResult<DashboardDataResponseDTO>> Get(
+            CancellationToken cancellationToken
+        )
         {
             var dashboard = await _service.DashboardService.GetDashboardData(cancellationToken);
             return Ok(dashboard);

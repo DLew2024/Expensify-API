@@ -1,5 +1,4 @@
-﻿
-using Expensify.DataAccessLayer.Enums;
+﻿using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.DataAccessLayer.Entities.Models
 {

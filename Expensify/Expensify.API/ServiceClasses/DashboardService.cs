@@ -14,7 +14,9 @@ namespace Expensify.Services.Interfaces
             _context = context;
         }
 
-        public Task<Result<DashboardDataResponseDTO>> GetDashboardData(CancellationToken cancellationToken)
+        public Task<Result<DashboardDataResponseDTO>> GetDashboardData(
+            CancellationToken cancellationToken
+        )
         {
             // Try to get user id
 

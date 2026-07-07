@@ -12,18 +12,14 @@ public class AccountType : Auditable
     /// Initializes a new instance of the <see cref="AccountType"/> class.
     /// Required by Entity Framework.
     /// </summary>
-    protected AccountType()
-    {
-    }
+    protected AccountType() { }
 
     /// <summary>
     /// Initializes a new account type with the specified name.
     /// </summary>
     /// <param name="name">The display name of the account type.</param>
     public AccountType(string name)
-        : base(name)
-    {
-    }
+        : base(name) { }
 
     /// <summary>
     /// The user who owns this account type.

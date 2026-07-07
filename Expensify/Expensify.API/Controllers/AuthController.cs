@@ -35,7 +35,7 @@ namespace Expensify.API.Controllers
             );
         }
 
-        // Add unauthroized logs 
+        // Add unauthroized logs
         [AllowAnonymous]
         [HttpPost(Name = "Login")]
         public async Task<ActionResult<UserTokenResponseDTO>> LoginUser(

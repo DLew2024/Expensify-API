@@ -5,6 +5,8 @@ namespace Expensify.API.ServiceClasses.Interfaces
 {
     public interface IDashboardService
     {
-        Task<Result<DashboardDataResponseDTO>> GetDashboardData(CancellationToken cancellationToken);
+        Task<Result<DashboardDataResponseDTO>> GetDashboardData(
+            CancellationToken cancellationToken
+        );
     }
 }

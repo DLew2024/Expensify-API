@@ -1,9 +1,9 @@
-﻿using Expensify.Entities.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using Expensify.Entities.Interfaces;
 
 namespace Expensify.DataAccessLayer.Entities.AbstractClasses;
 

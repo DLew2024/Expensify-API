@@ -1,7 +1,7 @@
-﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Expensify.DataAccessLayer.Entities.AbstractClasses;
 
 namespace Expensify.DataAccessLayer.Entities.Models;
 
@@ -14,18 +14,14 @@ public class PaymentMethod : Auditable
     /// <summary>
     /// Initializes a new instance of the <see cref="PaymentMethod"/> class.
     /// </summary>
-    protected PaymentMethod()
-    {
-    }
+    protected PaymentMethod() { }
 
     /// <summary>
     /// Initializes a new payment method with the specified name.
     /// </summary>
     /// <param name="name">The display name of the payment method.</param>
     public PaymentMethod(string name)
-        : base(name)
-    {
-    }
+        : base(name) { }
 
     /// <summary>
     /// The user who owns this payment method.

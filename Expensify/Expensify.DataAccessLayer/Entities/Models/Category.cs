@@ -10,18 +10,14 @@ public class Category : Auditable
     /// <summary>
     /// Initializes a new instance of the <see cref="Category"/> class.
     /// </summary>
-    protected Category()
-    {
-    }
+    protected Category() { }
 
     /// <summary>
     /// Initializes a new category with the specified name.
     /// </summary>
     /// <param name="name">The display name of the category.</param>
     public Category(string name)
-        : base(name)
-    {
-    }
+        : base(name) { }
 
     /// <summary>
     /// The user who owns this category.

@@ -12,18 +12,14 @@ public class GoalType : Auditable
     /// Initializes a new instance of the <see cref="GoalType"/> class.
     /// Required by Entity Framework.
     /// </summary>
-    protected GoalType()
-    {
-    }
+    protected GoalType() { }
 
     /// <summary>
     /// Initializes a new goal type with the specified name.
     /// </summary>
     /// <param name="name">The display name of the goal type.</param>
     public GoalType(string name)
-        : base(name)
-    {
-    }
+        : base(name) { }
 
     /// <summary>
     /// The user who owns this goal type.

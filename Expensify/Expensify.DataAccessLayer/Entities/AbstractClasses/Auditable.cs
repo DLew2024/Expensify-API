@@ -1,5 +1,5 @@
-﻿using Expensify.Entities.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Expensify.Entities.Interfaces;
 
 namespace Expensify.DataAccessLayer.Entities.AbstractClasses;
 
@@ -11,7 +11,8 @@ public abstract class Auditable : IAuditableEntity
         CreateDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     }
 
-    protected Auditable(string name) : this()
+    protected Auditable(string name)
+        : this()
     {
         Name = name;
     }

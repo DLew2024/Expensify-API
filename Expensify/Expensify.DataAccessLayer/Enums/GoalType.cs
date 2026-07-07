@@ -85,5 +85,5 @@ public enum GoalType
     /// <summary>
     /// A user-defined financial goal.
     /// </summary>
-    Custom = 13
+    Custom = 13,
 }

@@ -5,11 +5,11 @@ namespace Expensify.API.Utility
     public class CoreUtils
     {
         public static PaginatedListDTO<T> CreatePaginatedList<T>(
-        List<T> source,
-        int pageNumber,
-        int pageSize,
-        int totalRecords
-    )
+            List<T> source,
+            int pageNumber,
+            int pageSize,
+            int totalRecords
+        )
         {
             var count = source.Count;
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
