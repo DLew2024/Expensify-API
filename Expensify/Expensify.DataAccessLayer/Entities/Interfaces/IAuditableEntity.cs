@@ -1,7 +1,6 @@
 ﻿namespace Expensify.Entities.Interfaces;
 
-public interface INamed : ISortable
+public interface IAuditableEntity : IIdentifiable
 {
     public string Name { get; set; }
 }
-
