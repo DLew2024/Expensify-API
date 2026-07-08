@@ -11,6 +11,3 @@
         public bool EnableSsl { get; set; } = true;
     }
 }
-
-
-

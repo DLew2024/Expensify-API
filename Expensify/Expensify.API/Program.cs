@@ -60,6 +60,7 @@ builder
 builder.Services.AddAuthorization();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<FrontendSettings>(builder.Configuration.GetSection("FrontendSettings"));
 
 // Scoped services lives throughout whole request
 builder.Services.AddScoped<IAuthService, AuthService>();

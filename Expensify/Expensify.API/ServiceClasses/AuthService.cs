@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.Configurations;
 using Expensify.API.DTOs.AuthDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.Functions;
@@ -8,31 +9,25 @@ using Expensify.DataAccessLayer.Entities.Models;
 using LanguageExt.Common;
 using LanguageExt.Pipes;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Expensify.API.ServiceClasses
 {
-    public class AuthService : IAuthService
+    public class AuthService(
+        ApplicationDbContext context,
+        IJwtService jwtService,
+        IPasswordService passwordService,
+        ISecurityService securityService,
+        IEmailService emailService,
+        IOptions<FrontendSettings> frontendOptions
+    ) : IAuthService
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IJwtService _jwtService;
-        private readonly IPasswordService _passwordService;
-        private readonly ISecurityService _securityService;
-        private readonly IEmailService _emailService;
-
-        public AuthService(
-            ApplicationDbContext context,
-            IJwtService jwtService,
-            IPasswordService passwordService,
-            ISecurityService securityService,
-            IEmailService emailService
-        )
-        {
-            _context = context;
-            _jwtService = jwtService;
-            _passwordService = passwordService;
-            _securityService = securityService;
-            _emailService = emailService;
-        }
+        private readonly ApplicationDbContext _context = context;
+        private readonly IJwtService _jwtService = jwtService;
+        private readonly IPasswordService _passwordService = passwordService;
+        private readonly ISecurityService _securityService = securityService;
+        private readonly IEmailService _emailService = emailService;
+        private readonly FrontendSettings _frontendSettings = frontendOptions.Value;
 
         public async Task<Result<bool>> ForgotPassword(
             ForgotPasswordDTO request,
@@ -42,7 +37,9 @@ namespace Expensify.API.ServiceClasses
             //1.Receive email.
             if (!ValidationHelpers.IsValidEmail(request.Email))
             {
-                return new Result<bool>(new ValidationException("Email is not in correct format."));
+                return new Result<bool>(
+                    new ValidationException("Passed email is not in correct format.")
+                );
             }
 
             var normalizedEmail = ValidationHelpers.Normalize(request.Email);
@@ -53,7 +50,7 @@ namespace Expensify.API.ServiceClasses
                 cancellationToken
             );
 
-            //3.Always return success, even if user does not exist.
+            //3.Always return success, even if user does not exist. To prevent user enumeration
             if (foundUser is null)
             {
                 return new Result<bool>(true);
@@ -61,8 +58,8 @@ namespace Expensify.API.ServiceClasses
 
             //4.Generate secure reset token.
             var existingTokens = await _context
-                .PasswordResetTokens.Where(token =>
-                    token.UserId == foundUser.Id && token.UsedAt == null && !token.IsRevoked
+                .PasswordResetTokens.Where(_ =>
+                    _.UserId == foundUser.Id && _.UsedAt == null && !_.IsRevoked
                 )
                 .ToListAsync(cancellationToken);
 
@@ -76,7 +73,7 @@ namespace Expensify.API.ServiceClasses
             //5.Hash token before saving to database.
             var rawToken = _securityService.GenerateSecureToken();
             var tokenHash = _securityService.HashToken(rawToken);
-            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var nowCreatedDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             //6.Save token hash, user id, expiration date, and used flag.
             var passwordResetToken = new PasswordResetToken
@@ -85,7 +82,7 @@ namespace Expensify.API.ServiceClasses
                 TokenHash = tokenHash,
                 ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(30).ToUnixTimeSeconds(),
                 CreatedBy = foundUser.Id,
-                CreateDate = now,
+                CreateDate = nowCreatedDate,
             };
 
             _context.PasswordResetTokens.Add(passwordResetToken);
@@ -93,7 +90,9 @@ namespace Expensify.API.ServiceClasses
             await _context.SaveChangesAsync(cancellationToken);
 
             //7.Email user a reset link with the raw token.
-            var resetLink = $"https://test/reset-password?token={Uri.EscapeDataString(rawToken)}";
+            var resetLink =
+                $"{_frontendSettings.BaseUrl.TrimEnd('/')}/reset-password?token={Uri.EscapeDataString(rawToken)}";
+
             await _emailService.SendPasswordResetEmail(
                 foundUser.Email,
                 resetLink,
