@@ -38,7 +38,7 @@ public class Goal : Identifiable
     /// The type of financial goal.
     /// Example: Savings, Debt Payoff, Vacation, or Retirement.
     /// </summary>
-    public GoalType Type { get; set; }
+    public GoalType? GoalType { get; set; }
 
     /// <summary>
     /// The desired completion date for the goal.

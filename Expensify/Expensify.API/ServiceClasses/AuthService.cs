@@ -6,6 +6,7 @@ using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Entities.Models;
 using LanguageExt.Common;
+using LanguageExt.Pipes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.API.ServiceClasses
@@ -15,24 +16,91 @@ namespace Expensify.API.ServiceClasses
         private readonly ApplicationDbContext _context;
         private readonly IJwtService _jwtService;
         private readonly IPasswordService _passwordService;
+        private readonly ISecurityService _securityService;
+        private readonly IEmailService _emailService;
 
         public AuthService(
             ApplicationDbContext context,
             IJwtService jwtService,
-            IPasswordService passwordService
+            IPasswordService passwordService,
+            ISecurityService securityService,
+            IEmailService emailService
         )
         {
             _context = context;
             _jwtService = jwtService;
             _passwordService = passwordService;
+            _securityService = securityService;
+            _emailService = emailService;
         }
 
-        public Task<Result<bool>> ForgotPassword(
+        public async Task<Result<bool>> ForgotPassword(
             ForgotPasswordDTO request,
             CancellationToken cancellationToken
         )
         {
-            throw new NotImplementedException();
+            //1.Receive email.
+            if (!ValidationHelpers.IsValidEmail(request.Email))
+            {
+                return new Result<bool>(new ValidationException("Email is not in correct format."));
+            }
+
+            var normalizedEmail = ValidationHelpers.Normalize(request.Email);
+
+            //2.Look up user by email.
+            var foundUser = await _context.Users.FirstOrDefaultAsync(
+                _ => _.Email.Equals(normalizedEmail, StringComparison.CurrentCultureIgnoreCase),
+                cancellationToken
+            );
+
+            //3.Always return success, even if user does not exist.
+            if (foundUser is null)
+            {
+                return new Result<bool>(true);
+            }
+
+            //4.Generate secure reset token.
+            var existingTokens = await _context
+                .PasswordResetTokens.Where(token =>
+                    token.UserId == foundUser.Id && token.UsedAt == null && !token.IsRevoked
+                )
+                .ToListAsync(cancellationToken);
+
+            foreach (var existingToken in existingTokens)
+            {
+                existingToken.IsRevoked = true;
+                existingToken.UpdatedDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                existingToken.LastUpdatedBy = foundUser.Id;
+            }
+
+            //5.Hash token before saving to database.
+            var rawToken = _securityService.GenerateSecureToken();
+            var tokenHash = _securityService.HashToken(rawToken);
+            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            //6.Save token hash, user id, expiration date, and used flag.
+            var passwordResetToken = new PasswordResetToken
+            {
+                UserId = foundUser.Id,
+                TokenHash = tokenHash,
+                ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(30).ToUnixTimeSeconds(),
+                CreatedBy = foundUser.Id,
+                CreateDate = now,
+            };
+
+            _context.PasswordResetTokens.Add(passwordResetToken);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            //7.Email user a reset link with the raw token.
+            var resetLink = $"https://test/reset-password?token={Uri.EscapeDataString(rawToken)}";
+            await _emailService.SendPasswordResetEmail(
+                foundUser.Email,
+                resetLink,
+                cancellationToken
+            );
+
+            return new Result<bool>(true);
         }
 
         public async Task<Result<UserResponseDTO>> GetUserInfo(
@@ -172,7 +240,7 @@ namespace Expensify.API.ServiceClasses
         }
 
         public Task<Result<bool>> ResetPassword(
-            ResetPasswordDTO request,
+            ResetDTO request,
             CancellationToken cancellationToken
         )
         {

@@ -10,11 +10,6 @@ namespace Expensify.DataAccessLayer.Entities.Models;
 public class Transaction : Identifiable
 {
     /// <summary>
-    /// Unique identifier for the transaction.
-    /// </summary>
-    public Guid Id { get; set; }
-
-    /// <summary>
     /// The user who owns this transaction.
     /// </summary>
     public Guid UserId { get; set; }
@@ -117,30 +112,6 @@ public class Transaction : Identifiable
     /// Navigation property for the assigned category.
     /// </summary>
     public Category? Category { get; set; }
-
-    /// <summary>
-    /// The user who created the transaction.
-    /// </summary>
-    public Guid CreatedBy { get; set; }
-
-    /// <summary>
-    /// The date the transaction was created.
-    /// Stored as a long timestamp.
-    /// </summary>
-    public long CreateDate { get; set; }
-
-    /// <summary>
-    /// The user who last updated the transaction.
-    /// Null if the transaction has never been modified.
-    /// </summary>
-    public Guid LastUpdatedBy { get; set; }
-
-    /// <summary>
-    /// The date the transaction was last updated.
-    /// Null if the transaction has never been modified.
-    /// Stored as a long timestamp.
-    /// </summary>
-    public long UpdatedDate { get; set; }
 
     /// <summary>
     /// The related transaction created as part of the same transfer.

@@ -34,7 +34,7 @@ public class Account : IAuditableEntity
     /// The type of financial account.
     /// Example: Checking, Savings, CreditCard, Cash, Loan.
     /// </summary>
-    public AccountType Type { get; set; }
+    public AccountType? AccountType { get; set; }
 
     /// <summary>
     /// The name of the financial institution.

@@ -21,7 +21,7 @@ public abstract class Auditable : IAuditableEntity
     public Guid Id { get; set; }
 
     [Column(Order = 2)]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Column("deletion_indicator")]
     public bool IsDeleted { get; set; }

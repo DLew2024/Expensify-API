@@ -11,11 +11,6 @@ namespace Expensify.DataAccessLayer.Entities.Models;
 public class RecurringTransaction : Identifiable
 {
     /// <summary>
-    /// Unique identifier for the recurring transaction.
-    /// </summary>
-    public Guid Id { get; set; }
-
-    /// <summary>
     /// The user who owns this recurring transaction.
     /// </summary>
     public Guid UserId { get; set; }
@@ -115,28 +110,4 @@ public class RecurringTransaction : Identifiable
     /// Navigation property for the associated category.
     /// </summary>
     public Category? Category { get; set; }
-
-    /// <summary>
-    /// The user who created the recurring transaction.
-    /// </summary>
-    public Guid CreatedBy { get; set; }
-
-    /// <summary>
-    /// The date the recurring transaction was created.
-    /// Stored as a long timestamp.
-    /// </summary>
-    public long CreateDate { get; set; }
-
-    /// <summary>
-    /// The user who last updated the recurring transaction.
-    /// Null if it has never been modified.
-    /// </summary>
-    public Guid LastUpdatedBy { get; set; }
-
-    /// <summary>
-    /// The date the recurring transaction was last updated.
-    /// Null if it has never been modified.
-    /// Stored as a long timestamp.
-    /// </summary>
-    public long UpdatedDate { get; set; }
 }
