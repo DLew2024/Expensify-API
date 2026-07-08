@@ -1,4 +1,3 @@
-﻿namespace Expensify.API.DTOs.AuthDTOs
-{
-    public class ResetDTO { }
-}
+﻿namespace Expensify.API.DTOs.AuthDTOs;
+
+public class ResetPasswordDTO { }

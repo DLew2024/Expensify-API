@@ -239,7 +239,7 @@ namespace Expensify.API.ServiceClasses
         }
 
         public Task<Result<bool>> ResetPassword(
-            ResetDTO request,
+            ResetPasswordDTO request,
             CancellationToken cancellationToken
         )
         {

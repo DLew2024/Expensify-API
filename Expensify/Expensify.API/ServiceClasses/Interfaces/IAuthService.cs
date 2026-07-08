@@ -20,7 +20,7 @@ public interface IAuthService
         CancellationToken cancellationToken
     );
 
-    Task<Result<bool>> ResetPassword(ResetDTO request, CancellationToken cancellationToken);
+    Task<Result<bool>> ResetPassword(ResetPasswordDTO request, CancellationToken cancellationToken);
 
     Task<Result<bool>> UploadImage(CancellationToken cancellationToken);
 }

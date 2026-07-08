@@ -112,7 +112,7 @@ public class AuthController : AuthorizationController
 
     [HttpPost(Name = "Reset-Password")]
     public async Task<ActionResult<bool>> ResetPassword(
-        ResetDTO request,
+        ResetPasswordDTO request,
         CancellationToken cancellationToken
     )
     {
