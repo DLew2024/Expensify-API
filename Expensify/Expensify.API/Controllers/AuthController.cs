@@ -11,8 +11,10 @@ namespace Expensify.API.Controllers;
 /// <summary>
 /// Handles user authentication and authorization.
 /// Responsibilities:
-/// - User registration - Done (Need to Test)
+/// - Forgot Password - Done (Need to Test)
+/// - Get User Info - Done (Need to Test)
 /// - User login - Done (Need to Test)
+/// - User registration - Done (Need to Test)
 /// - Password reset
 /// - Refresh tokens
 /// - Email verification

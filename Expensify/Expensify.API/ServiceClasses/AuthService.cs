@@ -34,7 +34,6 @@ namespace Expensify.API.ServiceClasses
             CancellationToken cancellationToken
         )
         {
-            //1.Receive email.
             if (!ValidationHelpers.IsValidEmail(request.Email))
             {
                 return new Result<bool>(
@@ -44,60 +43,84 @@ namespace Expensify.API.ServiceClasses
 
             var normalizedEmail = ValidationHelpers.Normalize(request.Email);
 
-            //2.Look up user by email.
             var foundUser = await _context.Users.FirstOrDefaultAsync(
-                _ => _.Email.Equals(normalizedEmail, StringComparison.CurrentCultureIgnoreCase),
+                user => user.Email == normalizedEmail,
                 cancellationToken
             );
 
-            //3.Always return success, even if user does not exist. To prevent user enumeration
             if (foundUser is null)
             {
                 return new Result<bool>(true);
             }
 
-            //4.Generate secure reset token.
-            var existingTokens = await _context
-                .PasswordResetTokens.Where(_ =>
-                    _.UserId == foundUser.Id && _.UsedAt == null && !_.IsRevoked
-                )
-                .ToListAsync(cancellationToken);
+            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            foreach (var existingToken in existingTokens)
-            {
-                existingToken.IsRevoked = true;
-                existingToken.UpdatedDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                existingToken.LastUpdatedBy = foundUser.Id;
-            }
-
-            //5.Hash token before saving to database.
             var rawToken = _securityService.GenerateSecureToken();
             var tokenHash = _securityService.HashToken(rawToken);
-            var nowCreatedDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            //6.Save token hash, user id, expiration date, and used flag.
-            var passwordResetToken = new PasswordResetToken
+            PasswordResetToken passwordResetToken;
+
+            await using var transaction = await _context.Database.BeginTransactionAsync(
+                cancellationToken
+            );
+
+            try
             {
-                UserId = foundUser.Id,
-                TokenHash = tokenHash,
-                ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(30).ToUnixTimeSeconds(),
-                CreatedBy = foundUser.Id,
-                CreateDate = nowCreatedDate,
-            };
+                var existingTokens = await _context
+                    .PasswordResetTokens.Where(token =>
+                        token.UserId == foundUser.Id && token.UsedAt == null && !token.IsRevoked
+                    )
+                    .ToListAsync(cancellationToken);
 
-            _context.PasswordResetTokens.Add(passwordResetToken);
+                foreach (var existingToken in existingTokens)
+                {
+                    existingToken.IsRevoked = true;
+                    existingToken.UpdatedDate = now;
+                    existingToken.LastUpdatedBy = foundUser.Id;
+                }
 
-            await _context.SaveChangesAsync(cancellationToken);
+                passwordResetToken = new PasswordResetToken
+                {
+                    UserId = foundUser.Id,
+                    TokenHash = tokenHash,
+                    ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(30).ToUnixTimeSeconds(),
+                    CreatedBy = foundUser.Id,
+                    CreateDate = now,
+                };
 
-            //7.Email user a reset link with the raw token.
+                _context.PasswordResetTokens.Add(passwordResetToken);
+
+                await _context.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+
+                return new Result<bool>(ex);
+            }
+
             var resetLink =
                 $"{_frontendSettings.BaseUrl.TrimEnd('/')}/reset-password?token={Uri.EscapeDataString(rawToken)}";
 
-            await _emailService.SendPasswordResetEmail(
-                foundUser.Email,
-                resetLink,
-                cancellationToken
-            );
+            try
+            {
+                await _emailService.SendPasswordResetEmail(
+                    foundUser.Email,
+                    resetLink,
+                    cancellationToken
+                );
+            }
+            catch (Exception ex)
+            {
+                passwordResetToken.IsRevoked = true;
+                passwordResetToken.UpdatedDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                passwordResetToken.LastUpdatedBy = foundUser.Id;
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return new Result<bool>(ex);
+            }
 
             return new Result<bool>(true);
         }
@@ -120,10 +143,10 @@ namespace Expensify.API.ServiceClasses
                     })
                     .FirstOrDefaultAsync(cancellationToken);
 
-                if (userInfo == null)
+                if (userInfo is null)
                 {
                     return new Result<UserResponseDTO>(
-                        new EntityNotFoundException("User with id was not found" + id)
+                        new EntityNotFoundException($"User with id was not found: {id}")
                     );
                 }
 
@@ -147,25 +170,28 @@ namespace Expensify.API.ServiceClasses
                 );
             }
 
+            if (!ValidationHelpers.IsValidEmail(request.Email))
+            {
+                return new Result<UserTokenResponseDTO>(
+                    new ValidationException("Passed email is not in correct format.")
+                );
+            }
+
+            var normalizedEmail = ValidationHelpers.Normalize(request.Email);
+
             try
             {
                 var foundUser = await _context
                     .Users.AsNoTracking()
-                    .Where(user => user.Email == request.Email)
-                    .FirstOrDefaultAsync(cancellationToken);
+                    .FirstOrDefaultAsync(user => user.Email == normalizedEmail, cancellationToken);
 
-                if (foundUser == null)
+                if (
+                    foundUser is null
+                    || !_passwordService.VerifyPassword(request.Password, foundUser.Password)
+                )
                 {
                     return new Result<UserTokenResponseDTO>(
-                        new EntityNotFoundException(
-                            "No user could be found with the email:" + request.Email
-                        )
-                    );
-                }
-                else if (!_passwordService.VerifyPassword(request.Password, foundUser.Password))
-                {
-                    return new Result<UserTokenResponseDTO>(
-                        new UnauthorizedAccessException("Incorrect Password")
+                        new UnauthorizedAccessException("Invalid email or password.")
                     );
                 }
 
@@ -200,10 +226,19 @@ namespace Expensify.API.ServiceClasses
                 );
             }
 
+            if (!ValidationHelpers.IsValidEmail(request.Email))
+            {
+                return new Result<UserTokenResponseDTO>(
+                    new ValidationException("Passed email is not in correct format.")
+                );
+            }
+
+            var normalizedEmail = ValidationHelpers.Normalize(request.Email);
+
             try
             {
                 var userExists = await _context.Users.AnyAsync(
-                    user => user.Email == request.Email,
+                    user => user.Email == normalizedEmail,
                     cancellationToken
                 );
 
@@ -218,18 +253,26 @@ namespace Expensify.API.ServiceClasses
                 {
                     Id = Guid.NewGuid(),
                     FullName = $"{request.FirstName} {request.LastName}",
-                    Email = request.Email,
+                    Email = normalizedEmail,
                     Password = _passwordService.HashPassword(request.Password),
                     ProfileImageUrl = request.ProfileImageURl,
                 };
 
                 _context.Users.Add(newUser);
+
                 await _context.SaveChangesAsync(cancellationToken);
 
                 var token = _jwtService.GenerateToken(newUser);
 
                 return new Result<UserTokenResponseDTO>(
                     new UserTokenResponseDTO { UserId = newUser.Id, Token = token }
+                );
+            }
+            catch (DbUpdateException ex)
+            {
+                // Handles race conditions where another request inserts the same email
+                return new Result<UserTokenResponseDTO>(
+                    new ConflictException("A user with this email already exists.", ex)
                 );
             }
             catch (Exception ex)
@@ -243,6 +286,25 @@ namespace Expensify.API.ServiceClasses
             CancellationToken cancellationToken
         )
         {
+            // 1. Validate request
+
+            // 2. Hash raw token
+
+            // 3. Find valid password reset token
+
+            // 4. Return error if invalid
+
+            // 5. Find user
+
+            // 6. Update password
+
+            // 7. Mark token as used
+
+            // 8. Revoke other reset tokens
+
+            // 9. Save changes
+
+            // 10. Return true
             throw new NotImplementedException();
         }
 
