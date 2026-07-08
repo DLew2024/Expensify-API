@@ -1,8 +1,7 @@
-﻿namespace Expensify.API.DTOs.AuthDTOs
+﻿namespace Expensify.API.DTOs.AuthDTOs;
+
+public class UserTokenResponseDTO
 {
-    public class UserTokenResponseDTO
-    {
-        public Guid UserId { get; set; }
-        public required string Token { get; set; }
-    }
+    public Guid UserId { get; set; }
+    public required string Token { get; set; }
 }

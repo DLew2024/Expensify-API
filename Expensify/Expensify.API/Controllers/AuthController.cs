@@ -2,6 +2,7 @@
 using Expensify.API.DTOs.AuthDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
+using LanguageExt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,8 +11,8 @@ namespace Expensify.API.Controllers;
 /// <summary>
 /// Handles user authentication and authorization.
 /// Responsibilities:
-/// - User registration
-/// - User login
+/// - User registration - Done (Need to Test)
+/// - User login - Done (Need to Test)
 /// - Password reset
 /// - Refresh tokens
 /// - Email verification
@@ -25,6 +26,24 @@ public class AuthController : AuthorizationController
     public AuthController(IService service)
     {
         _service = service;
+    }
+
+    [HttpPost(Name = "Forgot-Password")]
+    public async Task<ActionResult<bool>> ForgotPassword(
+        ForgotPasswordDTO request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await _service.AuthService.ForgotPassword(request, cancellationToken);
+
+        return result.Match<ActionResult<bool>>(
+            success => Ok(),
+            error =>
+                error switch
+                {
+                    _ => StatusCode(500, error.Message),
+                }
+        );
     }
 
     [HttpGet(Name = "GetUserInfo")]
@@ -84,6 +103,24 @@ public class AuthController : AuthorizationController
                 {
                     ValidationException ex => BadRequest(ex.Message),
                     ConflictException ex => Conflict(ex.Message),
+                    _ => StatusCode(500, error.Message),
+                }
+        );
+    }
+
+    [HttpPost(Name = "Reset-Password")]
+    public async Task<ActionResult<bool>> ResetPassword(
+        ResetPasswordDTO request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await _service.AuthService.ResetPassword(request, cancellationToken);
+
+        return result.Match<ActionResult<bool>>(
+            success => Ok(),
+            error =>
+                error switch
+                {
                     _ => StatusCode(500, error.Message),
                 }
         );

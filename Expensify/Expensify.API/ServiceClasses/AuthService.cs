@@ -27,6 +27,14 @@ namespace Expensify.API.ServiceClasses
             _passwordService = passwordService;
         }
 
+        public Task<Result<bool>> ForgotPassword(
+            ForgotPasswordDTO request,
+            CancellationToken cancellationToken
+        )
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Result<UserResponseDTO>> GetUserInfo(
             Guid id,
             CancellationToken cancellationToken
@@ -161,6 +169,14 @@ namespace Expensify.API.ServiceClasses
             {
                 return new Result<UserTokenResponseDTO>(ex);
             }
+        }
+
+        public Task<Result<bool>> ResetPassword(
+            ResetPasswordDTO request,
+            CancellationToken cancellationToken
+        )
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Result<bool>> UploadImage(CancellationToken cancellationToken)

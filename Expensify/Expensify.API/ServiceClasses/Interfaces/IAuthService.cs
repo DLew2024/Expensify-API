@@ -5,6 +5,11 @@ namespace Expensify.API.ServiceClasses.Interfaces
 {
     public interface IAuthService
     {
+        Task<Result<bool>> ForgotPassword(
+            ForgotPasswordDTO request,
+            CancellationToken cancellationToken
+        );
+
         Task<Result<UserResponseDTO>> GetUserInfo(Guid id, CancellationToken cancellationToken);
         Task<Result<UserTokenResponseDTO>> LoginUser(
             LoginUserDTO request,
@@ -12,6 +17,11 @@ namespace Expensify.API.ServiceClasses.Interfaces
         );
         Task<Result<UserTokenResponseDTO>> RegisterUser(
             RegisterUserDTO request,
+            CancellationToken cancellationToken
+        );
+
+        Task<Result<bool>> ResetPassword(
+            ResetPasswordDTO request,
             CancellationToken cancellationToken
         );
 
