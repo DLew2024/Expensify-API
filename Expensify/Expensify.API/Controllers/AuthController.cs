@@ -41,6 +41,8 @@ public class AuthController : AuthorizationController
             error =>
                 error switch
                 {
+                    ValidationException ex => BadRequest(ex.Message),
+                    EntityNotFoundException ex => BadRequest(ex.Message),
                     _ => StatusCode(500, error.Message),
                 }
         );

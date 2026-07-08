@@ -1,30 +1,26 @@
 ﻿using Expensify.API.DTOs.AuthDTOs;
 using LanguageExt.Common;
 
-namespace Expensify.API.ServiceClasses.Interfaces
+namespace Expensify.API.ServiceClasses.Interfaces;
+
+public interface IAuthService
 {
-    public interface IAuthService
-    {
-        Task<Result<bool>> ForgotPassword(
-            ForgotPasswordDTO request,
-            CancellationToken cancellationToken
-        );
+    Task<Result<bool>> ForgotPassword(
+        ForgotPasswordDTO request,
+        CancellationToken cancellationToken
+    );
 
-        Task<Result<UserResponseDTO>> GetUserInfo(Guid id, CancellationToken cancellationToken);
-        Task<Result<UserTokenResponseDTO>> LoginUser(
-            LoginUserDTO request,
-            CancellationToken cancellationToken
-        );
-        Task<Result<UserTokenResponseDTO>> RegisterUser(
-            RegisterUserDTO request,
-            CancellationToken cancellationToken
-        );
+    Task<Result<UserResponseDTO>> GetUserInfo(Guid id, CancellationToken cancellationToken);
+    Task<Result<UserTokenResponseDTO>> LoginUser(
+        LoginUserDTO request,
+        CancellationToken cancellationToken
+    );
+    Task<Result<UserTokenResponseDTO>> RegisterUser(
+        RegisterUserDTO request,
+        CancellationToken cancellationToken
+    );
 
-        Task<Result<bool>> ResetPassword(
-            ResetPasswordDTO request,
-            CancellationToken cancellationToken
-        );
+    Task<Result<bool>> ResetPassword(ResetPasswordDTO request, CancellationToken cancellationToken);
 
-        Task<Result<bool>> UploadImage(CancellationToken cancellationToken);
-    }
+    Task<Result<bool>> UploadImage(CancellationToken cancellationToken);
 }
