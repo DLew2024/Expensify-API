@@ -22,7 +22,5 @@ namespace Expensify.API.Controllers
         {
             _service = service;
         }
-
-      
     }
 }

@@ -21,6 +21,4 @@ public class BudgetMembersController : AuthorizationController
     {
         _service = service;
     }
-
-    
 }

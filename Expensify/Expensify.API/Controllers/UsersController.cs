@@ -15,10 +15,9 @@ namespace Expensify.API.Controllers;
 public class UsersController : AuthorizationController
 {
     private readonly IService _service;
+
     public UsersController(IService service)
     {
         _service = service;
     }
-
-
 }

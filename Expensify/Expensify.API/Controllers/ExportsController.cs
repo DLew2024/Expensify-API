@@ -22,6 +22,4 @@ public class ExportsController : AuthorizationController
     {
         _service = service;
     }
-
-    
 }
