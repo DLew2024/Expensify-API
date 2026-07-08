@@ -8,8 +8,6 @@ namespace Expensify.DataAccessLayer.Entities.Models;
 /// </summary>
 public class Goal : Identifiable
 {
-   
-
     /// <summary>
     /// The user who owns the goal.
     /// </summary>
@@ -73,10 +71,4 @@ public class Goal : Identifiable
     /// Navigation property for the associated account.
     /// </summary>
     public Account? Account { get; set; }
-
-    
-
-
-
-
 }
