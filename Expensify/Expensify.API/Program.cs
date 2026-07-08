@@ -1,4 +1,5 @@
 using System.Text;
+using Expensify.API.Configurations;
 using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.DataAccessLayer;
@@ -58,9 +59,12 @@ builder
 
 builder.Services.AddAuthorization();
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 // Scoped services lives throughout whole request
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IIncomeService, IncomeService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
