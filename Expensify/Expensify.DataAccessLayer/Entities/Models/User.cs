@@ -40,6 +40,18 @@ public class User
     public string ProfileImageUrl { get; set; } = string.Empty;
 
     /// <summary>
+    /// Indicates whether the user's email address has been verified.
+    /// </summary>
+    public bool IsEmailVerified { get; set; }
+
+    /// <summary>
+    /// The date the user's email address was verified.
+    /// Null if the email has not been verified.
+    /// Stored as a Unix timestamp.
+    /// </summary>
+    public long? EmailVerifiedAt { get; set; }
+
+    /// <summary>
     /// Financial accounts owned by the user.
     /// </summary>
     public List<Account> Accounts { get; set; } = [];
@@ -74,4 +86,14 @@ public class User
     /// Password reset tokens issued for this user.
     /// </summary>
     public List<PasswordResetToken> PasswordResetTokens { get; set; } = [];
+
+    /// <summary>
+    /// Email-verification tokens issued for this user.
+    /// </summary>
+    public List<EmailVerificationToken> EmailVerificationTokens { get; set; } = [];
+
+    /// <summary>
+    /// Refresh tokens issued to this user.
+    /// </summary>
+    public List<RefreshToken> RefreshTokens { get; set; } = [];
 }

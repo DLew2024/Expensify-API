@@ -13,7 +13,7 @@ namespace Expensify.API.Controllers
     /// - Get available payment methods
     /// - Manage system defaults
     /// </summary>
-    public class PaymentMethodsController : AuthorizationController
+    public class PaymentMethodsController : AuthorizationControllerBase
     {
         private readonly IService _service;
 

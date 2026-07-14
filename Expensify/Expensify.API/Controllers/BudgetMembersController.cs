@@ -13,7 +13,7 @@ namespace Expensify.API.Controllers;
 /// - View budget members
 /// - Transfer budget ownership
 /// </summary>
-public class BudgetMembersController : AuthorizationController
+public class BudgetMembersController : AuthorizationControllerBase
 {
     private readonly IService _service;
 

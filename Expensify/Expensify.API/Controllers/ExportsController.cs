@@ -14,7 +14,7 @@ namespace Expensify.API.Controllers;
 /// - Export reports
 /// - Export budgets
 /// </summary>
-public class ExportsController : AuthorizationController
+public class ExportsController : AuthorizationControllerBase
 {
     private readonly IService _service;
 

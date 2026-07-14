@@ -14,7 +14,7 @@ namespace Expensify.API.Controllers;
 /// - Calculate remaining budget
 /// - View budget progress
 /// </summary>
-public class BudgetsController : AuthorizationController
+public class BudgetsController : AuthorizationControllerBase
 {
     private readonly IService _service;
 

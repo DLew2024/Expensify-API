@@ -14,7 +14,7 @@ namespace Expensify.API.Controllers
     /// - Recurring transaction reminders
     /// - Notification preferences
     /// </summary>
-    public class NotificationsController : AuthorizationController
+    public class NotificationsController : AuthorizationControllerBase
     {
         private readonly IService _service;
 

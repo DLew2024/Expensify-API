@@ -13,7 +13,7 @@ namespace Expensify.API.Controllers;
 /// - Hide/unhide accounts
 /// - Calculate net worth
 /// </summary>
-public class AccountsController : AuthorizationController
+public class AccountsController : AuthorizationControllerBase
 {
     private readonly IService _service;
 

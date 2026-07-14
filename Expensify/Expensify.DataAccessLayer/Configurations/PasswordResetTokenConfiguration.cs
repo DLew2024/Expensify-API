@@ -32,5 +32,11 @@ public class PasswordResetTokenConfiguration : IEntityTypeConfiguration<Password
 
         // Improves lookup performance when retrieving all tokens for a user.
         builder.HasIndex(x => x.UserId);
+
+        // Configures PostgreSQL's built-in xmin system column as the optimistic
+        // concurrency token. Entity Framework Core uses this value to detect if
+        // another transaction has modified the row since it was loaded. If it has,
+        // SaveChangesAsync will throw a DbUpdateConcurrencyException.
+        builder.Property<uint>("xmin").IsRowVersion();
     }
 }

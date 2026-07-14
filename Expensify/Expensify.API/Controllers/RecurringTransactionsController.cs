@@ -11,7 +11,7 @@ namespace Expensify.API.Controllers;
 /// - Delete recurring transactions
 /// - Generate scheduled transactions
 /// </summary>
-public class RecurringTransactionsController : AuthorizationController
+public class RecurringTransactionsController : AuthorizationControllerBase
 {
     private readonly IService _service;
 

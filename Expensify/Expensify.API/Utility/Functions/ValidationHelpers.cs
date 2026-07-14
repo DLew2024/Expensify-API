@@ -4,6 +4,8 @@ namespace Expensify.API.Utility.Functions
 {
     public class ValidationHelpers
     {
+        public const int PasswordLengthMinimum = 8;
+
         /// <summary>
         /// Determines whether any of the provided strings are null, empty, or contain only whitespace.
         /// </summary>

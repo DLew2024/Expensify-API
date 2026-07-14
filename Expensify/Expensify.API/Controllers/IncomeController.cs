@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.API.Controllers
 {
-    public class IncomeController : AuthorizationController
+    public class IncomeController : AuthorizationControllerBase
     {
         private readonly IService _service;
 

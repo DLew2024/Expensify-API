@@ -16,7 +16,7 @@ namespace Expensify.API.Controllers
     /// - Net worth history
     /// - Financial trends
     /// </summary>
-    public class ReportsController : AuthorizationController
+    public class ReportsController : AuthorizationControllerBase
     {
         private readonly IService _service;
 

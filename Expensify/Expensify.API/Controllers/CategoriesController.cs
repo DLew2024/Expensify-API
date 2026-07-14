@@ -11,7 +11,7 @@ namespace Expensify.API.Controllers;
 /// - Get user categories
 /// - Manage default categories
 /// </summary>
-public class CategoriesController : AuthorizationController
+public class CategoriesController : AuthorizationControllerBase
 {
     private readonly IService _service;
 

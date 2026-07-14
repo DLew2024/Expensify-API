@@ -16,7 +16,7 @@ namespace Expensify.API.Controllers
     /// - Upcoming bills
     /// - Spending overview
     /// </summary>
-    public class DashboardController : AuthorizationController
+    public class DashboardController : AuthorizationControllerBase
     {
         private readonly IService _service;
 

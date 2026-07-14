@@ -12,7 +12,7 @@ namespace Expensify.API.Controllers;
 /// - Delete account
 /// - User preferences
 /// </summary>
-public class UsersController : AuthorizationController
+public class UsersController : AuthorizationControllerBase
 {
     private readonly IService _service;
 

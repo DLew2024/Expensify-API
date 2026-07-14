@@ -12,7 +12,7 @@ namespace Expensify.API.Controllers;
 /// - Mark goals complete
 /// - View goal statistics
 /// </summary>
-public class GoalsController : AuthorizationController
+public class GoalsController : AuthorizationControllerBase
 {
     private readonly IService _service;
 

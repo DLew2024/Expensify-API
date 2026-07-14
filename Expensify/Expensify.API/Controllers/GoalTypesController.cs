@@ -13,7 +13,7 @@ namespace Expensify.API.Controllers
     /// - Get available goal types
     /// - Manage system defaults
     /// </summary>
-    public class GoalTypesController : AuthorizationController
+    public class GoalTypesController : AuthorizationControllerBase
     {
         private readonly IService _service;
 

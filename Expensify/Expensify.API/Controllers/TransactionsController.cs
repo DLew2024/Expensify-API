@@ -15,7 +15,7 @@ namespace Expensify.API.Controllers
     /// - View transaction history
     /// - Attach tags and notes
     /// </summary>
-    public class TransactionsController : AuthorizationController
+    public class TransactionsController : AuthorizationControllerBase
     {
         private readonly IService _service;
 
