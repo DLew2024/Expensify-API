@@ -20,15 +20,17 @@ namespace Expensify.API.ServiceClasses
         IPasswordService passwordService,
         ISecurityService securityService,
         IEmailService emailService,
-        IOptions<FrontendSettings> frontendOptions
+        IOptions<FrontendSettings> frontendOptions,
+        IOptions<JwtSettings> jwtSettings
     ) : IAuthService
     {
-        private readonly ApplicationDbContext _context = context;
-        private readonly FrontendSettings _frontendSettings = frontendOptions.Value;
         private readonly IJwtService _jwtService = jwtService;
         private readonly IPasswordService _passwordService = passwordService;
         private readonly ISecurityService _securityService = securityService;
         private readonly IEmailService _emailService = emailService;
+        private readonly ApplicationDbContext _context = context;
+        private readonly FrontendSettings _frontendSettings = frontendOptions.Value;
+        private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
         public async Task<Result<bool>> ChangePassword(
             Guid authenticatedUserId,
@@ -429,7 +431,7 @@ namespace Expensify.API.ServiceClasses
             CancellationToken cancellationToken
         )
         {
-            if (ValidationHelpers.HasEmptyOrWhiteSpace(refreshToken))
+            if (ValidationHelpers.HasEmptyOrWhiteSpace(refreshToken) || refreshToken == null)
             {
                 return new Result<bool>(
                     new ValidationException(
@@ -470,7 +472,6 @@ namespace Expensify.API.ServiceClasses
             }
             catch (DbUpdateConcurrencyException)
             {
-                // Another request already revoked the token, so the desired state was reached.
                 return new Result<bool>(true);
             }
             catch (Exception ex)
@@ -514,12 +515,188 @@ namespace Expensify.API.ServiceClasses
             }
         }
 
-        public Task<Result<RefreshTokenResponseDTO>> RefreshTokens(
+        public async Task<Result<RefreshTokenResponseDTO>> RefreshTokens(
             RefreshTokensDTO request,
             CancellationToken cancellationToken
         )
         {
-            throw new NotImplementedException();
+            if (ValidationHelpers.HasEmptyOrWhiteSpace(request.RefreshToken))
+            {
+                return new Result<RefreshTokenResponseDTO>(
+                    new ValidationException("Refresh token is required.")
+                );
+            }
+
+            var refreshTokenHash = _securityService.HashToken(request.RefreshToken);
+            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            await using var transaction = await _context.Database.BeginTransactionAsync(
+                cancellationToken
+            );
+
+            try
+            {
+                /*
+                 * Find the token regardless of whether it has been revoked.
+                 * This allows reused, previously rotated tokens to be detected.
+                 */
+                var existingRefreshToken = await _context.RefreshTokens.FirstOrDefaultAsync(
+                    token => token.TokenHash == refreshTokenHash,
+                    cancellationToken
+                );
+
+                if (existingRefreshToken is null)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+
+                    return new Result<RefreshTokenResponseDTO>(
+                        new UnauthorizedAccessException(
+                            "The refresh token is invalid or has expired."
+                        )
+                    );
+                }
+
+                /*
+                 * A revoked token being submitted again may indicate token reuse.
+                 * Revoke all remaining sessions for the affected user.
+                 */
+                if (existingRefreshToken.IsRevoked || existingRefreshToken.RevokedAt != null)
+                {
+                    await RevokeAllRefreshTokens(
+                        existingRefreshToken.UserId,
+                        "Previously revoked refresh token was reused.",
+                        currentTimestamp,
+                        cancellationToken
+                    );
+
+                    await _context.SaveChangesAsync(cancellationToken);
+                    await transaction.CommitAsync(cancellationToken);
+
+                    return new Result<RefreshTokenResponseDTO>(
+                        new UnauthorizedAccessException(
+                            "The refresh token is invalid or has expired."
+                        )
+                    );
+                }
+
+                if (existingRefreshToken.ExpiresAt <= currentTimestamp)
+                {
+                    existingRefreshToken.IsRevoked = true;
+                    existingRefreshToken.RevokedAt = currentTimestamp;
+                    existingRefreshToken.RevocationReason = "Refresh token expired.";
+                    existingRefreshToken.LastUpdatedBy = existingRefreshToken.UserId;
+                    existingRefreshToken.UpdatedDate = currentTimestamp;
+
+                    await _context.SaveChangesAsync(cancellationToken);
+                    await transaction.CommitAsync(cancellationToken);
+
+                    return new Result<RefreshTokenResponseDTO>(
+                        new UnauthorizedAccessException(
+                            "The refresh token is invalid or has expired."
+                        )
+                    );
+                }
+
+                var foundUser = await _context.Users.FirstOrDefaultAsync(
+                    user => user.Id == existingRefreshToken.UserId,
+                    cancellationToken
+                );
+
+                if (foundUser is null)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+
+                    return new Result<RefreshTokenResponseDTO>(
+                        new UnauthorizedAccessException(
+                            "The refresh token is invalid or has expired."
+                        )
+                    );
+                }
+
+                /*
+                 * Generate the new raw refresh token.
+                 * Only its hash will be stored in the database.
+                 */
+                var newRawRefreshToken = _securityService.GenerateSecureToken();
+                var newRefreshTokenHash = _securityService.HashToken(newRawRefreshToken);
+
+                var newRefreshToken = new RefreshToken
+                {
+                    UserId = foundUser.Id,
+                    TokenHash = newRefreshTokenHash,
+                    ExpiresAt = DateTimeOffset
+                        .UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays)
+                        .ToUnixTimeSeconds(),
+                    IsRevoked = false,
+                    CreatedBy = foundUser.Id,
+                    CreateDate = currentTimestamp,
+                };
+
+                /*
+                 * Revoke the token that was just exchanged.
+                 * It cannot be used to request another token pair.
+                 */
+                existingRefreshToken.IsRevoked = true;
+                existingRefreshToken.RevokedAt = currentTimestamp;
+                existingRefreshToken.RevocationReason = "Replaced during refresh-token rotation.";
+                existingRefreshToken.LastUpdatedBy = foundUser.Id;
+                existingRefreshToken.UpdatedDate = currentTimestamp;
+
+                _context.RefreshTokens.Add(newRefreshToken);
+
+                var newAccessToken = _jwtService.GenerateToken(foundUser);
+
+                await _context.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+
+                return new Result<RefreshTokenResponseDTO>(
+                    new RefreshTokenResponseDTO
+                    {
+                        AccessToken = newAccessToken,
+                        RefreshToken = newRawRefreshToken,
+                        ExpiresIn = _jwtSettings.ExpirationMinutes * 60,
+                    }
+                );
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+
+                return new Result<RefreshTokenResponseDTO>(
+                    new UnauthorizedAccessException(
+                        "The refresh token is invalid or has already been used."
+                    )
+                );
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+
+                return new Result<RefreshTokenResponseDTO>(ex);
+            }
+        }
+
+        private async Task RevokeAllRefreshTokens(
+            Guid userId,
+            string reason,
+            long currentTimestamp,
+            CancellationToken cancellationToken
+        )
+        {
+            var activeRefreshTokens = await _context
+                .RefreshTokens.Where(token =>
+                    token.UserId == userId && !token.IsRevoked && token.RevokedAt == null
+                )
+                .ToListAsync(cancellationToken);
+
+            foreach (var token in activeRefreshTokens)
+            {
+                token.IsRevoked = true;
+                token.RevokedAt = currentTimestamp;
+                token.RevocationReason = reason;
+                token.LastUpdatedBy = userId;
+                token.UpdatedDate = currentTimestamp;
+            }
         }
 
         public async Task<Result<UserTokenResponseDTO>> RegisterUser(

@@ -13,7 +13,8 @@ namespace Expensify.API.ServiceClasses
         IPasswordService passwordService,
         ISecurityService securityService,
         IJwtService jwtService,
-        IOptions<FrontendSettings> frontendOptions
+        IOptions<FrontendSettings> frontendOptions,
+        IOptions<JwtSettings> jwtOptions
     ) : IService
     {
         private readonly ApplicationDbContext _context =
@@ -23,6 +24,7 @@ namespace Expensify.API.ServiceClasses
         private readonly ISecurityService _securityService = securityService;
         private readonly IEmailService _emailService = emailService;
         private readonly IOptions<FrontendSettings> _frontendSettings = frontendOptions;
+        private readonly IOptions<JwtSettings> _jwtSettings = jwtOptions;
 
         public IAuthService AuthService =>
             field
@@ -32,7 +34,8 @@ namespace Expensify.API.ServiceClasses
                 _passwordService,
                 _securityService,
                 _emailService,
-                _frontendSettings
+                _frontendSettings,
+                _jwtSettings
             );
         public IDashboardService DashboardService => field ?? new DashboardService(_context);
         public IExpenseService ExpenseService => field ?? new ExpenseService(_context);

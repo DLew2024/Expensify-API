@@ -177,7 +177,7 @@ public class AuthController : AuthorizationControllerBase
                 error switch
                 {
                     ValidationException ex => BadRequest(ex.Message),
-                    EntityNotFoundException ex => NotFound(ex.Message),
+                    UnauthorizedAccessException ex => Unauthorized(ex.Message),
                     _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
