@@ -24,7 +24,12 @@ public class AccountType : Auditable
     /// <summary>
     /// The user who owns this account type.
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
+
+    /// <summary>
+    /// Navigation property for the user who owns this account type.
+    /// </summary>
+    public User? User { get; set; }
 
     /// <summary>
     /// Optional description of the account type.
@@ -43,23 +48,6 @@ public class AccountType : Auditable
     /// Inactive account types cannot be assigned to new accounts.
     /// </summary>
     public bool IsActive { get; set; } = true;
-
-    /// <summary>
-    /// Icon identifier used when displaying the account type.
-    /// Example: "bank", "credit-card", or "wallet".
-    /// </summary>
-    public string? Icon { get; set; }
-
-    /// <summary>
-    /// Accent color used when displaying the account type.
-    /// Example: "#2563EB".
-    /// </summary>
-    public string? Color { get; set; }
-
-    /// <summary>
-    /// Navigation property for the user who owns this account type.
-    /// </summary>
-    public User User { get; set; } = null!;
 
     /// <summary>
     /// Accounts that use this account type.

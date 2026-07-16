@@ -96,4 +96,14 @@ public class User
     /// Refresh tokens issued to this user.
     /// </summary>
     public List<RefreshToken> RefreshTokens { get; set; } = [];
+
+    /// <summary>
+    /// Account types created by or assigned to this user.
+    /// </summary>
+    public List<AccountType> AccountTypes { get; set; } = [];
+
+    /// <summary>
+    /// Payment methods created by the user.
+    /// </summary>
+    public List<PaymentMethod> PaymentMethods { get; set; } = [];
 }

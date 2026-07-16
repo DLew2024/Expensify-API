@@ -59,6 +59,12 @@ public class RecurringTransaction : Identifiable
     public string? Notes { get; set; }
 
     /// <summary>
+    /// The payment method used by generated transactions.
+    /// Null when no payment method is assigned.
+    /// </summary>
+    public Guid? PaymentMethodId { get; set; }
+
+    /// <summary>
     /// Payment method used by generated transactions.
     /// </summary>
     public PaymentMethod? PaymentMethod { get; set; }

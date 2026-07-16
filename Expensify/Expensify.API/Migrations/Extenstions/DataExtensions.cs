@@ -25,6 +25,7 @@ public static class DataExtensions
                 connectionString,
                 npgsqlOptions =>
                 {
+                    npgsqlOptions.MigrationsAssembly("Expensify.API");
                     npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "public");
                 }
             );

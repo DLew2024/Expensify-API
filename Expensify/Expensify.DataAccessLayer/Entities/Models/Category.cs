@@ -1,5 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
-using Expensify.DataAccessLayer.Entities.Models;
+
+namespace Expensify.DataAccessLayer.Entities.Models;
 
 /// <summary>
 /// Represents a category used to organize transactions and budgets.
@@ -22,7 +23,12 @@ public class Category : Auditable
     /// <summary>
     /// The user who owns this category.
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
+
+    /// <summary>
+    /// Navigation property for the category owner.
+    /// </summary>
+    public User? User { get; set; }
 
     /// <summary>
     /// Optional description of the category.
@@ -40,23 +46,6 @@ public class Category : Auditable
     /// Inactive categories remain available for historical transactions.
     /// </summary>
     public bool IsActive { get; set; } = true;
-
-    /// <summary>
-    /// Icon identifier used when displaying the category.
-    /// Example: "shopping-cart", "house", or "car".
-    /// </summary>
-    public string? Icon { get; set; }
-
-    /// <summary>
-    /// Accent color used when displaying the category.
-    /// Example: "#16A34A".
-    /// </summary>
-    public string? Color { get; set; }
-
-    /// <summary>
-    /// Navigation property for the category owner.
-    /// </summary>
-    public User User { get; set; } = null!;
 
     /// <summary>
     /// Transactions assigned to this category.

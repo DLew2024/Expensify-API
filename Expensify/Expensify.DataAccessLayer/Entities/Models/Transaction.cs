@@ -81,6 +81,11 @@ public class Transaction : Identifiable
     public bool IsRecurring { get; set; }
 
     /// <summary>
+    /// The payment method associated with this transaction.
+    /// </summary>
+    public Guid? PaymentMethodId { get; set; }
+
+    /// <summary>
     /// The payment method used to complete the transaction.
     /// Example: Credit Card, Debit Card, Cash.
     /// </summary>

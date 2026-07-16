@@ -31,10 +31,15 @@ public class Account : IAuditableEntity
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// The account type assigned to this account.
+    /// </summary>
+    public Guid AccountTypeId { get; set; }
+
+    /// <summary>
     /// The type of financial account.
     /// Example: Checking, Savings, CreditCard, Cash, Loan.
     /// </summary>
-    public AccountType? AccountType { get; set; }
+    public AccountType AccountType { get; set; } = null!;
 
     /// <summary>
     /// The name of the financial institution.

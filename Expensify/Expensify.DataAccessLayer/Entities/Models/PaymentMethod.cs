@@ -46,18 +46,6 @@ public class PaymentMethod : Auditable
     public bool IsActive { get; set; } = true;
 
     /// <summary>
-    /// Icon identifier used by the user interface.
-    /// Example: "credit-card", "wallet", or "bank".
-    /// </summary>
-    public string? Icon { get; set; }
-
-    /// <summary>
-    /// Accent color used when displaying the payment method.
-    /// Example: "#2563EB".
-    /// </summary>
-    public string? Color { get; set; }
-
-    /// <summary>
     /// Navigation property for the owner of the payment method.
     /// </summary>
     public User User { get; set; } = null!;
