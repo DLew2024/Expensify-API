@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.API.Controllers;
 
-//[Route("api/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public abstract class AuthorizationControllerBase : ControllerBase
