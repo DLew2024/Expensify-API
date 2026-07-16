@@ -184,7 +184,7 @@ public class AuthController : AuthorizationControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost(Name = "Register")]
+    [HttpPost("register", Name = "Register")]
     public async Task<ActionResult<UserTokenResponseDTO>> RegisterUser(
         RegisterUserDTO request,
         CancellationToken cancellationToken
