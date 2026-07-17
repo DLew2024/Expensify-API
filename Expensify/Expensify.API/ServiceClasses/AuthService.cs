@@ -708,11 +708,15 @@ public class AuthService(
         if (!ValidationHelpers.IsValidEmail(request.Email))
         {
             return new Result<UserTokenResponseDTO>(
-                new ValidationException("Passed email is not in correct format.")
+                new ValidationException("Passed email is not in the correct format.")
             );
         }
 
         var normalizedEmail = ValidationHelpers.Normalize(request.Email);
+
+        await using var transaction = await _context.Database.BeginTransactionAsync(
+            cancellationToken
+        );
 
         try
         {
@@ -731,31 +735,39 @@ public class AuthService(
             var newUser = new User
             {
                 Id = Guid.NewGuid(),
-                FullName = $"{request.FirstName} {request.LastName}",
+                FullName = $"{request.FirstName.Trim()} {request.LastName.Trim()}",
                 Email = normalizedEmail,
                 Password = _passwordService.HashPassword(request.Password),
                 ProfileImageUrl = request.ProfileImageURl,
             };
 
+            var token = _jwtService.GenerateToken(newUser);
+
+            var response = new UserTokenResponseDTO
+            {
+                User = UserResponseDTO.FromUser(newUser),
+                Token = token,
+            };
+
             _context.Users.Add(newUser);
 
             await _context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
 
-            var token = _jwtService.GenerateToken(newUser);
-
-            return new Result<UserTokenResponseDTO>(
-                new UserTokenResponseDTO { User = UserResponseDTO.FromUser(newUser), Token = token }
-            );
+            return new Result<UserTokenResponseDTO>(response);
         }
         catch (DbUpdateException ex)
         {
-            // Handles race conditions where another request inserts the same email
+            await transaction.RollbackAsync(cancellationToken);
+
             return new Result<UserTokenResponseDTO>(
                 new ConflictException("A user with this email already exists.", ex)
             );
         }
         catch (Exception ex)
         {
+            await transaction.RollbackAsync(cancellationToken);
+
             return new Result<UserTokenResponseDTO>(ex);
         }
     }

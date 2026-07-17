@@ -193,14 +193,14 @@ public class AuthController : AuthorizationControllerBase
     )
     {
         var result = await _service.AuthService.RegisterUser(request, cancellationToken);
-        return result.Match<ActionResult>(
-            succees => StatusCode(StatusCodes.Status201Created),
+        return result.Match<ActionResult<UserTokenResponseDTO>>(
+            success => StatusCode(StatusCodes.Status201Created, success),
             error =>
                 error switch
                 {
                     ValidationException ex => BadRequest(ex.Message),
                     ConflictException ex => Conflict(ex.Message),
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
