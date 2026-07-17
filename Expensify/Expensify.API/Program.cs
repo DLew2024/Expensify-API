@@ -2,7 +2,10 @@ using Expensify.API.Configurations;
 using Expensify.API.Migrations.Extenstions;
 using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Utility.Filters;
+using Expensify.API.Utility.Validation.Auth;
 using Expensify.Services.Interfaces;
+using FluentValidation;
 using Scalar.AspNetCore;
 using static Expensify.API.Utility.Constants;
 
@@ -28,6 +31,8 @@ builder.Services.AddCors(options =>
     );
 });
 
+builder.Services.AddValidatorsFromAssemblyContaining<LoginUserDTOValidator>();
+
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.Configure<FrontendSettings>(builder.Configuration.GetSection("FrontendSettings"));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
@@ -42,6 +47,7 @@ builder.Services.AddScoped<IIncomeService, IncomeService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped(typeof(ValidationFilter<>));
 
 // Add Transient for Validator
 //builder.Services.AddTransient<IValidator<DTO>, DTOValidator>();

@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Expensify.API.DTOs.AuthDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Utility.Filters;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -119,6 +120,7 @@ public class AuthController : AuthorizationControllerBase
     // Add unauthroized logs
     [AllowAnonymous]
     [HttpPost("login", Name = "Login")]
+    [ServiceFilter(typeof(ValidationFilter<LoginUserDTO>))]
     public async Task<ActionResult<UserTokenResponseDTO>> LoginUser(
         LoginUserDTO request,
         CancellationToken cancellationToken

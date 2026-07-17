@@ -2,6 +2,6 @@
 
 public class UserTokenResponseDTO
 {
-    public Guid UserId { get; set; }
+    public required UserResponseDTO User { get; set; }
     public required string Token { get; set; }
 }
