@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace Expensify.API.Utility.Functions
+namespace Expensify.API.Utility.Validators
 {
     public class ValidationHelpers
     {

@@ -1,4 +1,5 @@
-﻿using Expensify.API.Configurations;
+﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.Configurations;
 using Expensify.API.DTOs.AuthDTOs;
 using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
@@ -9,7 +10,6 @@ using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
-using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.UnitTests.IntergrationTests;
 
@@ -36,10 +36,7 @@ public class AuthServiceTests : IDisposable
         _context = new ApplicationDbContext(databaseOptions);
 
         var frontendSettings = Options.Create(
-            new FrontendSettings
-            {
-                BaseUrl = "https://localhost:5173",
-            }
+            new FrontendSettings { BaseUrl = "https://localhost:5173" }
         );
 
         var jwtSettings = Options.Create(
@@ -77,10 +74,7 @@ public class AuthServiceTests : IDisposable
         };
 
         // Act
-        var result = await _authService.RegisterUser(
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.RegisterUser(request, CancellationToken.None);
 
         // Assert
         var exception = GetException(result);
@@ -95,19 +89,14 @@ public class AuthServiceTests : IDisposable
             Times.Never
         );
 
-        _jwtServiceMock.Verify(
-            service => service.GenerateToken(It.IsAny<User>()),
-            Times.Never
-        );
+        _jwtServiceMock.Verify(service => service.GenerateToken(It.IsAny<User>()), Times.Never);
     }
 
     [Theory]
     [InlineData("invalid-email")]
     [InlineData("user@")]
     [InlineData("@example.com")]
-    public async Task RegisterUser_WhenEmailIsInvalid_ReturnsValidationException(
-        string email
-    )
+    public async Task RegisterUser_WhenEmailIsInvalid_ReturnsValidationException(string email)
     {
         // Arrange
         var request = new RegisterUserDTO
@@ -119,18 +108,13 @@ public class AuthServiceTests : IDisposable
         };
 
         // Act
-        var result = await _authService.RegisterUser(
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.RegisterUser(request, CancellationToken.None);
 
         // Assert
         var exception = GetException(result);
 
         exception.Should().BeOfType<ValidationException>();
-        exception.Message.Should().Be(
-            "Passed email is not in the correct format."
-        );
+        exception.Message.Should().Be("Passed email is not in the correct format.");
 
         _context.Users.Should().BeEmpty();
     }
@@ -160,18 +144,13 @@ public class AuthServiceTests : IDisposable
         };
 
         // Act
-        var result = await _authService.RegisterUser(
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.RegisterUser(request, CancellationToken.None);
 
         // Assert
         var exception = GetException(result);
 
         exception.Should().BeOfType<ConflictException>();
-        exception.Message.Should().Be(
-            "A user with this email already exists."
-        );
+        exception.Message.Should().Be("A user with this email already exists.");
 
         _context.Users.Should().ContainSingle();
 
@@ -207,10 +186,7 @@ public class AuthServiceTests : IDisposable
         };
 
         // Act
-        var result = await _authService.RegisterUser(
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.RegisterUser(request, CancellationToken.None);
 
         // Assert
         var response = GetSuccess(result);
@@ -224,22 +200,17 @@ public class AuthServiceTests : IDisposable
         createdUser.FullName.Should().Be("Darius Lewis");
         createdUser.Email.Should().Be("darius@example.com");
         createdUser.Password.Should().Be(passwordHash);
-        createdUser.ProfileImageUrl.Should().Be(
-            "https://example.com/profile.png"
-        );
+        createdUser.ProfileImageUrl.Should().Be("https://example.com/profile.png");
 
-        _passwordServiceMock.Verify(
-            service => service.HashPassword(rawPassword),
-            Times.Once
-        );
+        _passwordServiceMock.Verify(service => service.HashPassword(rawPassword), Times.Once);
 
         _jwtServiceMock.Verify(
-            service => service.GenerateToken(
-                It.Is<User>(user =>
-                    user.Email == "darius@example.com"
-                    && user.FullName == "Darius Lewis"
-                )
-            ),
+            service =>
+                service.GenerateToken(
+                    It.Is<User>(user =>
+                        user.Email == "darius@example.com" && user.FullName == "Darius Lewis"
+                    )
+                ),
             Times.Once
         );
     }
@@ -248,17 +219,10 @@ public class AuthServiceTests : IDisposable
     public async Task LoginUser_WhenUserDoesNotExist_ReturnsUnauthorizedAccessException()
     {
         // Arrange
-        var request = new LoginUserDTO
-        {
-            Email = "missing@example.com",
-            Password = "Password123!",
-        };
+        var request = new LoginUserDTO { Email = "missing@example.com", Password = "Password123!" };
 
         // Act
-        var result = await _authService.LoginUser(
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.LoginUser(request, CancellationToken.None);
 
         // Assert
         var exception = GetException(result);
@@ -267,17 +231,11 @@ public class AuthServiceTests : IDisposable
         exception.Message.Should().Be("Invalid email or password.");
 
         _passwordServiceMock.Verify(
-            service => service.VerifyPassword(
-                It.IsAny<string>(),
-                It.IsAny<string>()
-            ),
+            service => service.VerifyPassword(It.IsAny<string>(), It.IsAny<string>()),
             Times.Never
         );
 
-        _jwtServiceMock.Verify(
-            service => service.GenerateToken(It.IsAny<User>()),
-            Times.Never
-        );
+        _jwtServiceMock.Verify(service => service.GenerateToken(It.IsAny<User>()), Times.Never);
     }
 
     [Fact]
@@ -296,12 +254,7 @@ public class AuthServiceTests : IDisposable
         await _context.SaveChangesAsync();
 
         _passwordServiceMock
-            .Setup(service =>
-                service.VerifyPassword(
-                    "WrongPassword!",
-                    "stored-password-hash"
-                )
-            )
+            .Setup(service => service.VerifyPassword("WrongPassword!", "stored-password-hash"))
             .Returns(false);
 
         var request = new LoginUserDTO
@@ -311,10 +264,7 @@ public class AuthServiceTests : IDisposable
         };
 
         // Act
-        var result = await _authService.LoginUser(
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.LoginUser(request, CancellationToken.None);
 
         // Assert
         var exception = GetException(result);
@@ -322,10 +272,7 @@ public class AuthServiceTests : IDisposable
         exception.Should().BeOfType<UnauthorizedAccessException>();
         exception.Message.Should().Be("Invalid email or password.");
 
-        _jwtServiceMock.Verify(
-            service => service.GenerateToken(It.IsAny<User>()),
-            Times.Never
-        );
+        _jwtServiceMock.Verify(service => service.GenerateToken(It.IsAny<User>()), Times.Never);
     }
 
     [Fact]
@@ -346,12 +293,7 @@ public class AuthServiceTests : IDisposable
         await _context.SaveChangesAsync();
 
         _passwordServiceMock
-            .Setup(service =>
-                service.VerifyPassword(
-                    "Password123!",
-                    "stored-password-hash"
-                )
-            )
+            .Setup(service => service.VerifyPassword("Password123!", "stored-password-hash"))
             .Returns(true);
 
         _jwtServiceMock
@@ -365,10 +307,7 @@ public class AuthServiceTests : IDisposable
         };
 
         // Act
-        var result = await _authService.LoginUser(
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.LoginUser(request, CancellationToken.None);
 
         // Assert
         var response = GetSuccess(result);
@@ -379,18 +318,12 @@ public class AuthServiceTests : IDisposable
         response.User.FullName.Should().Be(user.FullName);
 
         _passwordServiceMock.Verify(
-            service =>
-                service.VerifyPassword(
-                    "Password123!",
-                    "stored-password-hash"
-                ),
+            service => service.VerifyPassword("Password123!", "stored-password-hash"),
             Times.Once
         );
 
         _jwtServiceMock.Verify(
-            service => service.GenerateToken(
-                It.Is<User>(foundUser => foundUser.Id == user.Id)
-            ),
+            service => service.GenerateToken(It.Is<User>(foundUser => foundUser.Id == user.Id)),
             Times.Once
         );
     }
@@ -420,10 +353,7 @@ public class AuthServiceTests : IDisposable
         exception.Message.Should().Be("New passwords do not match.");
 
         _passwordServiceMock.Verify(
-            service => service.VerifyPassword(
-                It.IsAny<string>(),
-                It.IsAny<string>()
-            ),
+            service => service.VerifyPassword(It.IsAny<string>(), It.IsAny<string>()),
             Times.Never
         );
     }
@@ -445,10 +375,7 @@ public class AuthServiceTests : IDisposable
 
         _passwordServiceMock
             .Setup(service =>
-                service.VerifyPassword(
-                    "IncorrectCurrentPassword!",
-                    "stored-password-hash"
-                )
+                service.VerifyPassword("IncorrectCurrentPassword!", "stored-password-hash")
             )
             .Returns(false);
 
@@ -460,19 +387,13 @@ public class AuthServiceTests : IDisposable
         };
 
         // Act
-        var result = await _authService.ChangePassword(
-            user.Id,
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.ChangePassword(user.Id, request, CancellationToken.None);
 
         // Assert
         var exception = GetException(result);
 
         exception.Should().BeOfType<ValidationException>();
-        exception.Message.Should().Be(
-            "The current password is incorrect."
-        );
+        exception.Message.Should().Be("The current password is incorrect.");
 
         _passwordServiceMock.Verify(
             service => service.HashPassword(It.IsAny<string>()),
@@ -496,12 +417,7 @@ public class AuthServiceTests : IDisposable
         await _context.SaveChangesAsync();
 
         _passwordServiceMock
-            .Setup(service =>
-                service.VerifyPassword(
-                    "CurrentPassword123!",
-                    "stored-password-hash"
-                )
-            )
+            .Setup(service => service.VerifyPassword("CurrentPassword123!", "stored-password-hash"))
             .Returns(true);
 
         var request = new ChangePasswordDTO
@@ -512,19 +428,15 @@ public class AuthServiceTests : IDisposable
         };
 
         // Act
-        var result = await _authService.ChangePassword(
-            user.Id,
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.ChangePassword(user.Id, request, CancellationToken.None);
 
         // Assert
         var exception = GetException(result);
 
         exception.Should().BeOfType<ValidationException>();
-        exception.Message.Should().Be(
-            "The new password must be different from the current password."
-        );
+        exception
+            .Message.Should()
+            .Be("The new password must be different from the current password.");
 
         _passwordServiceMock.Verify(
             service => service.HashPassword(It.IsAny<string>()),
@@ -553,21 +465,11 @@ public class AuthServiceTests : IDisposable
         await _context.SaveChangesAsync();
 
         _passwordServiceMock
-            .Setup(service =>
-                service.VerifyPassword(
-                    currentPassword,
-                    currentPasswordHash
-                )
-            )
+            .Setup(service => service.VerifyPassword(currentPassword, currentPasswordHash))
             .Returns(true);
 
         _passwordServiceMock
-            .Setup(service =>
-                service.VerifyPassword(
-                    newPassword,
-                    currentPasswordHash
-                )
-            )
+            .Setup(service => service.VerifyPassword(newPassword, currentPasswordHash))
             .Returns(false);
 
         _passwordServiceMock
@@ -582,11 +484,7 @@ public class AuthServiceTests : IDisposable
         };
 
         // Act
-        var result = await _authService.ChangePassword(
-            user.Id,
-            request,
-            CancellationToken.None
-        );
+        var result = await _authService.ChangePassword(user.Id, request, CancellationToken.None);
 
         // Assert
         var response = GetSuccess(result);
@@ -598,28 +496,27 @@ public class AuthServiceTests : IDisposable
         updatedUser.Should().NotBeNull();
         updatedUser!.Password.Should().Be(newPasswordHash);
 
-        _passwordServiceMock.Verify(
-            service => service.HashPassword(newPassword),
-            Times.Once
-        );
+        _passwordServiceMock.Verify(service => service.HashPassword(newPassword), Times.Once);
     }
 
     private static T GetSuccess<T>(Result<T> result)
     {
         return result.Match(
             success => success,
-            exception => throw new Xunit.Sdk.XunitException(
-                $"Expected a successful result, but received: {exception}"
-            )
+            exception =>
+                throw new Xunit.Sdk.XunitException(
+                    $"Expected a successful result, but received: {exception}"
+                )
         );
     }
 
     private static Exception GetException<T>(Result<T> result)
     {
         return result.Match<Exception>(
-            _ => throw new Xunit.Sdk.XunitException(
-                "Expected a failed result, but the operation succeeded."
-            ),
+            _ =>
+                throw new Xunit.Sdk.XunitException(
+                    "Expected a failed result, but the operation succeeded."
+                ),
             exception => exception
         );
     }

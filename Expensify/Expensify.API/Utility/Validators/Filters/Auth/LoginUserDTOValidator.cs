@@ -1,7 +1,7 @@
 ﻿using Expensify.API.DTOs.AuthDTOs;
 using FluentValidation;
 
-namespace Expensify.API.Utility.Validation.Auth;
+namespace Expensify.API.Utility.Validators.Filters.Auth;
 
 public class LoginUserDTOValidator : AbstractValidator<LoginUserDTO>
 {

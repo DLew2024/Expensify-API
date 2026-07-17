@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Expensify.API.Utility.Filters;
+namespace Expensify.API.Utility.Validators.Filters;
 
 public class ValidationFilter<TRequest>(IValidator<TRequest> validator) : IAsyncActionFilter
 {

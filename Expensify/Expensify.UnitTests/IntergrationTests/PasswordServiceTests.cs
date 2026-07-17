@@ -58,10 +58,7 @@ public class PasswordServiceTests
         var storedPasswordHash = _passwordService.HashPassword(correctPassword);
 
         // Act
-        var result = _passwordService.VerifyPassword(
-            incorrectPassword,
-            storedPasswordHash
-        );
+        var result = _passwordService.VerifyPassword(incorrectPassword, storedPasswordHash);
 
         // Assert
         result.Should().BeFalse();
@@ -77,10 +74,7 @@ public class PasswordServiceTests
         // Act
         var storedPasswordHash = _passwordService.HashPassword(password);
 
-        var result = _passwordService.VerifyPassword(
-            password,
-            storedPasswordHash
-        );
+        var result = _passwordService.VerifyPassword(password, storedPasswordHash);
 
         // Assert
         result.Should().BeTrue();

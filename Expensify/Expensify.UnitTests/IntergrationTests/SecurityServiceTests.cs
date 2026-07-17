@@ -34,8 +34,8 @@ public class SecurityServiceTests
     [InlineData(64)]
     [InlineData(128)]
     public void GenerateSecureToken_WhenLengthIsProvided_ReturnsRequestedNumberOfBytes(
-    int byteLength
-)
+        int byteLength
+    )
     {
         // Act
         var token = _securityService.GenerateSecureToken(byteLength);
@@ -111,4 +111,3 @@ public class SecurityServiceTests
         hashBytes.Should().HaveCount(32);
     }
 }
-

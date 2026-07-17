@@ -2,8 +2,8 @@
 using Expensify.API.Configurations;
 using Expensify.API.DTOs.AuthDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
-using Expensify.API.Utility.Functions;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
+using Expensify.API.Utility.Validators;
 using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Entities.Models;
 using Expensify.DataAccessLayer.Enums;
@@ -675,7 +675,7 @@ public class AuthService(
             );
         }
 
-         var normalizedEmail = ValidationHelpers.Normalize(request.Email);
+        var normalizedEmail = ValidationHelpers.Normalize(request.Email);
 
         if (!ValidationHelpers.IsValidEmail(normalizedEmail))
         {

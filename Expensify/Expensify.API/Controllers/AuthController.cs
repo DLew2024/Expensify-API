@@ -2,8 +2,8 @@
 using System.Security.Claims;
 using Expensify.API.DTOs.AuthDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
-using Expensify.API.Utility.Filters;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
+using Expensify.API.Utility.Validators.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
