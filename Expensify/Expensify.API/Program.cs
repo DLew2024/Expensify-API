@@ -7,8 +7,7 @@ using Scalar.AspNetCore;
 using static Expensify.API.Utility.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
-var allowedOrigins =
-    builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
 
 builder.AddApplicationDatabaseDB();
 builder.AddApplicationAuthentication();
@@ -20,13 +19,13 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(CorsPolicies.ReactFrontend, policy =>
-    {
-        policy
-            .WithOrigins(allowedOrigins!)
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
+    options.AddPolicy(
+        CorsPolicies.ReactFrontend,
+        policy =>
+        {
+            policy.WithOrigins(allowedOrigins!).AllowAnyHeader().AllowAnyMethod();
+        }
+    );
 });
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
