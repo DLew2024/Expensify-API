@@ -1,4 +1,5 @@
-﻿using Expensify.DataAccessLayer.Enums;
+﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
+using Expensify.DataAccessLayer.Enums;
 using Expensify.Entities.Interfaces;
 
 namespace Expensify.DataAccessLayer.Entities.Models;
@@ -7,13 +8,8 @@ namespace Expensify.DataAccessLayer.Entities.Models;
 /// Represents a financial account that belongs to a user.
 /// An account can contain many transactions and maintains a cached current balance.
 /// </summary>
-public class Account : IAuditableEntity
+public class Account : Auditable
 {
-    /// <summary>
-    /// Unique identifier for the account.
-    /// </summary>
-    public Guid Id { get; set; }
-
     /// <summary>
     /// The user who owns this account.
     /// </summary>
@@ -23,12 +19,6 @@ public class Account : IAuditableEntity
     /// The user navigation property for the account owner.
     /// </summary>
     public User User { get; set; } = null!;
-
-    /// <summary>
-    /// User-defined display name for the account.
-    /// Example: "Chase Checking", "Emergency Fund", "Discover Card".
-    /// </summary>
-    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The account type assigned to this account.
@@ -119,27 +109,4 @@ public class Account : IAuditableEntity
     /// All transactions associated with this account.
     /// </summary>
     public List<Transaction> Transactions { get; set; } = [];
-
-    /// <summary>
-    /// The user who created the account.
-    /// </summary>
-    public Guid CreatedBy { get; set; }
-
-    /// <summary>
-    /// Date the account was created.
-    /// Stored as a long timestamp.
-    /// </summary>
-    public long CreateDate { get; set; }
-
-    /// <summary>
-    /// The user who last updated the account.
-    /// Null if the account has never been updated.
-    /// </summary>
-    public Guid LastUpdatedBy { get; set; }
-
-    /// <summary>
-    /// Date the account was last updated.
-    /// Null if the account has never been updated.
-    /// </summary>
-    public long UpdatedDate { get; set; }
 }

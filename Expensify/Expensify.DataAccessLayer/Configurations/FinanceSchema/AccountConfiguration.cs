@@ -38,7 +38,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         builder.Property(account => account.Notes).HasMaxLength(DatabaseLengths.Notes);
 
-        // Stores CurrencyCode as an integer by default.
+        // Stores the currency code as an integer.
         builder.Property(account => account.CurrencyCode).IsRequired();
 
         // Configures monetary precision.
@@ -50,6 +50,9 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         // Supports percentage values such as 12.75.
         builder.Property(account => account.InterestRate).HasPrecision(5, 2);
+
+        // Uses PostgreSQL's xmin system column for optimistic concurrency control.
+        builder.Property<uint>("xmin").IsRowVersion();
 
         // One user can own many accounts.
         builder

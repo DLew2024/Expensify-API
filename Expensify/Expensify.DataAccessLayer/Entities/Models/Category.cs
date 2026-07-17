@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
+using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.DataAccessLayer.Entities.Models;
 
@@ -29,6 +30,11 @@ public class Category : Auditable
     /// Navigation property for the category owner.
     /// </summary>
     public User? User { get; set; }
+
+    /// <summary>
+    /// Indicates whether this category is for income or expense transactions.
+    /// </summary>
+    public CategoryType Type { get; set; }
 
     /// <summary>
     /// Optional description of the category.

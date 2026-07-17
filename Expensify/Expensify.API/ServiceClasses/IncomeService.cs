@@ -1,4 +1,5 @@
-﻿using Expensify.API.DTOs.IncomeDTOs;
+﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.DTOs.IncomeDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
@@ -20,8 +21,16 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
         CancellationToken cancellationToken
     )
     {
+        if (request.Amount <= 0)
+        {
+            return new Result<IncomeTransactionResponseDTO>(
+                new ValidationException("The income amount must be greater than zero.")
+            );
+        }
+
         var userAccount = await _context.Accounts.FirstOrDefaultAsync(
-            account => account.Id == request.AccountId && account.UserId == userId,
+            account =>
+                account.Id == request.AccountId && account.UserId == userId && !account.IsDeleted,
             cancellationToken
         );
 
@@ -32,14 +41,35 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
             );
         }
 
+        if (userAccount.ClosedDate.HasValue)
+        {
+            return new Result<IncomeTransactionResponseDTO>(
+                new ValidationException("Transactions cannot be added to a closed account.")
+            );
+        }
+
         if (request.BudgetId.HasValue)
         {
-            var budgetExists = await _context.Budgets.AnyAsync(
-                budget => budget.Id == request.BudgetId.Value,
+            var canUseBudget = await _context.Budgets.AnyAsync(
+                budget =>
+                    budget.Id == request.BudgetId.Value
+                    && budget.IsActive
+                    && !budget.IsDeleted
+                    && (
+                        budget.OwnerUserId == userId
+                        || budget.Members.Any(member =>
+                            member.UserId == userId
+                            && !member.IsDeleted
+                            && (
+                                member.Role == BudgetMemberRole.Admin
+                                || member.Role == BudgetMemberRole.Editor
+                            )
+                        )
+                    ),
                 cancellationToken
             );
 
-            if (!budgetExists)
+            if (!canUseBudget)
             {
                 return new Result<IncomeTransactionResponseDTO>(
                     new EntityNotFoundException("The requested budget could not be found.")
@@ -50,7 +80,12 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
         if (request.CategoryId.HasValue)
         {
             var categoryExists = await _context.Categories.AnyAsync(
-                category => category.Id == request.CategoryId.Value,
+                category =>
+                    category.Id == request.CategoryId.Value
+                    && !category.IsDeleted
+                    && category.IsActive
+                    && category.Type == CategoryType.Income
+                    && (category.UserId == userId || category.IsSystemDefault),
                 cancellationToken
             );
 
@@ -67,7 +102,8 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
             var paymentMethodExists = await _context.PaymentMethods.AnyAsync(
                 paymentMethod =>
                     paymentMethod.Id == request.PaymentMethodId.Value
-                    && paymentMethod.UserId == userId,
+                    && paymentMethod.UserId == userId
+                    && !paymentMethod.IsDeleted,
                 cancellationToken
             );
 
@@ -99,20 +135,24 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
                 Notes = request.Notes?.Trim(),
                 IsRecurring = request.IsRecurring,
                 PaymentMethodId = request.PaymentMethodId,
-                Tags = request
-                    .Tags.Select(tag => tag.Trim())
-                    .Where(tag => !string.IsNullOrWhiteSpace(tag))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .ToList(),
+                Tags =
+                    request
+                        .Tags?.Select(tag => tag.Trim())
+                        .Where(tag => !string.IsNullOrWhiteSpace(tag))
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .ToList()
+                    ?? [],
             };
 
             userAccount.CurrentBalance = newBalance;
 
-            await _context.Transactions.AddAsync(incomeTransaction, cancellationToken);
+            _context.Transactions.Add(incomeTransaction);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new Result<IncomeTransactionResponseDTO>(IncomeTransactionResponseDTO.FromTransaction(incomeTransaction));
+            return new Result<IncomeTransactionResponseDTO>(
+                IncomeTransactionResponseDTO.FromTransaction(incomeTransaction)
+            );
         }
         catch (OperationCanceledException)
         {
@@ -122,14 +162,28 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
         {
             _logger.LogWarning(
                 exception,
-                "A concurrency conflict occurred while adding income for user {UserId}.",
-                userId
+                "A concurrency conflict occurred while adding income for user {UserId} and account {AccountId}.",
+                userId,
+                request.AccountId
             );
 
             return new Result<IncomeTransactionResponseDTO>(
                 new ConflictException(
                     "The account was modified by another request. Please try again."
                 )
+            );
+        }
+        catch (DbUpdateException exception)
+        {
+            _logger.LogError(
+                exception,
+                "A database error occurred while adding income for user {UserId} and account {AccountId}.",
+                userId,
+                request.AccountId
+            );
+
+            return new Result<IncomeTransactionResponseDTO>(
+                new Exception("The income transaction could not be saved.")
             );
         }
         catch (Exception exception)
@@ -140,7 +194,9 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
                 userId
             );
 
-            return new Result<IncomeTransactionResponseDTO>(new Exception("The income transaction could not be added."));
+            return new Result<IncomeTransactionResponseDTO>(
+                new Exception("The income transaction could not be added.")
+            );
         }
     }
 
