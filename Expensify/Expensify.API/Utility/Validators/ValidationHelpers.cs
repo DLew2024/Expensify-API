@@ -59,7 +59,7 @@ namespace Expensify.API.Utility.Validators
         /// <returns>The normalized string, or an empty string if the input is null.</returns>
         public static string Normalize(string? value)
         {
-            return value?.Trim().ToLowerInvariant() ?? string.Empty;
+            return Trim(value).ToLowerInvariant();
         }
     }
 }
