@@ -28,7 +28,7 @@ namespace Expensify.API.DTOs.DashboardDTOs
         public string Notes { get; set; } = string.Empty;
         public PaymentMethod PaymentMethod { get; set; }
         public TransactionType Type { get; set; }
-        public TransactionStatus Status { get; set; }
+        public TransactionPostedStatus Status { get; set; }
         public Guid CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public bool IsRecurring { get; set; }

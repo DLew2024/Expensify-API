@@ -1,6 +1,6 @@
 ﻿namespace Expensify.DataAccessLayer.Enums;
 
-public enum TransactionStatus
+public enum TransactionPostedStatus
 {
     /// <summary>
     /// The transaction has been initiated but has not yet been completed.

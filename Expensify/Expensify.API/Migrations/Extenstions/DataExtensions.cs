@@ -21,14 +21,16 @@ public static class DataExtensions
                 );
             }
 
-            options.UseNpgsql(
-                connectionString,
-                npgsqlOptions =>
-                {
-                    npgsqlOptions.MigrationsAssembly("Expensify.API");
-                    npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "public");
-                }
-            );
+            options
+                .UseNpgsql(
+                    connectionString,
+                    npgsqlOptions =>
+                    {
+                        npgsqlOptions.MigrationsAssembly("Expensify.API");
+                        npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "public");
+                    }
+                )
+                .UseSnakeCaseNamingConvention();
         });
     }
 

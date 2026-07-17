@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Expensify.API.Utility.Functions
+namespace Expensify.API.Utility.Validators
 {
     public static class PasswordValidation
     {

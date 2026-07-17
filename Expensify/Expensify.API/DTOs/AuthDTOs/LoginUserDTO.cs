@@ -1,13 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Expensify.API.DTOs.AuthDTOs;
+﻿namespace Expensify.API.DTOs.AuthDTOs;
 
 public class LoginUserDTO
 {
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; } = string.Empty;
-
-    [Required]
-    public string Password { get; set; } = string.Empty;
+    public required string Email { get; set; }
+    public required string Password { get; set; }
 }

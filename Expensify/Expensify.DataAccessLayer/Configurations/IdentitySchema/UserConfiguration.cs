@@ -22,40 +22,34 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.ToTable("users", "identity");
 
         // Configures the primary key.
-        builder.HasKey(user => user.Id)
-            .HasName("pk_users");
+        builder.HasKey(user => user.Id).HasName("pk_users");
 
         // Configures the user's required full name.
-        builder.Property(user => user.FullName)
+        builder
+            .Property(user => user.FullName)
             .IsRequired()
             .HasMaxLength(DatabaseLengths.FullName);
 
         // Configures the user's required email address.
-        builder.Property(user => user.Email)
-            .IsRequired()
-            .HasMaxLength(DatabaseLengths.Email);
+        builder.Property(user => user.Email).IsRequired().HasMaxLength(DatabaseLengths.Email);
 
         // Configures the stored password hash.
         // Plain-text passwords should never be persisted.
-        builder.Property(user => user.Password)
+        builder
+            .Property(user => user.Password)
             .IsRequired()
             .HasMaxLength(DatabaseLengths.PasswordHash);
 
         // Configures the optional profile image URL.
-        builder.Property(user => user.ProfileImageUrl)
-            .HasMaxLength(DatabaseLengths.Url);
+        builder.Property(user => user.ProfileImageUrl).HasMaxLength(DatabaseLengths.Url);
 
         // Configures the email-verification status flag.
-        builder.Property(user => user.IsEmailVerified)
-            .IsRequired();
+        builder.Property(user => user.IsEmailVerified).IsRequired();
 
         // Configures the optional email-verification timestamp.
-        builder.Property(user => user.EmailVerifiedAt)
-            .IsRequired(false);
+        builder.Property(user => user.EmailVerifiedAt).IsRequired(false);
 
         // Ensures each email address is unique.
-        builder.HasIndex(user => user.Email)
-            .IsUnique()
-            .HasDatabaseName("ux_users_email");
+        builder.HasIndex(user => user.Email).IsUnique().HasDatabaseName("ux_users_email");
     }
 }

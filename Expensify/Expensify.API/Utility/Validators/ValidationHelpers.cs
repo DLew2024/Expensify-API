@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace Expensify.API.Utility.Functions
+namespace Expensify.API.Utility.Validators
 {
     public class ValidationHelpers
     {
@@ -24,11 +24,13 @@ namespace Expensify.API.Utility.Functions
                 return false;
             }
 
+            var trimmedEmail = email.Trim();
+
             try
             {
-                var address = new MailAddress(email);
+                var address = new MailAddress(trimmedEmail);
 
-                return address.Address.Equals(email, StringComparison.OrdinalIgnoreCase);
+                return address.Address.Equals(trimmedEmail, StringComparison.OrdinalIgnoreCase);
             }
             catch
             {
@@ -57,7 +59,7 @@ namespace Expensify.API.Utility.Functions
         /// <returns>The normalized string, or an empty string if the input is null.</returns>
         public static string Normalize(string? value)
         {
-            return value?.Trim().ToLowerInvariant() ?? string.Empty;
+            return Trim(value).ToLowerInvariant();
         }
     }
 }
