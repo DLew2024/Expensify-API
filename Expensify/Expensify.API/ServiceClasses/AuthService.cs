@@ -222,14 +222,14 @@ public class AuthService(
         CancellationToken cancellationToken
     )
     {
-        if (!ValidationHelpers.IsValidEmail(request.Email))
+        var normalizedEmail = ValidationHelpers.Normalize(request.Email);
+
+        if (!ValidationHelpers.IsValidEmail(normalizedEmail))
         {
             return new Result<bool>(
                 new ValidationException("Passed email is not in correct format.")
             );
         }
-
-        var normalizedEmail = ValidationHelpers.Normalize(request.Email);
 
         var foundUser = await _context.Users.FirstOrDefaultAsync(
             user => user.Email == normalizedEmail,
@@ -345,20 +345,6 @@ public class AuthService(
         CancellationToken cancellationToken
     )
     {
-        //if (ValidationHelpers.HasEmptyOrWhiteSpace(request.Email, request.Password))
-        //{
-        //    return new Result<UserTokenResponseDTO>(
-        //        new ValidationException("Email and password are required.")
-        //    );
-        //}
-
-        //if (!ValidationHelpers.IsValidEmail(request.Email))
-        //{
-        //    return new Result<UserTokenResponseDTO>(
-        //        new ValidationException("Passed email is not in correct format.")
-        //    );
-        //}
-
         var normalizedEmail = ValidationHelpers.Normalize(request.Email);
 
         try
@@ -531,10 +517,6 @@ public class AuthService(
 
         try
         {
-            /*
-             * Find the token regardless of whether it has been revoked.
-             * This allows reused, previously rotated tokens to be detected.
-             */
             var existingRefreshToken = await _context.RefreshTokens.FirstOrDefaultAsync(
                 token => token.TokenHash == refreshTokenHash,
                 cancellationToken
@@ -549,10 +531,6 @@ public class AuthService(
                 );
             }
 
-            /*
-             * A revoked token being submitted again may indicate token reuse.
-             * Revoke all remaining sessions for the affected user.
-             */
             if (existingRefreshToken.IsRevoked || existingRefreshToken.RevokedAt != null)
             {
                 await RevokeAllRefreshTokens(
@@ -600,10 +578,6 @@ public class AuthService(
                 );
             }
 
-            /*
-             * Generate the new raw refresh token.
-             * Only its hash will be stored in the database.
-             */
             var newRawRefreshToken = _securityService.GenerateSecureToken();
             var newRefreshTokenHash = _securityService.HashToken(newRawRefreshToken);
 
@@ -619,10 +593,6 @@ public class AuthService(
                 CreateDate = currentTimestamp,
             };
 
-            /*
-             * Revoke the token that was just exchanged.
-             * It cannot be used to request another token pair.
-             */
             existingRefreshToken.IsRevoked = true;
             existingRefreshToken.RevokedAt = currentTimestamp;
             existingRefreshToken.RevocationReason = "Replaced during refresh-token rotation.";
@@ -705,14 +675,14 @@ public class AuthService(
             );
         }
 
-        if (!ValidationHelpers.IsValidEmail(request.Email))
+         var normalizedEmail = ValidationHelpers.Normalize(request.Email);
+
+        if (!ValidationHelpers.IsValidEmail(normalizedEmail))
         {
             return new Result<UserTokenResponseDTO>(
                 new ValidationException("Passed email is not in the correct format.")
             );
         }
-
-        var normalizedEmail = ValidationHelpers.Normalize(request.Email);
 
         await using var transaction = await _context.Database.BeginTransactionAsync(
             cancellationToken

@@ -1,13 +1,14 @@
 ﻿namespace Expensify.API.DTOs.AuthDTOs;
 
+// Add DTO Validator
 public class RegisterUserDTO
 {
-    public string FirstName { get; set; } = string.Empty;
+    public required string FirstName { get; init; } 
 
-    public string LastName { get; set; } = string.Empty;
+    public required string LastName { get; init; } 
 
-    public string Email { get; set; } = string.Empty;
+    public required string Email { get; init; } 
 
-    public string Password { get; set; } = string.Empty;
-    public string ProfileImageURl { get; set; } = string.Empty;
+    public required string Password { get; init; }
+    public string ProfileImageURl { get; init; } = string.Empty;
 }

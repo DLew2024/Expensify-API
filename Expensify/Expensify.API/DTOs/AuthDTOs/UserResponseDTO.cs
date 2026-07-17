@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Expensify.DataAccessLayer.Entities.Models;
 
 namespace Expensify.API.DTOs.AuthDTOs;

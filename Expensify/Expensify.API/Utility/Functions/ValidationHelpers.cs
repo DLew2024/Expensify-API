@@ -24,11 +24,13 @@ namespace Expensify.API.Utility.Functions
                 return false;
             }
 
+            var trimmedEmail = email.Trim();
+
             try
             {
-                var address = new MailAddress(email);
+                var address = new MailAddress(trimmedEmail);
 
-                return address.Address.Equals(email, StringComparison.OrdinalIgnoreCase);
+                return address.Address.Equals(trimmedEmail, StringComparison.OrdinalIgnoreCase);
             }
             catch
             {
