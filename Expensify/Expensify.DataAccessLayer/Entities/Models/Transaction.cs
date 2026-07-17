@@ -12,12 +12,12 @@ public class Transaction : Identifiable
     /// <summary>
     /// The user who owns this transaction.
     /// </summary>
-    public Guid UserId { get; set; }
+    public required Guid UserId { get; set; }
 
     /// <summary>
     /// The account associated with this transaction.
     /// </summary>
-    public Guid AccountId { get; set; }
+    public required Guid AccountId { get; set; }
 
     /// <summary>
     /// The budget this transaction contributes to, if applicable.
@@ -33,42 +33,42 @@ public class Transaction : Identifiable
     /// <summary>
     /// The monetary amount of the transaction.
     /// </summary>
-    public decimal Amount { get; set; }
+    public required decimal Amount { get; set; }
 
     /// <summary>
     /// The account balance immediately after this transaction was applied.
     /// Used for historical balance tracking.
     /// </summary>
-    public decimal AccountBalanceAfterTransaction { get; set; }
+    public required decimal AccountBalanceAfterTransaction { get; set; }
 
     /// <summary>
     /// Indicates whether the transaction is an income, expense, or transfer.
     /// </summary>
-    public TransactionType Type { get; set; }
+    public required TransactionType Type { get; set; }
 
     /// <summary>
     /// The current processing status of the transaction.
     /// Example: Pending or Posted.
     /// </summary>
-    public TransactionStatus Status { get; set; }
+    public required TransactionPostedStatus Status { get; set; }
 
     /// <summary>
     /// The date the transaction occurred.
     /// Stored as a long timestamp.
     /// </summary>
-    public long TransactionDate { get; set; }
+    public required long TransactionDate { get; set; }
 
     /// <summary>
     /// Short description of the transaction.
     /// Example: "Monthly Rent" or "Paycheck".
     /// </summary>
-    public string Description { get; set; } = string.Empty;
+    public required string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// The merchant or payee associated with the transaction.
     /// Example: Walmart, Amazon, Starbucks.
     /// </summary>
-    public string? MerchantName { get; set; }
+    public required string MerchantName { get; set; }
 
     /// <summary>
     /// Optional notes entered by the user.

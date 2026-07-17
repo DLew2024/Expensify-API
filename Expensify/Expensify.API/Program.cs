@@ -4,6 +4,7 @@ using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.Validators.Filters;
 using Expensify.API.Utility.Validators.Filters.Auth;
+using Expensify.API.Utility.Validators.Filters.Income;
 using Expensify.Services.Interfaces;
 using FluentValidation;
 using Scalar.AspNetCore;
@@ -32,6 +33,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddValidatorsFromAssemblyContaining<LoginUserDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<AddIncomeTransactionDTOValidator>();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.Configure<FrontendSettings>(builder.Configuration.GetSection("FrontendSettings"));
