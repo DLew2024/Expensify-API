@@ -30,7 +30,7 @@ public class TransactionDTO
     public string Merchant { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Notes { get; set; } = string.Empty;
-    public required PaymentMethod PaymentMethod { get; set; }
+    public required PaymentMethodDTO PaymentMethod { get; set; }
     public TransactionType Type { get; set; }
     public TransactionPostedStatus Status { get; set; }
     public Guid CategoryId { get; set; }
@@ -48,7 +48,14 @@ public class TransactionDTO
             Merchant = transaction.MerchantName,
             Description = transaction.Description,
             Notes = transaction.Notes ?? string.Empty,
-            PaymentMethod = transaction.PaymentMethod!,
+            PaymentMethod =
+                transaction.PaymentMethod != null
+                    ? new PaymentMethodDTO
+                    {
+                        Id = transaction.PaymentMethod.Id,
+                        Name = transaction.PaymentMethod.Name,
+                    }
+                    : new PaymentMethodDTO { Id = Guid.Empty, Name = string.Empty },
             Type = transaction.Type,
             Status = transaction.Status,
             CategoryId = transaction.CategoryId ?? Guid.Empty,
@@ -56,4 +63,11 @@ public class TransactionDTO
             IsRecurring = transaction.IsRecurring,
             Tags = transaction.Tags,
         };
+}
+
+public class PaymentMethodDTO
+{
+    public Guid Id { get; set; }
+
+    public string Name { get; set; } = string.Empty;
 }

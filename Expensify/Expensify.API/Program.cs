@@ -18,8 +18,8 @@ builder.AddApplicationAuthentication();
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
-builder.Services.AddValidation();
 builder.Services.AddOpenApi();
+builder.Services.AddValidation();
 
 builder.Services.AddCors(options =>
 {
@@ -51,15 +51,15 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IService, Service>();
 builder.Services.AddScoped(typeof(ValidationFilter<>));
 
-// Add Transient for Validator
-//builder.Services.AddTransient<IValidator<DTO>, DTOValidator>();
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithOpenApiRoutePattern("/openapi/{documentName}.json");
+    });
 }
 
 app.UseHttpsRedirection();
