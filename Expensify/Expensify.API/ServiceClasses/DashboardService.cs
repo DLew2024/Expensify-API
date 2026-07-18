@@ -1,5 +1,4 @@
 ﻿using Expensify.API.DTOs.DashboardDTOs;
-using Expensify.API.Projections;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Enums;
