@@ -1,4 +1,3 @@
-﻿namespace Expensify.API.DTOs.ExpenseDTOs
-{
-    public class GetExpenseIncomeDTO { }
-}
+﻿namespace Expensify.API.DTOs.ExpenseDTOs;
+
+public class GetExpenseIncomeDTO { }

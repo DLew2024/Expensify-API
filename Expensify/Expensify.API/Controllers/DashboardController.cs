@@ -26,7 +26,7 @@ namespace Expensify.API.Controllers
             _service = service;
         }
 
-        [HttpGet("/", Name = "GetDashboardData")]
+        [HttpGet(Name = "GetDashboardData")]
         public async Task<ActionResult<DashboardDataResponseDTO>> GetDashboardData(
             CancellationToken cancellationToken
         )

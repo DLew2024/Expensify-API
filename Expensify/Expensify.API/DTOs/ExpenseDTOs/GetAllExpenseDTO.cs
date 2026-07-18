@@ -1,7 +1,6 @@
-﻿namespace Expensify.API.DTOs.ExpenseDTOs
+﻿namespace Expensify.API.DTOs.ExpenseDTOs;
+
+public class GetAllExpenseDTO
 {
-    public class GetAllExpenseDTO
-    {
-        public Guid UserID { get; set; }
-    }
+    public Guid UserId { get; set; }
 }

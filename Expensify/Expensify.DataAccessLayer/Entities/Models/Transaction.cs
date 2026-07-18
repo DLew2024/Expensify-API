@@ -128,4 +128,8 @@ public class Transaction : Identifiable
     /// Navigation property for the linked transfer transaction.
     /// </summary>
     public Transaction? LinkedTransaction { get; set; }
+
+    public Guid RecurringTransactionId { get; set; }
+
+    public string Icon { get; set; } = string.Empty;
 }

@@ -55,10 +55,12 @@ public class TransactionDTO
         {
             Id = transaction.Id,
             Amount = transaction.Amount,
+            Type = transaction.Type,
             TransactionDate = transaction.TransactionDate,
             Merchant = transaction.MerchantName,
             Description = transaction.Description,
             Notes = transaction.Notes ?? string.Empty,
+
             PaymentMethod =
                 transaction.PaymentMethod != null
                     ? new PaymentMethodDTO
@@ -67,8 +69,7 @@ public class TransactionDTO
                         Name = transaction.PaymentMethod.Name,
                     }
                     : new PaymentMethodDTO { Id = Guid.Empty, Name = string.Empty },
-            Type = transaction.Type,
-            Status = transaction.Status,
+
             Category =
                 transaction.Category != null
                     ? new CategoryDTO
@@ -78,8 +79,11 @@ public class TransactionDTO
                     }
                     : new CategoryDTO { Id = Guid.Empty, Name = string.Empty },
 
+            Status = transaction.Status,
             IsRecurring = transaction.IsRecurring,
+            RecurringTransactionId = transaction.RecurringTransactionId,
             Tags = transaction.Tags,
+            Icon = transaction.Icon,
         };
 }
 

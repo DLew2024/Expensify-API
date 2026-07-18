@@ -1,4 +1,7 @@
-﻿namespace Expensify.API.DTOs.IncomeDTOs;
+﻿using Expensify.DataAccessLayer.Entities.Models;
+using Expensify.DataAccessLayer.Enums;
+
+namespace Expensify.API.DTOs.IncomeDTOs;
 
 public class AddIncomeTransactionDTO
 {
@@ -35,7 +38,7 @@ public class AddIncomeTransactionDTO
     /// <summary>
     /// The employer, payer, or other source of the income.
     /// </summary>
-    public required string MerchantName { get; set; }
+    public required string Source { get; set; }
 
     /// <summary>
     /// Optional notes entered by the user.
@@ -56,4 +59,30 @@ public class AddIncomeTransactionDTO
     /// Optional tags used to organize the income transaction.
     /// </summary>
     public List<string> Tags { get; set; } = [];
+
+    public string Icon { get; set; } = string.Empty;
+
+    public Transaction ToTransaction(Guid userId, decimal accountBalanceAfterTransaction)
+    {
+        return new Transaction
+        {
+            UserId = userId,
+            AccountId = AccountId,
+            BudgetId = BudgetId,
+            CategoryId = CategoryId,
+            Amount = Amount,
+            AccountBalanceAfterTransaction = accountBalanceAfterTransaction,
+            Type = TransactionType.Income,
+            Status = TransactionPostedStatus.Posted,
+            TransactionDate = TransactionDate,
+            Description = Description,
+            MerchantName = Source,
+            Notes = Notes,
+            IsRecurring = IsRecurring,
+            PaymentMethodId = PaymentMethodId,
+            Tags = Tags,
+            CreatedBy = userId,
+            LastUpdatedBy = userId,
+        };
+    }
 }

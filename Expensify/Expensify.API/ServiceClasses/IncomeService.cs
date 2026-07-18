@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.DTOs.IncomeDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
-using Expensify.DataAccessLayer.Entities.Models;
 using Expensify.DataAccessLayer.Enums;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
@@ -119,30 +119,7 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
         {
             var newBalance = userAccount.CurrentBalance + request.Amount;
 
-            var incomeTransaction = new Transaction
-            {
-                UserId = userId,
-                AccountId = userAccount.Id,
-                BudgetId = request.BudgetId,
-                CategoryId = request.CategoryId,
-                Amount = request.Amount,
-                AccountBalanceAfterTransaction = newBalance,
-                Type = TransactionType.Income,
-                Status = TransactionPostedStatus.Posted,
-                TransactionDate = request.TransactionDate,
-                Description = request.Description.Trim(),
-                MerchantName = request.MerchantName.Trim(),
-                Notes = request.Notes?.Trim(),
-                IsRecurring = request.IsRecurring,
-                PaymentMethodId = request.PaymentMethodId,
-                Tags =
-                    request
-                        .Tags?.Select(tag => tag.Trim())
-                        .Where(tag => !string.IsNullOrWhiteSpace(tag))
-                        .Distinct(StringComparer.OrdinalIgnoreCase)
-                        .ToList()
-                    ?? [],
-            };
+            var incomeTransaction = request.ToTransaction(userId, newBalance);
 
             userAccount.CurrentBalance = newBalance;
 
@@ -200,7 +177,11 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
         }
     }
 
-    public Task<Result<bool>> DeleteIncome(Guid id, CancellationToken cancellationToken)
+    public Task<Result<bool>> DeleteIncome(
+        Guid userId,
+        Guid incomeId,
+        CancellationToken cancellationToken
+    )
     {
         // Find and delete income by id
         // Return message to indicate success
@@ -209,29 +190,50 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
         throw new NotImplementedException();
     }
 
-    public Task<Result<bool>> DownloadIncomeExcel(
-        DownloadIncomeExcelDTO request,
+    public async Task<Result<byte[]>> DownloadIncomeExcel(
+        Guid userId,
         CancellationToken cancellationToken
     )
     {
-        // Find User Income based on id
-        // Prepare Data for Excel
+        //try
+        //{
+        //    // Generate your Excel file...
 
-        // Catch error return 500
+        //    //byte[] fileBytes = /* generated Excel bytes */;
+
+        //    return new Result<byte[]>(fileBytes);
+        //}
+        //catch (Exception ex)
+        //{
+        //    return new Result<byte[]>(ex);
+        //}
+
         throw new NotImplementedException();
     }
 
-    public Task<Result<bool>> GetAllIncome(
-        GetAllIncomeDTO request,
+    public async Task<Result<List<TransactionDTO>>> GetAllIncome(
+        Guid userId,
         CancellationToken cancellationToken
     )
     {
-        // Grab user id
+        try
+        {
+            var transactions = await _context
+                .Transactions.AsNoTracking()
+                .Where(transaction =>
+                    transaction.UserId == userId
+                    && transaction.Type == TransactionType.Income
+                    && !transaction.IsDeleted
+                )
+                .OrderByDescending(transaction => transaction.TransactionDate)
+                .Select(TransactionDTO.Projection)
+                .ToListAsync(cancellationToken);
 
-        // Try to find the income based on the user id and sort by date
-        // Return data
-
-        // Catch error return 500
-        throw new NotImplementedException();
+            return new Result<List<TransactionDTO>>(transactions);
+        }
+        catch (Exception ex)
+        {
+            return new Result<List<TransactionDTO>>(ex);
+        }
     }
 }

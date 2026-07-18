@@ -6,7 +6,7 @@ namespace Expensify.API.Utility.Validators.Filters.Income;
 public class AddIncomeTransactionDTOValidator : AbstractValidator<AddIncomeTransactionDTO>
 {
     private const int MaximumDescriptionLength = 100;
-    private const int MaximumMerchantNameLength = 100;
+    private const int MaximumSourceNameLength = 100;
     private const int MaximumNotesLength = 1000;
     private const int MaximumTagLength = 50;
 
@@ -38,11 +38,11 @@ public class AddIncomeTransactionDTOValidator : AbstractValidator<AddIncomeTrans
             .MaximumLength(MaximumDescriptionLength)
             .WithMessage($"Description cannot exceed {MaximumDescriptionLength} characters.");
 
-        RuleFor(x => x.MerchantName)
+        RuleFor(x => x.Source)
             .NotEmpty()
-            .WithMessage("Merchant name is required.")
-            .MaximumLength(MaximumMerchantNameLength)
-            .WithMessage($"Merchant name cannot exceed {MaximumMerchantNameLength} characters.");
+            .WithMessage("Source name is required.")
+            .MaximumLength(MaximumSourceNameLength)
+            .WithMessage($"Source name cannot exceed {MaximumSourceNameLength} characters.");
 
         RuleFor(x => x.Notes)
             .MaximumLength(MaximumNotesLength)
