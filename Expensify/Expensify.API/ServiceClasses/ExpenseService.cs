@@ -1,12 +1,17 @@
 ﻿using Expensify.API.DTOs.ExpenseDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.DataAccessLayer;
+using LanguageExt.Common;
 
 namespace Expensify.API.ServiceClasses
 {
     public class ExpenseService(ApplicationDbContext _context) : IExpenseService
     {
-        public void AddExpense(AddExpenseDTO request, CancellationToken cancellationToken)
+        public Task<Result<ExpenseTransactionResponseDTO>> AddExpense(
+            Guid userId,
+            AddExpenseTransactionDTO request,
+            CancellationToken cancellationToken
+        )
         {
             // Validate all data is present in request
             // If not throw 400 .. All fields are required
@@ -17,7 +22,7 @@ namespace Expensify.API.ServiceClasses
             throw new NotImplementedException();
         }
 
-        public void DeleteExpense(Guid id, CancellationToken cancellationToken)
+        public async Task<Result<bool>> DeleteExpense(Guid id, CancellationToken cancellationToken)
         {
             // Find and delete income by id
             // Return message to indicate success
@@ -26,7 +31,7 @@ namespace Expensify.API.ServiceClasses
             throw new NotImplementedException();
         }
 
-        public void DownloadExpenseExcel(
+        public async Task<Result<bool>> DownloadExpenseExcel(
             DownloadExpenseExcelDTO request,
             CancellationToken cancellationToken
         )
@@ -38,7 +43,10 @@ namespace Expensify.API.ServiceClasses
             throw new NotImplementedException();
         }
 
-        public void GetAllExpense(GetAllExpenseDTO request, CancellationToken cancellationToken)
+        public async Task<Result<bool>> GetAllExpense(
+            GetExpenseIncomeDTO request,
+            CancellationToken cancellationToken
+        )
         {
             // Grab user id
 

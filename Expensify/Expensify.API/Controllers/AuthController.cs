@@ -51,7 +51,7 @@ public class AuthController : AuthorizationControllerBase
                 {
                     ValidationException ex => BadRequest(ex.Message),
                     UnauthorizedAccessException ex => Unauthorized(ex.Message),
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
@@ -71,7 +71,7 @@ public class AuthController : AuthorizationControllerBase
                 error switch
                 {
                     ValidationException ex => BadRequest(ex.Message),
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
@@ -92,7 +92,7 @@ public class AuthController : AuthorizationControllerBase
                 {
                     ValidationException ex => BadRequest(ex.Message),
                     EntityNotFoundException ex => BadRequest(ex.Message),
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
@@ -111,7 +111,7 @@ public class AuthController : AuthorizationControllerBase
                 error switch
                 {
                     EntityNotFoundException ex => BadRequest(ex.Message),
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
@@ -135,7 +135,7 @@ public class AuthController : AuthorizationControllerBase
                     ValidationException ex => BadRequest(ex.Message),
                     EntityNotFoundException ex => BadRequest(ex.Message),
                     UnauthorizedAccessException ex => Unauthorized(ex.Message),
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
@@ -159,7 +159,7 @@ public class AuthController : AuthorizationControllerBase
                 {
                     ValidationException ex => BadRequest(ex.Message),
                     UnauthorizedAccessException ex => Unauthorized(ex.Message),
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
@@ -220,7 +220,7 @@ public class AuthController : AuthorizationControllerBase
                 {
                     ValidationException ex => BadRequest(ex.Message),
                     EntityNotFoundException ex => NotFound(ex.Message),
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }

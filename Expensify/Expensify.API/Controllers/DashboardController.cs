@@ -42,7 +42,7 @@ namespace Expensify.API.Controllers
                     {
                         ValidationException ex => BadRequest(ex.Message),
                         UnauthorizedAccessException ex => Unauthorized(ex.Message),
-                        _ => StatusCode(500, error.Message),
+                        _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                     }
             );
         }

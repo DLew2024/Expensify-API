@@ -16,8 +16,8 @@ public class IncomeController : AuthorizationControllerBase
         _service = service;
     }
 
+    [HttpPost("add", Name = "AddIncome")]
     [ServiceFilter(typeof(ValidationFilter<AddIncomeTransactionDTO>))]
-    [HttpPost("add", Name = "AddIncomeSource")]
     public async Task<ActionResult<IncomeTransactionResponseDTO>> AddIncome(
         AddIncomeTransactionDTO request,
         CancellationToken cancellationToken
@@ -32,7 +32,7 @@ public class IncomeController : AuthorizationControllerBase
                 error switch
                 {
                     EntityNotFoundException => BadRequest(error.Message),
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
@@ -49,13 +49,13 @@ public class IncomeController : AuthorizationControllerBase
             error =>
                 error switch
                 {
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
 
     [HttpGet("getAll", Name = "GetAllIncomeSource")]
-    public async Task<ActionResult<bool>> GetAll(
+    public async Task<ActionResult<bool>> GetAllIncome(
         GetAllIncomeDTO request,
         CancellationToken cancellationToken
     )
@@ -66,7 +66,7 @@ public class IncomeController : AuthorizationControllerBase
             error =>
                 error switch
                 {
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
@@ -83,7 +83,7 @@ public class IncomeController : AuthorizationControllerBase
             error =>
                 error switch
                 {
-                    _ => StatusCode(500, error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
