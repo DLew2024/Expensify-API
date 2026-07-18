@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 using Expensify.API.DTOs.AuthDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
@@ -98,7 +97,7 @@ public class AuthController : AuthorizationControllerBase
         );
     }
 
-    [HttpGet(Name = "GetUserInfo")]
+    [HttpGet("getUser", Name = "GetUserInfo")]
     public async Task<ActionResult<UserResponseDTO>> GetUserInfo(
         Guid id,
         CancellationToken cancellationToken

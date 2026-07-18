@@ -1,7 +1,10 @@
 ﻿using Expensify.API.DTOs.DashboardDTOs;
+using Expensify.API.Projections;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.DataAccessLayer;
+using Expensify.DataAccessLayer.Enums;
 using LanguageExt.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.Services.Interfaces
 {
@@ -14,39 +17,117 @@ namespace Expensify.Services.Interfaces
             _context = context;
         }
 
-        public Task<Result<DashboardDataResponseDTO>> GetDashboardData(
+        public async Task<Result<DashboardDataResponseDTO>> GetDashboardData(
+            Guid userId,
             CancellationToken cancellationToken
         )
         {
-            // Try to get user id
+            try
+            {
+                if (userId == Guid.Empty)
+                {
+                    return new Result<DashboardDataResponseDTO>(
+                        new UnauthorizedAccessException("Unable to identify the current user.")
+                    );
+                }
 
-            // Fetch total Income and Expenses
+                var currentDate = DateTimeOffset.UtcNow;
 
-            // Find Income by id add all Incomes by amount
+                var thirtyDaysAgo = currentDate.AddDays(-30).ToUnixTimeSeconds();
+                var sixtyDaysAgo = currentDate.AddDays(-60).ToUnixTimeSeconds();
 
-            // Find Expenses by id add all Expenses by amount
+                var transactions = await _context
+                    .Transactions.AsNoTracking()
+                    .Where(transaction => transaction.UserId == userId)
+                    .Select(TransactionDTO.Projection)
+                    .ToListAsync(cancellationToken);
 
-            // Find last 60 days Income Transactions
+                var totalIncome = transactions
+                    .Where(transaction => transaction.Type == TransactionType.Income)
+                    .Sum(transaction => transaction.Amount);
 
-            // Find income from last 60 days
+                var totalExpenses = transactions
+                    .Where(transaction => transaction.Type == TransactionType.Expense)
+                    .Sum(transaction => transaction.Amount);
 
-            // Find last 30 days for Expenses Transactions
+                var totalBalance = totalIncome - totalExpenses;
 
-            // Find Expenses from last 30 days
+                var last30DaysOfExpenses = transactions
+                    .Where(transaction =>
+                        transaction.Type == TransactionType.Expense
+                        && transaction.TransactionDate >= thirtyDaysAgo
+                    )
+                    .OrderByDescending(transaction => transaction.TransactionDate)
+                    .ToArray();
 
-            // Find last five transactions (income + expenses) sort the latest first
+                var last60DaysOfExpenses = transactions
+                    .Where(transaction =>
+                        transaction.Type == TransactionType.Expense
+                        && transaction.TransactionDate >= sixtyDaysAgo
+                    )
+                    .OrderByDescending(transaction => transaction.TransactionDate)
+                    .ToArray();
 
-            // Final Response
+                var last30DaysOfIncome = transactions
+                    .Where(transaction =>
+                        transaction.Type == TransactionType.Income
+                        && transaction.TransactionDate >= thirtyDaysAgo
+                    )
+                    .OrderByDescending(transaction => transaction.TransactionDate)
+                    .ToArray();
 
-            // Total Balance
-            // Total Income
-            // Total Expenses
-            // Last 30 Days Expenses - {total, transactions}
-            // Last 60 Days Expeses - {total, transactions}
-            // recent
+                var last60DaysOfIncome = transactions
+                    .Where(transaction =>
+                        transaction.Type == TransactionType.Income
+                        && transaction.TransactionDate >= sixtyDaysAgo
+                    )
+                    .OrderByDescending(transaction => transaction.TransactionDate)
+                    .ToArray();
 
-            // Catch errors
-            throw new NotImplementedException();
+                var recentTransactions = transactions
+                    .OrderByDescending(transaction => transaction.TransactionDate)
+                    .Take(5)
+                    .ToArray();
+
+                var response = new DashboardDataResponseDTO
+                {
+                    TotalBalance = totalBalance,
+                    TotalIncome = totalIncome,
+                    TotalExpenses = totalExpenses,
+
+                    Last30DaysOfExpenses = new TransactionPeriodSummaryDTO
+                    {
+                        TotalBalance = last30DaysOfExpenses.Sum(transaction => transaction.Amount),
+                        Transactions = last30DaysOfExpenses,
+                    },
+
+                    Last60DaysOfExpenses = new TransactionPeriodSummaryDTO
+                    {
+                        TotalBalance = last60DaysOfExpenses.Sum(transaction => transaction.Amount),
+                        Transactions = last60DaysOfExpenses,
+                    },
+
+                    Last30DaysOfIncome = new TransactionPeriodSummaryDTO
+                    {
+                        TotalBalance = last30DaysOfIncome.Sum(transaction => transaction.Amount),
+                        Transactions = last30DaysOfIncome,
+                    },
+
+                    Last60DaysOfIncome = new TransactionPeriodSummaryDTO
+                    {
+                        TotalBalance = last60DaysOfIncome.Sum(transaction => transaction.Amount),
+                        Transactions = last60DaysOfIncome,
+                    },
+
+                    RecentTransactions = recentTransactions,
+                };
+
+                return new Result<DashboardDataResponseDTO>(response);
+            }
+            catch (Exception exception)
+            {
+                return new Result<DashboardDataResponseDTO>(exception);
+            }
         }
     }
 }

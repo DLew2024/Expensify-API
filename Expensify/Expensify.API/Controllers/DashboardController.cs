@@ -1,4 +1,5 @@
-﻿using Expensify.API.DTOs.DashboardDTOs;
+﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,13 +26,25 @@ namespace Expensify.API.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<DashboardDataResponseDTO>> Get(
+        [HttpGet("/", Name = "GetDashboardData")]
+        public async Task<ActionResult<DashboardDataResponseDTO>> GetDashboardData(
             CancellationToken cancellationToken
         )
         {
-            var dashboard = await _service.DashboardService.GetDashboardData(cancellationToken);
-            return Ok(dashboard);
+            var result = await _service.DashboardService.GetDashboardData(
+                CurrentUserId,
+                cancellationToken
+            );
+            return result.Match<ActionResult<DashboardDataResponseDTO>>(
+                success => Ok(success),
+                error =>
+                    error switch
+                    {
+                        ValidationException ex => BadRequest(ex.Message),
+                        UnauthorizedAccessException ex => Unauthorized(ex.Message),
+                        _ => StatusCode(500, error.Message),
+                    }
+            );
         }
     }
 }
