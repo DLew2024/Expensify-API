@@ -4,7 +4,7 @@ namespace Expensify.DataAccessLayer.Entities.Models;
 
 /// <summary>
 /// Represents a type of financial account.
-/// Account types may be system-defined or created by the user.
+/// Account types may be system-defined or created by a user.
 /// </summary>
 public class AccountType : Auditable
 {
@@ -23,6 +23,7 @@ public class AccountType : Auditable
 
     /// <summary>
     /// The user who owns this account type.
+    /// Null for system-defined account types.
     /// </summary>
     public Guid? UserId { get; set; }
 
@@ -33,24 +34,21 @@ public class AccountType : Auditable
 
     /// <summary>
     /// Optional description of the account type.
-    /// Example: "Primary checking account" or "High-yield savings account".
     /// </summary>
     public string? Description { get; set; }
 
     /// <summary>
-    /// Indicates whether this account type was provided by the system.
-    /// System account types cannot typically be deleted.
+    /// Indicates whether this account type is defined and managed by the system.
     /// </summary>
     public bool IsSystemDefault { get; set; }
 
     /// <summary>
-    /// Indicates whether this account type is active.
-    /// Inactive account types cannot be assigned to new accounts.
+    /// Indicates whether this account type can be assigned to new accounts.
     /// </summary>
     public bool IsActive { get; set; } = true;
 
     /// <summary>
-    /// Accounts that use this account type.
+    /// Accounts assigned to this account type.
     /// </summary>
     public List<Account> Accounts { get; set; } = [];
 }

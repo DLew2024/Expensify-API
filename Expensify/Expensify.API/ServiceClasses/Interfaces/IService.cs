@@ -8,4 +8,5 @@ public interface IService
     IIncomeService IncomeService { get; }
     IJwtService JwtService { get; }
     IPasswordService PasswordService { get; }
+    IAccountService AccountService { get; }
 }

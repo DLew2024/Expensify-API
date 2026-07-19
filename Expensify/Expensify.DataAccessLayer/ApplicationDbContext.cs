@@ -15,13 +15,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public virtual DbSet<Category> Categories { get; set; }
     public virtual DbSet<Budget> Budgets { get; set; }
     public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
+    public virtual DbSet<AccountType> AccountTypes { get; set; }
 
     /// <summary>
     ///  public virtual DbSet<BudgetMember> BudgetMembers { get; set; }
     ///  public virtual DbSet<BudgetCategory> BudgetCategories { get; set; }
     ///  public virtual DbSet<RecurringTransaction> RecurringTransactions { get; set; }
     ///  public virtual DbSet<Goal> Goals { get; set; }
-    ///  public virtual DbSet<AccountType> AccountTypes { get; set; }
     ///  public virtual DbSet<GoalType> GoalTypes { get; set; }
     /// </summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)

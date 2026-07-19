@@ -26,6 +26,11 @@ namespace Expensify.API.ServiceClasses
         private readonly IOptions<FrontendSettings> _frontendSettings = frontendOptions;
         private readonly IOptions<JwtSettings> _jwtSettings = jwtOptions;
 
+        public IAccountService AccountService =>
+            field
+            ?? new AccountService(
+                _context
+            );
         public IAuthService AuthService =>
             field
             ?? new AuthService(

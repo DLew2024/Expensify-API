@@ -17,7 +17,8 @@ namespace Expensify.API.Migrations
                 table: "transactions",
                 type: "text",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: ""
+            );
 
             migrationBuilder.AddColumn<Guid>(
                 name: "recurring_transaction_id",
@@ -25,21 +26,20 @@ namespace Expensify.API.Migrations
                 table: "transactions",
                 type: "uuid",
                 nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000")
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "icon",
-                schema: "finance",
-                table: "transactions");
+            migrationBuilder.DropColumn(name: "icon", schema: "finance", table: "transactions");
 
             migrationBuilder.DropColumn(
                 name: "recurring_transaction_id",
                 schema: "finance",
-                table: "transactions");
+                table: "transactions"
+            );
         }
     }
 }
