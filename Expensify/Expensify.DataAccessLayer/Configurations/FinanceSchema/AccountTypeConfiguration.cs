@@ -61,5 +61,93 @@ public class AccountTypeConfiguration : IEntityTypeConfiguration<AccountType>
         builder
             .HasIndex(accountType => new { accountType.UserId, accountType.IsActive })
             .HasDatabaseName("ix_account_types_user_id_is_active");
+
+        // Seeds the system-defined account types.
+        builder.HasData(
+            new
+            {
+                Id = Guid.Parse("6f8332b7-cf15-4c41-b1b5-a85022859dd8"),
+                Name = "Checking",
+                Description = "Standard checking account.",
+                UserId = (Guid?)null,
+                IsSystemDefault = true,
+                IsActive = true,
+                IsDeleted = false,
+                LastUpdatedBy = Guid.Empty,
+                CreatedBy = Guid.Empty,
+                UpdatedDate = 0L,
+                CreateDate = 0L,
+            },
+            new
+            {
+                Id = Guid.Parse("21d970f4-bda1-48c5-8b04-f38408508238"),
+                Name = "Savings",
+                Description = "Standard savings account.",
+                UserId = (Guid?)null,
+                IsSystemDefault = true,
+                IsActive = true,
+                IsDeleted = false,
+                LastUpdatedBy = Guid.Empty,
+                CreatedBy = Guid.Empty,
+                UpdatedDate = 0L,
+                CreateDate = 0L,
+            },
+            new
+            {
+                Id = Guid.Parse("c524f6bf-b7da-4985-a1af-f76222dfc89c"),
+                Name = "Credit Card",
+                Description = "Credit card or revolving credit account.",
+                UserId = (Guid?)null,
+                IsSystemDefault = true,
+                IsActive = true,
+                IsDeleted = false,
+                LastUpdatedBy = Guid.Empty,
+                CreatedBy = Guid.Empty,
+                UpdatedDate = 0L,
+                CreateDate = 0L,
+            },
+            new
+            {
+                Id = Guid.Parse("81ac10c1-b977-45c9-a637-a00654ef07e7"),
+                Name = "Cash",
+                Description = "Physical cash account.",
+                UserId = (Guid?)null,
+                IsSystemDefault = true,
+                IsActive = true,
+                IsDeleted = false,
+                LastUpdatedBy = Guid.Empty,
+                CreatedBy = Guid.Empty,
+                UpdatedDate = 0L,
+                CreateDate = 0L,
+            },
+            new
+            {
+                Id = Guid.Parse("9de9f381-06e4-41f8-8269-f8cb76330cc9"),
+                Name = "Investment",
+                Description = "Brokerage or investment account.",
+                UserId = (Guid?)null,
+                IsSystemDefault = true,
+                IsActive = true,
+                IsDeleted = false,
+                LastUpdatedBy = Guid.Empty,
+                CreatedBy = Guid.Empty,
+                UpdatedDate = 0L,
+                CreateDate = 0L,
+            },
+            new
+            {
+                Id = Guid.Parse("f95a4632-e98f-4c9b-b831-b14447e3e308"),
+                Name = "Loan",
+                Description = "Loan or other debt account.",
+                UserId = (Guid?)null,
+                IsSystemDefault = true,
+                IsActive = true,
+                IsDeleted = false,
+                LastUpdatedBy = Guid.Empty,
+                CreatedBy = Guid.Empty,
+                UpdatedDate = 0L,
+                CreateDate = 0L,
+            }
+        );
     }
 }
