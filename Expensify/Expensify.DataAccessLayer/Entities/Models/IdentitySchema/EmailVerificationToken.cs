@@ -1,6 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
 /// <summary>
 /// Represents a token issued to verify a user's email address.

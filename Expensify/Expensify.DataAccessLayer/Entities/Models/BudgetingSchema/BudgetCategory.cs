@@ -1,4 +1,6 @@
-﻿namespace Expensify.DataAccessLayer.Entities.Models;
+﻿using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
+
+namespace Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 
 /// <summary>
 /// Join model between Budget and Category.

@@ -1,6 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
 /// <summary>
 /// Represents a password reset token issued to a user.

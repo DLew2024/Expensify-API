@@ -1,4 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
+using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
 using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.DataAccessLayer.Entities.Models;

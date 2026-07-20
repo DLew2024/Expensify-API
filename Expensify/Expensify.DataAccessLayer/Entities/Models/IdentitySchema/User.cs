@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
+using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.DataAccessLayer.Entities.Models;
 

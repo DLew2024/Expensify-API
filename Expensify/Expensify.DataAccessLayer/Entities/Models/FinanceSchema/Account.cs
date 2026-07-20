@@ -2,7 +2,7 @@
 using Expensify.DataAccessLayer.Enums;
 using Expensify.Entities.Interfaces;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 
 /// <summary>
 /// Represents a financial account that belongs to a user.

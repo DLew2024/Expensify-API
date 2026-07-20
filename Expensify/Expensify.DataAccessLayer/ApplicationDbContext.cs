@@ -1,4 +1,7 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models;
+using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
+using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.DataAccessLayer;

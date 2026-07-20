@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Expensify.DataAccessLayer.Entities.AbstractClasses;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
 /// <summary>
 /// Represents a refresh token issued to an authenticated user.
