@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
 namespace Expensify.DataAccessLayer.Entities.Models;
 

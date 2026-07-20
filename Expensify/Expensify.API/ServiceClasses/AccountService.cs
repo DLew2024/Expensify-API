@@ -2,7 +2,7 @@
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
-using Expensify.DataAccessLayer.Entities.Models;
+using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,7 +48,7 @@ public class AccountService(ApplicationDbContext context) : IAccountService
                 UserId = userId,
                 AccountTypeId = accountType.Id,
 
-                InstitutionName = request.InstitutionName?.Trim(),
+                InstitutionName = request.InstitutionName.Trim(),
                 LastFourDigits = request.LastFourDigits?.Trim(),
 
                 CurrencyCode = request.CurrencyCode,

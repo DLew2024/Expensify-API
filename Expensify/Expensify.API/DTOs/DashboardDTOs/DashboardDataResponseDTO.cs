@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
-using Expensify.DataAccessLayer.Entities.Models;
+using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.API.DTOs.DashboardDTOs;

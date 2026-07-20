@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Expensify.DataAccessLayer.Entities.AbstractClasses;
+﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 
 namespace Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 

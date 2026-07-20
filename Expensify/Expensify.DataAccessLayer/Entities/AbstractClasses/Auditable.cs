@@ -15,6 +15,7 @@ public abstract class Auditable : IAuditableEntity
         : this()
     {
         Name = name;
+        CreateDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     }
 
     [Column(Order = 1)]

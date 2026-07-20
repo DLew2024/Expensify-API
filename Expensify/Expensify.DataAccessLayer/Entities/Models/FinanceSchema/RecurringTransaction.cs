@@ -1,9 +1,10 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
-using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
 using Expensify.DataAccessLayer.Enums;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 
 /// <summary>
 /// Represents a recurring transaction template.

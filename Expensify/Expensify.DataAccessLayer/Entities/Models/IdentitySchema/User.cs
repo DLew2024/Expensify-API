@@ -1,9 +1,9 @@
-﻿using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
-using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
+﻿using System.ComponentModel.DataAnnotations;
+using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
+using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
-using System.ComponentModel.DataAnnotations;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
 /// <summary>
 /// Represents a user of the application.
@@ -21,6 +21,7 @@ public class User
     /// The user's full name.
     /// </summary>
     [Required]
+    [MaxLength(200)]
     public string FullName { get; set; } = string.Empty;
 
     /// <summary>
@@ -28,6 +29,7 @@ public class User
     /// Used for authentication and account communication.
     /// </summary>
     [Required]
+    [MaxLength(320)]
     public string Email { get; set; } = string.Empty;
 
     /// <summary>
@@ -35,6 +37,7 @@ public class User
     /// Never store plain text passwords.
     /// </summary>
     [Required]
+    [MaxLength(500)]
     public string Password { get; set; } = string.Empty;
 
     /// <summary>

@@ -5,7 +5,7 @@ using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
-using Expensify.DataAccessLayer.Entities.Models;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

@@ -1,7 +1,9 @@
-﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
+﻿using System.ComponentModel.DataAnnotations;
+using Expensify.DataAccessLayer.Entities.AbstractClasses;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Enums;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 
 /// <summary>
 /// Represents a user's access to a shared budget.
@@ -11,11 +13,13 @@ public class BudgetMember : Auditable
     /// <summary>
     /// The budget the user has access to.
     /// </summary>
+    [Required]
     public Guid BudgetId { get; set; }
 
     /// <summary>
     /// The user who has access to the budget.
     /// </summary>
+    [Required]
     public Guid UserId { get; set; }
 
     /// <summary>

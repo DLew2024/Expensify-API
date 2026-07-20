@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Expensify.DataAccessLayer.Entities.AbstractClasses;
+﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 
 /// <summary>
 /// Represents a payment method that can be associated with transactions.

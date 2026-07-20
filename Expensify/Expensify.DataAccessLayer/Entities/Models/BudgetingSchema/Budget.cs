@@ -1,8 +1,9 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
-using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Enums;
+using System.ComponentModel.DataAnnotations;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 
 /// <summary>
 /// Represents a budget created by a user.
@@ -13,28 +14,29 @@ public class Budget : Auditable
     /// <summary>
     /// The user who created/owns the budget.
     /// </summary>
+    [Required]
     public Guid OwnerUserId { get; set; }
 
     /// <summary>
     /// Optional description for the budget.
     /// </summary>
-    public string? Description { get; set; }
+    public string? Description { get; set; } = string.Empty;
 
     /// <summary>
     /// Total spending limit for this budget.
     /// </summary>
-    public decimal LimitAmount { get; set; }
+    public decimal LimitAmount { get; set; } = 0;
 
     /// <summary>
     /// How often the budget resets.
     /// Example: Weekly, Monthly, Yearly.
     /// </summary>
-    public BudgetPeriod Period { get; set; } //Fix
+    public BudgetPeriod Period { get; set; } = BudgetPeriod.Monthly;
 
     /// <summary>
     /// The date the budget starts.
     /// </summary>
-    public long StartDate { get; set; }
+    public long StartDate { get; set; } = 0;
 
     /// <summary>
     /// Optional date the budget ends.
@@ -50,7 +52,7 @@ public class Budget : Auditable
     /// <summary>
     /// Indicates whether this budget is shared with other users.
     /// </summary>
-    public bool IsShared { get; set; }
+    public bool IsShared { get; set; } = false;
 
     /// <summary>
     /// The owner navigation property.

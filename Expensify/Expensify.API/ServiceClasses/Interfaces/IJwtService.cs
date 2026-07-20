@@ -1,4 +1,4 @@
-﻿using Expensify.DataAccessLayer.Entities.Models;
+﻿using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
 namespace Expensify.API.ServiceClasses.Interfaces
 {

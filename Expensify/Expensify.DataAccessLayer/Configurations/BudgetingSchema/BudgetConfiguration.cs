@@ -1,4 +1,4 @@
-﻿using Expensify.DataAccessLayer.Entities.Models;
+﻿using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Expensify.DataAccessLayer.Utility.Constants;

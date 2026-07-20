@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using Expensify.DataAccessLayer.Entities.Models;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
 namespace Expensify.API.DTOs.AuthDTOs;
 
