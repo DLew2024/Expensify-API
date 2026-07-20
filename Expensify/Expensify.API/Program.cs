@@ -7,6 +7,8 @@ using Expensify.API.Utility.Validators.Filters.Auth;
 using Expensify.API.Utility.Validators.Filters.Income;
 using Expensify.Services.Interfaces;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using static Expensify.API.Utility.Constants;
 
@@ -18,7 +20,29 @@ builder.AddApplicationAuthentication();
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer(
+        (document, context, cancellationToken) =>
+        {
+            document.Components ??= new OpenApiComponents();
+
+            document.Components.SecuritySchemes ??=
+                new Dictionary<string, IOpenApiSecurityScheme>();
+
+            document.Components.SecuritySchemes[JwtBearerDefaults.AuthenticationScheme] =
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme.ToLowerInvariant(),
+                    BearerFormat = "JWT",
+                    Description = "Enter your JWT Bearer token.",
+                };
+
+            return Task.CompletedTask;
+        }
+    );
+});
 builder.Services.AddValidation();
 
 builder.Services.AddCors(options =>

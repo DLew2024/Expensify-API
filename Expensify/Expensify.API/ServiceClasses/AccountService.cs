@@ -11,6 +11,7 @@ namespace Expensify.API.ServiceClasses;
 public class AccountService(ApplicationDbContext context) : IAccountService
 {
     private readonly ApplicationDbContext _context = context;
+
     public async Task<Result<CreateAccountResponseDTO>> CreateAccount(
         Guid userId,
         CreateAccountDTO request,

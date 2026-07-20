@@ -1,6 +1,4 @@
 ﻿namespace Expensify.API.DTOs.AccountDTOs
 {
-    public class UpdateAccountDTO
-    {
-    }
+    public class UpdateAccountDTO { }
 }
