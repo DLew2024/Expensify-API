@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
+﻿using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
 
 namespace Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 
@@ -17,13 +16,11 @@ public class BudgetCategory
     /// <summary>
     /// The budget this category belongs to.
     /// </summary>
-    [Required]
     public Guid BudgetId { get; set; }
 
     /// <summary>
     /// The category included in the budget.
     /// </summary>
-    [Required]
     public Guid CategoryId { get; set; }
 
     /// <summary>

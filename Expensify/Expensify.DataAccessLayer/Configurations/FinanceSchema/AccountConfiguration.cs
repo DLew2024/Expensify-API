@@ -30,10 +30,12 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         // Configures optional string properties.
         builder
             .Property(account => account.InstitutionName)
+            .IsRequired()
             .HasMaxLength(DatabaseLengths.InstitutionName);
 
         builder
             .Property(account => account.LastFourDigits)
+            .IsRequired()
             .HasMaxLength(DatabaseLengths.LastFourDigits);
 
         builder.Property(account => account.Notes).HasMaxLength(DatabaseLengths.Notes);

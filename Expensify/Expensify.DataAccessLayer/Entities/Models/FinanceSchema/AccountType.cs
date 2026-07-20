@@ -1,6 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
-using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 
@@ -27,8 +26,7 @@ public class AccountType : Auditable
     /// The user who owns this account type.
     /// Null for system-defined account types.
     /// </summary>
-    [Required]
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 
     /// <summary>
     /// Navigation property for the user who owns this account type.

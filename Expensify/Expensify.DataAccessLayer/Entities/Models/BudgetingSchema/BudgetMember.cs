@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Expensify.DataAccessLayer.Entities.AbstractClasses;
+﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Enums;
 
@@ -13,13 +12,11 @@ public class BudgetMember : Auditable
     /// <summary>
     /// The budget the user has access to.
     /// </summary>
-    [Required]
     public Guid BudgetId { get; set; }
 
     /// <summary>
     /// The user who has access to the budget.
     /// </summary>
-    [Required]
     public Guid UserId { get; set; }
 
     /// <summary>

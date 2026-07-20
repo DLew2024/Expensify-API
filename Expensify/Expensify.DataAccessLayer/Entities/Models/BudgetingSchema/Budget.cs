@@ -1,7 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 
@@ -14,7 +13,6 @@ public class Budget : Auditable
     /// <summary>
     /// The user who created/owns the budget.
     /// </summary>
-    [Required]
     public Guid OwnerUserId { get; set; }
 
     /// <summary>

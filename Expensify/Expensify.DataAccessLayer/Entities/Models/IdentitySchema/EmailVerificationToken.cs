@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Expensify.DataAccessLayer.Entities.AbstractClasses;
+﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 
 namespace Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
@@ -11,7 +10,6 @@ public class EmailVerificationToken : Identifiable
     /// <summary>
     /// The user associated with this verification token.
     /// </summary>
-    [Required]
     public Guid UserId { get; set; }
 
     /// <summary>

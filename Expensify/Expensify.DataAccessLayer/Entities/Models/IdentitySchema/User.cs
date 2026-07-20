@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
+﻿using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
 
@@ -14,30 +13,23 @@ public class User
     /// <summary>
     /// Unique identifier for the user.
     /// </summary>
-    [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
     /// The user's full name.
     /// </summary>
-    [Required]
-    [MaxLength(200)]
     public string FullName { get; set; } = string.Empty;
 
     /// <summary>
     /// The user's email address.
     /// Used for authentication and account communication.
     /// </summary>
-    [Required]
-    [MaxLength(320)]
     public string Email { get; set; } = string.Empty;
 
     /// <summary>
     /// The user's hashed password.
     /// Never store plain text passwords.
     /// </summary>
-    [Required]
-    [MaxLength(500)]
     public string Password { get; set; } = string.Empty;
 
     /// <summary>

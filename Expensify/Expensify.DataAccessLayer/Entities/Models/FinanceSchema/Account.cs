@@ -1,7 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 
@@ -14,7 +13,6 @@ public class Account : Auditable
     /// <summary>
     /// The user who owns this account.
     /// </summary>
-    [Required]
     public Guid UserId { get; set; }
 
     /// <summary>
@@ -25,7 +23,6 @@ public class Account : Auditable
     /// <summary>
     /// The account type assigned to this account.
     /// </summary>
-    [Required]
     public Guid AccountTypeId { get; set; }
 
     /// <summary>
@@ -38,28 +35,24 @@ public class Account : Auditable
     /// The name of the financial institution.
     /// Example: Chase, Fidelity, Capital One.
     /// </summary>
-    [Required]
     public string InstitutionName { get; set; } = string.Empty;
 
     /// <summary>
     /// The last four digits of the account number for display purposes only.
     /// Example: "4821".
     /// </summary>
-    [Required]
     public string? LastFourDigits { get; set; } = string.Empty;
 
     /// <summary>
     /// The currency used by this account.
     /// Example: USD, EUR, GBP.
     /// </summary>
-    [Required]
     public CurrencyCode CurrencyCode { get; set; } = CurrencyCode.USD;
 
     /// <summary>
     /// Cached current balance for dashboard and account list performance.
     /// This should be updated whenever transactions are created, updated, or removed.
     /// </summary>
-    [Required]
     public decimal CurrentBalance { get; set; } = 0;
 
     /// <summary>
@@ -68,7 +61,6 @@ public class Account : Auditable
     /// For example, a pending debit card purchase may reduce the available balance
     /// before it is reflected in the current balance.
     /// </summary>
-    [Required]
     public decimal AvailableBalance { get; set; } = 0;
 
     /// <summary>
@@ -93,7 +85,6 @@ public class Account : Auditable
     /// Optional notes about the account.
     /// Example: "Used only for travel expenses."
     /// </summary>
-    [MaxLength(500)]
     public string? Notes { get; set; }
 
     /// <summary>
