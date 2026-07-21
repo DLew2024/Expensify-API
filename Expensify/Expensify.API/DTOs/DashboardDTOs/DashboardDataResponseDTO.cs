@@ -38,6 +38,7 @@ public class TransactionDTO
 
     [Required]
     public TransactionType Type { get; set; }
+    [Required]
     public long TransactionDate { get; set; }
     public string Merchant { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;

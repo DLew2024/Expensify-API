@@ -107,4 +107,25 @@ public class AccountService(ApplicationDbContext context) : IAccountService
             return new Result<CreateAccountResponseDTO>(ex);
         }
     }
+
+    public async Task<Result<IEnumerable<AccountResponseDTO>>> GetAccounts(
+        Guid userId,
+        CancellationToken cancellationToken
+    )
+    {
+        try
+        {
+            var accounts = await _context
+                .Accounts.AsNoTracking()
+                .Where(account => account.UserId == userId && !account.IsDeleted)
+                .Select(AccountResponseDTO.Projection)
+                .ToListAsync(cancellationToken);
+
+            return accounts;
+        }
+        catch (Exception ex)
+        {
+            return new Result<IEnumerable<AccountResponseDTO>>(ex);
+        }
+    }
 }

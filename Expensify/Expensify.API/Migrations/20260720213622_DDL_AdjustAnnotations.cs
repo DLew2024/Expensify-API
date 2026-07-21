@@ -21,7 +21,8 @@ namespace Expensify.API.Migrations
                 oldClrType: typeof(string),
                 oldType: "character varying(4)",
                 oldMaxLength: 4,
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "institution_name",
@@ -34,7 +35,8 @@ namespace Expensify.API.Migrations
                 oldClrType: typeof(string),
                 oldType: "character varying(100)",
                 oldMaxLength: 100,
-                oldNullable: true);
+                oldNullable: true
+            );
         }
 
         /// <inheritdoc />
@@ -49,7 +51,8 @@ namespace Expensify.API.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldType: "character varying(4)",
-                oldMaxLength: 4);
+                oldMaxLength: 4
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "institution_name",
@@ -60,7 +63,8 @@ namespace Expensify.API.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldType: "character varying(100)",
-                oldMaxLength: 100);
+                oldMaxLength: 100
+            );
         }
     }
 }

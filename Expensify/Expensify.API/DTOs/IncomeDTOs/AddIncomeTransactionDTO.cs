@@ -1,5 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.API.DTOs.IncomeDTOs;
 
@@ -8,6 +9,7 @@ public class AddIncomeTransactionDTO
     /// <summary>
     /// The account that will receive the income.
     /// </summary>
+    [Required]
     public Guid AccountId { get; set; }
 
     /// <summary>
@@ -23,11 +25,13 @@ public class AddIncomeTransactionDTO
     /// <summary>
     /// The amount of income received.
     /// </summary>
+    [Required]
     public decimal Amount { get; set; }
 
     /// <summary>
     /// The date the income was received.
     /// </summary>
+    [Required]
     public long TransactionDate { get; set; }
 
     /// <summary>

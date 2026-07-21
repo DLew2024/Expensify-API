@@ -1,6 +1,6 @@
-﻿using Expensify.Entities.Interfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Expensify.Entities.Interfaces;
 
 namespace Expensify.DataAccessLayer.Entities.AbstractClasses;
 

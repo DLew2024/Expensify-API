@@ -30,9 +30,21 @@ public class AccountsController : AuthorizationControllerBase
     /// Gets all accounts for the authenticated user.
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> GetAccounts(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<AccountResponseDTO>>> GetUserAccounts(
+        CancellationToken cancellationToken
+    )
     {
-        throw new NotImplementedException();
+        var result = await _service.AccountService.GetAccounts(CurrentUserId, cancellationToken);
+
+        return result.Match<ActionResult<IEnumerable<AccountResponseDTO>>>(
+            success => Ok(success),
+            error =>
+                error switch
+                {
+                    ValidationException ex => BadRequest(ex.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
+                }
+        );
     }
 
     /// <summary>
