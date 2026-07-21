@@ -1,6 +1,6 @@
-﻿using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+﻿using System.ComponentModel.DataAnnotations;
+using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.API.DTOs.IncomeDTOs;
 
