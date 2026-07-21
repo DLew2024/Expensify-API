@@ -1,5 +1,6 @@
 using Expensify.API.Authentication.Handlers;
 using Expensify.API.Configurations;
+using Expensify.API.Development;
 using Expensify.API.Migrations.Extenstions;
 using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
@@ -94,6 +95,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    await app.SeedDevelopmentDataAsync();
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {

@@ -19,7 +19,8 @@ namespace Expensify.API.Migrations
                 table: "users",
                 type: "uuid",
                 nullable: false,
-                defaultValue: new Guid("7e04d972-5cde-4156-8ac4-b5659549236b"));
+                defaultValue: new Guid("7e04d972-5cde-4156-8ac4-b5659549236b")
+            );
 
             migrationBuilder.CreateTable(
                 name: "roles",
@@ -27,12 +28,17 @@ namespace Expensify.API.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false)
+                    name = table.Column<string>(
+                        type: "character varying(20)",
+                        maxLength: 20,
+                        nullable: false
+                    ),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_roles", x => x.id);
-                });
+                }
+            );
 
             migrationBuilder.InsertData(
                 schema: "identity",
@@ -41,21 +47,24 @@ namespace Expensify.API.Migrations
                 values: new object[,]
                 {
                     { new Guid("7e04d972-5cde-4156-8ac4-b5659549236b"), "User" },
-                    { new Guid("aa911248-931b-4cb2-9a65-451081aa3976"), "Admin" }
-                });
+                    { new Guid("aa911248-931b-4cb2-9a65-451081aa3976"), "Admin" },
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "ix_users_role_id",
                 schema: "identity",
                 table: "users",
-                column: "role_id");
+                column: "role_id"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "ux_roles_name",
                 schema: "identity",
                 table: "roles",
                 column: "name",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "fk_users_roles_role_id",
@@ -65,7 +74,8 @@ namespace Expensify.API.Migrations
                 principalSchema: "identity",
                 principalTable: "roles",
                 principalColumn: "id",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.Restrict
+            );
         }
 
         /// <inheritdoc />
@@ -74,21 +84,18 @@ namespace Expensify.API.Migrations
             migrationBuilder.DropForeignKey(
                 name: "fk_users_roles_role_id",
                 schema: "identity",
-                table: "users");
+                table: "users"
+            );
 
-            migrationBuilder.DropTable(
-                name: "roles",
-                schema: "identity");
+            migrationBuilder.DropTable(name: "roles", schema: "identity");
 
             migrationBuilder.DropIndex(
                 name: "ix_users_role_id",
                 schema: "identity",
-                table: "users");
+                table: "users"
+            );
 
-            migrationBuilder.DropColumn(
-                name: "role_id",
-                schema: "identity",
-                table: "users");
+            migrationBuilder.DropColumn(name: "role_id", schema: "identity", table: "users");
         }
     }
 }

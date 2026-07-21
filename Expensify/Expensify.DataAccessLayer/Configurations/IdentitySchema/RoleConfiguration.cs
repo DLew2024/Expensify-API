@@ -39,16 +39,8 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             .HasConstraintName("fk_users_roles_role_id");
 
         builder.HasData(
-            new Role
-            {
-                Id = RoleIds.User,
-                Name = RoleNames.User,
-            },
-            new Role
-            {
-                Id = RoleIds.Admin,
-                Name = RoleNames.Admin,
-            }
+            new Role { Id = RoleIds.User, Name = RoleNames.User },
+            new Role { Id = RoleIds.Admin, Name = RoleNames.Admin }
         );
     }
 }

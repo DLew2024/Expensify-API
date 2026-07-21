@@ -65,4 +65,9 @@ public class CreateAccountDTO
     /// Optional notes associated with the account.
     /// </summary>
     public string Notes { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Optional Icon to add with the account.
+    /// </summary>
+    public string Icon { get; set; } = string.Empty;
 }

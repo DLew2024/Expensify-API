@@ -50,10 +50,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(user => user.EmailVerifiedAt).IsRequired(false);
 
         // Configures the required role foreign key.
-        builder
-            .Property(user => user.RoleId)
-            .IsRequired()
-            .HasDefaultValue(RoleIds.User);
+        builder.Property(user => user.RoleId).IsRequired().HasDefaultValue(RoleIds.User);
 
         // Configures the relationship between a user and their role.
         builder
