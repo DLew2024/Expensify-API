@@ -314,7 +314,7 @@ public class AuthService(
     }
 
     public async Task<Result<UserResponseDTO>> GetUserInfo(
-        Guid id,
+        Guid userId,
         CancellationToken cancellationToken
     )
     {
@@ -322,14 +322,14 @@ public class AuthService(
         {
             var userInfo = await _context
                 .Users.AsNoTracking()
-                .Where(user => user.Id == id)
+                .Where(user => user.Id == userId)
                 .Select(UserResponseDTO.Projection)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (userInfo is null)
             {
                 return new Result<UserResponseDTO>(
-                    new EntityNotFoundException($"User with id was not found: {id}")
+                    new EntityNotFoundException($"User with id was not found: {userId}")
                 );
             }
 

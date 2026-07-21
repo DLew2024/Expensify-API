@@ -1,6 +1,7 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
+using static Expensify.DataAccessLayer.Utility.Constants;
 
 namespace Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
@@ -36,6 +37,16 @@ public class User
     /// URL of the user's profile image.
     /// </summary>
     public string ProfileImageUrl { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The unique identifier of the role assigned to the user.
+    /// </summary>
+    public Guid RoleId { get; set; } = RoleIds.User;
+
+    /// <summary>
+    /// The role assigned to the user.
+    /// </summary>
+    public Role Role { get; set; } = null!;
 
     /// <summary>
     /// Indicates whether the user's email address has been verified.

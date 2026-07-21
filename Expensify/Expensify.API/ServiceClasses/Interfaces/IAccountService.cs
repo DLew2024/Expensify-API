@@ -21,7 +21,7 @@ public interface IAuthService
         CancellationToken cancellationToken
     );
 
-    Task<Result<UserResponseDTO>> GetUserInfo(Guid id, CancellationToken cancellationToken);
+    Task<Result<UserResponseDTO>> GetUserInfo(Guid userId, CancellationToken cancellationToken);
 
     Task<Result<UserTokenResponseDTO>> LoginUser(
         LoginUserDTO request,

@@ -24,9 +24,8 @@ namespace Expensify.API.Controllers
             CancellationToken cancellationToken
         )
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _service.ExpenseService.AddExpense(
-                userId,
+                CurrentUserId,
                 request,
                 cancellationToken
             );

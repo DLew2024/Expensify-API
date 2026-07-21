@@ -49,7 +49,24 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         // Configures the optional email-verification timestamp.
         builder.Property(user => user.EmailVerifiedAt).IsRequired(false);
 
+        // Configures the required role foreign key.
+        builder
+            .Property(user => user.RoleId)
+            .IsRequired()
+            .HasDefaultValue(RoleIds.User);
+
+        // Configures the relationship between a user and their role.
+        builder
+            .HasOne(user => user.Role)
+            .WithMany(role => role.Users)
+            .HasForeignKey(user => user.RoleId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_users_roles_role_id");
+
         // Ensures each email address is unique.
         builder.HasIndex(user => user.Email).IsUnique().HasDatabaseName("ux_users_email");
+
+        // Adds an index for role-based user queries.
+        builder.HasIndex(user => user.RoleId).HasDatabaseName("ix_users_role_id");
     }
 }

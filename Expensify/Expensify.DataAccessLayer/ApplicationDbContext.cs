@@ -19,6 +19,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public virtual DbSet<Budget> Budgets { get; set; }
     public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
     public virtual DbSet<AccountType> AccountTypes { get; set; }
+    public virtual DbSet<Role> Roles { get; set; }
 
     /// <summary>
     ///  public virtual DbSet<BudgetMember> BudgetMembers { get; set; }

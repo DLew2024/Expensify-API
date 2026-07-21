@@ -99,11 +99,10 @@ public class AuthController : AuthorizationControllerBase
 
     [HttpGet("getUser", Name = "GetUserInfo")]
     public async Task<ActionResult<UserResponseDTO>> GetUserInfo(
-        Guid id,
         CancellationToken cancellationToken
     )
     {
-        var result = await _service.AuthService.GetUserInfo(id, cancellationToken);
+        var result = await _service.AuthService.GetUserInfo(CurrentUserId, cancellationToken);
 
         return result.Match<ActionResult<UserResponseDTO>>(
             success => Ok(success),

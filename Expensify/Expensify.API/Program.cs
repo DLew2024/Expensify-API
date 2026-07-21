@@ -1,3 +1,4 @@
+using Expensify.API.Authentication.Handlers;
 using Expensify.API.Configurations;
 using Expensify.API.Migrations.Extenstions;
 using Expensify.API.ServiceClasses;
@@ -7,6 +8,7 @@ using Expensify.API.Utility.Validators.Filters.Auth;
 using Expensify.API.Utility.Validators.Filters.Income;
 using Expensify.Services.Interfaces;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
@@ -15,8 +17,21 @@ using static Expensify.API.Utility.Constants;
 var builder = WebApplication.CreateBuilder(args);
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
 
+if (builder.Environment.IsDevelopment())
+{
+    builder
+        .Services.AddAuthentication("Development")
+        .AddScheme<AuthenticationSchemeOptions, DevelopmentAuthenticationHandler>(
+            "Development",
+            _ => { }
+        );
+}
+else
+{
+    builder.AddApplicationAuthentication();
+}
+
 builder.AddApplicationDatabaseDB();
-builder.AddApplicationAuthentication();
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
