@@ -10,7 +10,11 @@ public interface IAccountService
         CreateAccountDTO request,
         CancellationToken cancellationToken
     );
-
+    Task<Result<bool>> DeleteAccount(
+        Guid userId,
+        Guid accountId,
+        CancellationToken cancellationToken
+    );
     Task<Result<IEnumerable<AccountResponseDTO>>> GetAccounts(
         Guid userId,
         CancellationToken cancellationToken

@@ -116,7 +116,22 @@ public class AccountsController : AuthorizationControllerBase
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        var result = await _service.AccountService.DeleteAccount(
+            CurrentUserId,
+            accountId,
+            cancellationToken
+        );
+
+        return result.Match<IActionResult>(
+            success => NoContent(),
+            error =>
+                error switch
+                {
+                    EntityNotFoundException ex => NotFound(ex.Message),
+                    ValidationException ex => BadRequest(ex.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
+                }
+        );
     }
 
     /// <summary>

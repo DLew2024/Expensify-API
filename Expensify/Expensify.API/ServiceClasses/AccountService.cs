@@ -55,6 +55,37 @@ public class AccountService(ApplicationDbContext context) : IAccountService
         }
     }
 
+    public async Task<Result<bool>> DeleteAccount(
+        Guid userId,
+        Guid accountId,
+        CancellationToken cancellationToken
+    )
+    {
+        var closedDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        var affectedRows = await _context
+            .Accounts.Where(account =>
+                account.Id == accountId && account.UserId == userId && !account.IsDeleted
+            )
+            .ExecuteUpdateAsync(
+                setters =>
+                    setters
+                        .SetProperty(account => account.IsDeleted, true)
+                        .SetProperty(account => account.IsActive, false)
+                        .SetProperty(account => account.ClosedDate, closedDate),
+                cancellationToken
+            );
+
+        if (affectedRows == 0)
+        {
+            return new Result<bool>(
+                new EntityNotFoundException($"Account with id '{accountId}' was not found.")
+            );
+        }
+
+        return new Result<bool>(true);
+    }
+
     public async Task<Result<IEnumerable<AccountResponseDTO>>> GetAccounts(
         Guid userId,
         CancellationToken cancellationToken
