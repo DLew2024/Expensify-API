@@ -15,11 +15,105 @@ public class DashboardDataResponseDTO
 
     [Required]
     public decimal TotalExpenses { get; set; }
+
+    public AccountSummaryDTO? Account { get; set; }
+
     public TransactionPeriodSummaryDTO? Last30DaysOfExpenses { get; set; }
+
     public TransactionPeriodSummaryDTO? Last60DaysOfExpenses { get; set; }
+
     public TransactionPeriodSummaryDTO? Last30DaysOfIncome { get; set; }
+
     public TransactionPeriodSummaryDTO? Last60DaysOfIncome { get; set; }
+
     public TransactionDTO[] RecentTransactions { get; set; } = [];
+
+    public static DashboardDataResponseDTO Create(
+        AccountSummaryDTO account,
+        TransactionDTO[] transactions
+    )
+    {
+        var currentDate = DateTimeOffset.UtcNow;
+
+        var thirtyDaysAgo = currentDate.AddDays(-30).ToUnixTimeSeconds();
+
+        var sixtyDaysAgo = currentDate.AddDays(-60).ToUnixTimeSeconds();
+
+        var income = transactions
+            .Where(transaction => transaction.Type == TransactionType.Income)
+            .ToArray();
+
+        var expenses = transactions
+            .Where(transaction => transaction.Type == TransactionType.Expense)
+            .ToArray();
+
+        var last30DaysOfExpenses = expenses
+            .Where(transaction => transaction.TransactionDate >= thirtyDaysAgo)
+            .OrderByDescending(transaction => transaction.TransactionDate)
+            .ToArray();
+
+        var last60DaysOfExpenses = expenses
+            .Where(transaction => transaction.TransactionDate >= sixtyDaysAgo)
+            .OrderByDescending(transaction => transaction.TransactionDate)
+            .ToArray();
+
+        var last30DaysOfIncome = income
+            .Where(transaction => transaction.TransactionDate >= thirtyDaysAgo)
+            .OrderByDescending(transaction => transaction.TransactionDate)
+            .ToArray();
+
+        var last60DaysOfIncome = income
+            .Where(transaction => transaction.TransactionDate >= sixtyDaysAgo)
+            .OrderByDescending(transaction => transaction.TransactionDate)
+            .ToArray();
+
+        var totalIncome = income.Sum(transaction => transaction.Amount);
+
+        var totalExpenses = expenses.Sum(transaction => transaction.Amount);
+
+        return new DashboardDataResponseDTO
+        {
+            Account = account,
+
+            TotalBalance = account.CurrentBalance + totalIncome - totalExpenses,
+            TotalIncome = totalIncome,
+            TotalExpenses = totalExpenses,
+
+            Last30DaysOfExpenses = CreateTransactionPeriodSummary(last30DaysOfExpenses),
+
+            Last60DaysOfExpenses = CreateTransactionPeriodSummary(last60DaysOfExpenses),
+
+            Last30DaysOfIncome = CreateTransactionPeriodSummary(last30DaysOfIncome),
+
+            Last60DaysOfIncome = CreateTransactionPeriodSummary(last60DaysOfIncome),
+
+            RecentTransactions = transactions
+                .OrderByDescending(transaction => transaction.TransactionDate)
+                .Take(5)
+                .ToArray(),
+        };
+    }
+
+    private static TransactionPeriodSummaryDTO CreateTransactionPeriodSummary(
+        TransactionDTO[] transactions
+    )
+    {
+        return new TransactionPeriodSummaryDTO
+        {
+            TotalBalance = transactions.Sum(transaction => transaction.Amount),
+            Transactions = transactions,
+        };
+    }
+}
+
+/// <summary>
+/// Represents the user's default account information.
+/// </summary>
+public class AccountSummaryDTO
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public decimal CurrentBalance { get; set; }
 }
 
 public class TransactionPeriodSummaryDTO

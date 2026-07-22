@@ -13,6 +13,7 @@ namespace Expensify.API.ServiceClasses.Interfaces
         );
         public Task<Result<List<TransactionDTO>>> GetAllIncome(
             Guid userId,
+            Guid? accountId,
             CancellationToken cancellationToken
         );
 

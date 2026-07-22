@@ -10,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.API.ServiceClasses;
 
-public class IncomeService(ApplicationDbContext context) : IIncomeService
+public class IncomeService(ApplicationDbContext context, IAccountResolver accountResolver)
+    : IIncomeService
 {
     private readonly ApplicationDbContext _context = context;
+    private readonly IAccountResolver _accountResolver = accountResolver;
     private readonly ILogger<IncomeService> _logger;
 
     public async Task<Result<IncomeTransactionResponseDTO>> AddIncome(
@@ -213,15 +215,34 @@ public class IncomeService(ApplicationDbContext context) : IIncomeService
 
     public async Task<Result<List<TransactionDTO>>> GetAllIncome(
         Guid userId,
+        Guid? accountId,
         CancellationToken cancellationToken
     )
     {
         try
         {
+            var resolvedAccountId = await _accountResolver.ResolveAccountId(
+                userId,
+                accountId,
+                cancellationToken
+            );
+
+            if (!resolvedAccountId.HasValue)
+            {
+                return new Result<List<TransactionDTO>>(
+                    new EntityNotFoundException(
+                        accountId.HasValue
+                            ? "The selected account could not be found or is unavailable."
+                            : "No default account could be found."
+                    )
+                );
+            }
+
             var transactions = await _context
                 .Transactions.AsNoTracking()
                 .Where(transaction =>
                     transaction.UserId == userId
+                    && transaction.AccountId == resolvedAccountId.Value
                     && transaction.Type == TransactionType.Income
                     && !transaction.IsDeleted
                 )

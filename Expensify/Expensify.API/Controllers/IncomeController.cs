@@ -60,16 +60,27 @@ public class IncomeController : AuthorizationControllerBase
         );
     }
 
-    [HttpGet("getAll", Name = "GetAllIncome")]
+    [HttpGet("getAll")]
     public async Task<ActionResult<List<TransactionDTO>>> GetAllIncome(
+        [FromQuery] Guid? accountId,
         CancellationToken cancellationToken
     )
     {
-        var result = await _service.IncomeService.GetAllIncome(CurrentUserId, cancellationToken);
+        var result = await _service.IncomeService.GetAllIncome(
+            CurrentUserId,
+            accountId,
+            cancellationToken
+        );
 
         return result.Match<ActionResult<List<TransactionDTO>>>(
             success => Ok(success),
-            error => StatusCode(StatusCodes.Status500InternalServerError, error.Message)
+            error =>
+                error switch
+                {
+                    EntityNotFoundException ex => NotFound(ex.Message),
+
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
+                }
         );
     }
 

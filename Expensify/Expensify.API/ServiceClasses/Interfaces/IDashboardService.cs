@@ -7,6 +7,7 @@ namespace Expensify.API.ServiceClasses.Interfaces
     {
         Task<Result<DashboardDataResponseDTO>> GetDashboardData(
             Guid userId,
+            Guid? accountId,
             CancellationToken cancellationToken
         );
     }

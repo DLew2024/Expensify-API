@@ -16,7 +16,8 @@ namespace Expensify.API.Migrations
                 table: "accounts",
                 type: "boolean",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: false
+            );
 
             migrationBuilder.CreateIndex(
                 name: "ux_accounts_user_default",
@@ -24,7 +25,8 @@ namespace Expensify.API.Migrations
                 table: "accounts",
                 column: "user_id",
                 unique: true,
-                filter: "\"is_default\" = true");
+                filter: "\"is_default\" = true"
+            );
         }
 
         /// <inheritdoc />
@@ -33,12 +35,10 @@ namespace Expensify.API.Migrations
             migrationBuilder.DropIndex(
                 name: "ux_accounts_user_default",
                 schema: "finance",
-                table: "accounts");
+                table: "accounts"
+            );
 
-            migrationBuilder.DropColumn(
-                name: "is_default",
-                schema: "finance",
-                table: "accounts");
+            migrationBuilder.DropColumn(name: "is_default", schema: "finance", table: "accounts");
         }
     }
 }

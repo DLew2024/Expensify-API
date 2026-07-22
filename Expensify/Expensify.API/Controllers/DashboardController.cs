@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Expensify.API.DTOs.DashboardDTOs;
+﻿using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.API.Controllers
 {
@@ -26,13 +26,15 @@ namespace Expensify.API.Controllers
             _service = service;
         }
 
-        [HttpGet(Name = "GetDashboardData")]
+        [HttpGet]
         public async Task<ActionResult<DashboardDataResponseDTO>> GetDashboardData(
+            Guid? accountId,
             CancellationToken cancellationToken
         )
         {
             var result = await _service.DashboardService.GetDashboardData(
                 CurrentUserId,
+                accountId,
                 cancellationToken
             );
             return result.Match<ActionResult<DashboardDataResponseDTO>>(

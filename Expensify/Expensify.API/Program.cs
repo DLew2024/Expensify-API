@@ -4,6 +4,7 @@ using Expensify.API.Development;
 using Expensify.API.Migrations.Extenstions;
 using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.ServiceClasses.Resolvers;
 using Expensify.API.Utility.Validators.Filters;
 using Expensify.API.Utility.Validators.Filters.Auth;
 using Expensify.API.Utility.Validators.Filters.Income;
@@ -89,6 +90,7 @@ builder.Services.AddScoped<IIncomeService, IncomeService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped<IAccountResolver, AccountResolver>();
 builder.Services.AddScoped(typeof(ValidationFilter<>));
 
 var app = builder.Build();

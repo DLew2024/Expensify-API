@@ -1,7 +1,7 @@
 ﻿using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
-using Expensify.DataAccessLayer.Enums;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,14 +10,17 @@ namespace Expensify.Services.Interfaces
     public class DashboardService : IDashboardService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IAccountResolver _accountResolver;
 
-        public DashboardService(ApplicationDbContext context)
+        public DashboardService(ApplicationDbContext context, IAccountResolver accountResolver)
         {
             _context = context;
+            _accountResolver = accountResolver;
         }
 
         public async Task<Result<DashboardDataResponseDTO>> GetDashboardData(
             Guid userId,
+            Guid? accountId,
             CancellationToken cancellationToken
         )
         {
@@ -30,96 +33,48 @@ namespace Expensify.Services.Interfaces
                     );
                 }
 
-                var currentDate = DateTimeOffset.UtcNow;
+                var resolvedAccountId = await _accountResolver.ResolveAccountId(
+                    userId,
+                    accountId,
+                    cancellationToken
+                );
 
-                var thirtyDaysAgo = currentDate.AddDays(-30).ToUnixTimeSeconds();
-                var sixtyDaysAgo = currentDate.AddDays(-60).ToUnixTimeSeconds();
+                if (!resolvedAccountId.HasValue)
+                {
+                    return new Result<DashboardDataResponseDTO>(
+                        new EntityNotFoundException(
+                            accountId.HasValue
+                                ? "The selected account could not be found or is unavailable."
+                                : "No default account could be found."
+                        )
+                    );
+                }
+
+                var account = await _context
+                    .Accounts.AsNoTracking()
+                    .Where(account =>
+                        account.UserId == userId
+                        && account.Id == resolvedAccountId.Value
+                        && !account.IsDeleted
+                        && account.IsActive
+                    )
+                    .Select(account => new AccountSummaryDTO
+                    {
+                        Id = account.Id,
+                        Name = account.Name,
+                        CurrentBalance = account.CurrentBalance,
+                    })
+                    .FirstAsync(cancellationToken);
 
                 var transactions = await _context
                     .Transactions.AsNoTracking()
-                    .Where(transaction => transaction.UserId == userId)
+                    .Where(transaction =>
+                        transaction.UserId == userId && transaction.AccountId == account.Id
+                    )
                     .Select(TransactionDTO.Projection)
-                    .ToListAsync(cancellationToken);
+                    .ToArrayAsync(cancellationToken);
 
-                var totalIncome = transactions
-                    .Where(transaction => transaction.Type == TransactionType.Income)
-                    .Sum(transaction => transaction.Amount);
-
-                var totalExpenses = transactions
-                    .Where(transaction => transaction.Type == TransactionType.Expense)
-                    .Sum(transaction => transaction.Amount);
-
-                var totalBalance = totalIncome - totalExpenses;
-
-                var last30DaysOfExpenses = transactions
-                    .Where(transaction =>
-                        transaction.Type == TransactionType.Expense
-                        && transaction.TransactionDate >= thirtyDaysAgo
-                    )
-                    .OrderByDescending(transaction => transaction.TransactionDate)
-                    .ToArray();
-
-                var last60DaysOfExpenses = transactions
-                    .Where(transaction =>
-                        transaction.Type == TransactionType.Expense
-                        && transaction.TransactionDate >= sixtyDaysAgo
-                    )
-                    .OrderByDescending(transaction => transaction.TransactionDate)
-                    .ToArray();
-
-                var last30DaysOfIncome = transactions
-                    .Where(transaction =>
-                        transaction.Type == TransactionType.Income
-                        && transaction.TransactionDate >= thirtyDaysAgo
-                    )
-                    .OrderByDescending(transaction => transaction.TransactionDate)
-                    .ToArray();
-
-                var last60DaysOfIncome = transactions
-                    .Where(transaction =>
-                        transaction.Type == TransactionType.Income
-                        && transaction.TransactionDate >= sixtyDaysAgo
-                    )
-                    .OrderByDescending(transaction => transaction.TransactionDate)
-                    .ToArray();
-
-                var recentTransactions = transactions
-                    .OrderByDescending(transaction => transaction.TransactionDate)
-                    .Take(5)
-                    .ToArray();
-
-                var response = new DashboardDataResponseDTO
-                {
-                    TotalBalance = totalBalance,
-                    TotalIncome = totalIncome,
-                    TotalExpenses = totalExpenses,
-
-                    Last30DaysOfExpenses = new TransactionPeriodSummaryDTO
-                    {
-                        TotalBalance = last30DaysOfExpenses.Sum(transaction => transaction.Amount),
-                        Transactions = last30DaysOfExpenses,
-                    },
-
-                    Last60DaysOfExpenses = new TransactionPeriodSummaryDTO
-                    {
-                        TotalBalance = last60DaysOfExpenses.Sum(transaction => transaction.Amount),
-                        Transactions = last60DaysOfExpenses,
-                    },
-
-                    Last30DaysOfIncome = new TransactionPeriodSummaryDTO
-                    {
-                        TotalBalance = last30DaysOfIncome.Sum(transaction => transaction.Amount),
-                        Transactions = last30DaysOfIncome,
-                    },
-
-                    Last60DaysOfIncome = new TransactionPeriodSummaryDTO
-                    {
-                        TotalBalance = last60DaysOfIncome.Sum(transaction => transaction.Amount),
-                        Transactions = last60DaysOfIncome,
-                    },
-
-                    RecentTransactions = recentTransactions,
-                };
+                var response = DashboardDataResponseDTO.Create(account, transactions);
 
                 return new Result<DashboardDataResponseDTO>(response);
             }
