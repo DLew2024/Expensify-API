@@ -40,6 +40,9 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         builder.Property(account => account.Notes).HasMaxLength(DatabaseLengths.Notes);
 
+        // Configures the optional account Icon URL.
+        builder.Property(account => account.Icon).HasMaxLength(DatabaseLengths.Url);
+
         // Stores the currency code as an integer.
         builder.Property(account => account.CurrencyCode).IsRequired();
 

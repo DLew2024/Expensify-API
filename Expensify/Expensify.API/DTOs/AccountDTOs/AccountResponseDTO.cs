@@ -89,6 +89,11 @@ public class AccountResponseDTO
     public string Notes { get; set; } = string.Empty;
 
     /// <summary>
+    /// Icon associated with the account.
+    /// </summary>
+    public string Icon { get; set; } = string.Empty;
+
+    /// <summary>
     /// Projection used to convert an account entity into an account response DTO.
     /// </summary>
     public static readonly Expression<Func<Account, AccountResponseDTO>> Projection =
@@ -109,5 +114,6 @@ public class AccountResponseDTO
             CreditLimit = account.CreditLimit,
             InterestRate = account.InterestRate,
             Notes = account.Notes ?? string.Empty,
+            Icon = account.Icon ?? string.Empty
         };
 }

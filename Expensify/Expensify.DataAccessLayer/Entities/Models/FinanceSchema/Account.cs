@@ -88,6 +88,11 @@ public class Account : Auditable
     public string? Notes { get; set; }
 
     /// <summary>
+    /// Icon associated with the account.
+    /// </summary>
+    public string? Icon { get; set; }
+
+    /// <summary>
     /// Maximum borrowable amount for credit-based accounts.
     /// Applies mainly to credit cards and lines of credit.
     /// </summary>
