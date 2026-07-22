@@ -82,6 +82,13 @@ public class Account : Auditable
     public bool IsHidden { get; set; } = false;
 
     /// <summary>
+    /// Indicates whether this is the user's default account.
+    /// The default account is selected automatically when no account
+    /// has been explicitly selected.
+    /// </summary>
+    public bool IsDefault { get; set; }
+
+    /// <summary>
     /// Optional notes about the account.
     /// Example: "Used only for travel expenses."
     /// </summary>

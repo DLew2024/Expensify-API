@@ -97,5 +97,17 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder
             .HasIndex(account => account.AccountTypeId)
             .HasDatabaseName("ix_accounts_account_type_id");
+
+        // Configures whether the account is the user's default account.
+        // Defaults to false when no value is explicitly provided.
+        builder.Property(account => account.IsDefault).IsRequired().HasDefaultValue(false);
+
+        // Ensures each user can have only one account marked as the default.
+        // The partial unique index applies only to accounts where IsDefault is true.
+        builder
+            .HasIndex(account => account.UserId)
+            .IsUnique()
+            .HasFilter("\"is_default\" = true")
+            .HasDatabaseName("ux_accounts_user_default");
     }
 }

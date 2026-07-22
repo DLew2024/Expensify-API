@@ -39,9 +39,14 @@ public class AccountService(ApplicationDbContext context) : IAccountService
                 );
             }
 
-            var currentDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var hasExistingAccounts = await _context.Accounts.AnyAsync(
+                account => account.UserId == userId && !account.IsDeleted,
+                cancellationToken
+            );
 
             var account = request.ToEntity(userId);
+
+            account.IsDefault = !hasExistingAccounts;
 
             _context.Accounts.Add(account);
 
@@ -52,6 +57,42 @@ public class AccountService(ApplicationDbContext context) : IAccountService
         catch (Exception ex)
         {
             return new Result<CreateAccountResponseDTO>(ex);
+        }
+    }
+
+    public async Task<Result<bool>> SetDefaultAccount(
+        Guid userId,
+        Guid accountId,
+        CancellationToken cancellationToken
+    )
+    {
+        try
+        {
+            var accounts = await _context
+                .Accounts.Where(account => account.UserId == userId && !account.IsDeleted)
+                .ToListAsync(cancellationToken);
+
+            var newDefaultAccount = accounts.FirstOrDefault(account => account.Id == accountId);
+
+            if (newDefaultAccount is null)
+            {
+                return new Result<bool>(
+                    new EntityNotFoundException("The account could not be found.")
+                );
+            }
+
+            foreach (var account in accounts)
+            {
+                account.IsDefault = account.Id == accountId;
+            }
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return new Result<bool>(true);
+        }
+        catch (Exception ex)
+        {
+            return new Result<bool>(ex);
         }
     }
 

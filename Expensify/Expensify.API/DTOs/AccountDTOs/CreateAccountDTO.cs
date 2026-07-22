@@ -72,6 +72,11 @@ public class CreateAccountDTO
     /// </summary>
     public string Icon { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Verify if account is default
+    /// </summary>
+    public bool IsDefault { get; set; }
+
     public Account ToEntity(Guid userId)
     {
         return new Account
@@ -89,6 +94,7 @@ public class CreateAccountDTO
             InterestRate = InterestRate,
             Notes = Notes.Trim(),
             Icon = Icon.Trim(),
+            IsDefault = false,
             IsActive = true,
             IsHidden = false,
         };
@@ -109,6 +115,7 @@ public class CreateAccountDTO
             InterestRate = account.InterestRate ?? 0,
             Notes = account.Notes ?? string.Empty,
             Icon = account.Icon ?? string.Empty,
+            IsDefault = account.IsDefault,
         };
     }
 }
