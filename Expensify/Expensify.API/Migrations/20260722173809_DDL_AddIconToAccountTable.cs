@@ -16,16 +16,14 @@ namespace Expensify.API.Migrations
                 table: "accounts",
                 type: "character varying(2048)",
                 maxLength: 2048,
-                nullable: true);
+                nullable: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "icon",
-                schema: "finance",
-                table: "accounts");
+            migrationBuilder.DropColumn(name: "icon", schema: "finance", table: "accounts");
         }
     }
 }

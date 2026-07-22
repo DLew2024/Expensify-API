@@ -1,4 +1,5 @@
-﻿using Expensify.DataAccessLayer.Enums;
+﻿using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.API.DTOs.AccountDTOs;
 
@@ -86,4 +87,27 @@ public class CreateAccountResponseDTO
     /// The date the account was created.
     /// </summary>
     public long CreateDate { get; set; }
+
+    public static CreateAccountResponseDTO FromEntity(Account account, string accountTypeName)
+    {
+        return new CreateAccountResponseDTO
+        {
+            AccountId = account.Id,
+            Name = account.Name,
+            AccountTypeId = account.AccountTypeId,
+            AccountTypeName = accountTypeName,
+            InstitutionName = account.InstitutionName,
+            LastFourDigits = account.LastFourDigits,
+            CurrencyCode = account.CurrencyCode,
+            CurrentBalance = account.CurrentBalance,
+            AvailableBalance = account.AvailableBalance,
+            IncludeInNetWorth = account.IncludeInNetWorth,
+            IsActive = account.IsActive,
+            IsHidden = account.IsHidden,
+            Notes = account.Notes,
+            CreditLimit = account.CreditLimit,
+            InterestRate = account.InterestRate,
+            CreateDate = account.CreateDate,
+        };
+    }
 }

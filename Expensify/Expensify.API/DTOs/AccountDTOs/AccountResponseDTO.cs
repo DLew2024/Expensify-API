@@ -114,6 +114,6 @@ public class AccountResponseDTO
             CreditLimit = account.CreditLimit,
             InterestRate = account.InterestRate,
             Notes = account.Notes ?? string.Empty,
-            Icon = account.Icon ?? string.Empty
+            Icon = account.Icon ?? string.Empty,
         };
 }

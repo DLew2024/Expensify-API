@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.API.DTOs.AccountDTOs;
@@ -70,4 +71,44 @@ public class CreateAccountDTO
     /// Optional Icon to add with the account.
     /// </summary>
     public string Icon { get; set; } = string.Empty;
+
+    public Account ToEntity(Guid userId)
+    {
+        return new Account
+        {
+            UserId = userId,
+            Name = Name.Trim(),
+            AccountTypeId = AccountTypeId,
+            InstitutionName = InstitutionName.Trim(),
+            LastFourDigits = LastFourDigits.Trim(),
+            CurrencyCode = CurrencyCode,
+            CurrentBalance = InitialBalance,
+            AvailableBalance = InitialBalance,
+            IncludeInNetWorth = IncludeInNetWorth,
+            CreditLimit = CreditLimit,
+            InterestRate = InterestRate,
+            Notes = Notes.Trim(),
+            Icon = Icon.Trim(),
+            IsActive = true,
+            IsHidden = false,
+        };
+    }
+
+    public static CreateAccountDTO FromEntity(Account account)
+    {
+        return new CreateAccountDTO
+        {
+            Name = account.Name,
+            AccountTypeId = account.AccountTypeId,
+            InstitutionName = account.InstitutionName,
+            LastFourDigits = account.LastFourDigits ?? string.Empty,
+            CurrencyCode = account.CurrencyCode,
+            InitialBalance = account.CurrentBalance,
+            IncludeInNetWorth = account.IncludeInNetWorth,
+            CreditLimit = account.CreditLimit ?? 0,
+            InterestRate = account.InterestRate ?? 0,
+            Notes = account.Notes ?? string.Empty,
+            Icon = account.Icon ?? string.Empty,
+        };
+    }
 }
