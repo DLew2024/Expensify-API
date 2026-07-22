@@ -34,11 +34,11 @@ public static class DataExtensions
         });
     }
 
-    public static void MigrateDB(this WebApplication app)
+    public static async Task MigrateDBAsync(this WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
+        await using var scope = app.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.Migrate();
+        await dbContext.Database.MigrateAsync();
     }
 
     public static void AddApplicationAuthentication(this WebApplicationBuilder builder)

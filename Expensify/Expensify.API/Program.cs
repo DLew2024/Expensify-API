@@ -93,10 +93,14 @@ builder.Services.AddScoped(typeof(ValidationFilter<>));
 
 var app = builder.Build();
 
+await app.MigrateDBAsync();
+
 if (app.Environment.IsDevelopment())
 {
     await app.SeedDevelopmentDataAsync();
+
     app.MapOpenApi();
+
     app.MapScalarApiReference(options =>
     {
         options.WithOpenApiRoutePattern("/openapi/{documentName}.json");
@@ -113,7 +117,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 //app.MapHealthChecks("health-check");
-
-app.MigrateDB();
 
 app.Run();
