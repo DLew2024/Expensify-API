@@ -12,6 +12,7 @@ namespace Expensify.API.ServiceClasses
         IEmailService emailService,
         IPasswordService passwordService,
         ISecurityService securityService,
+        IAccountResolver accountResolver,
         IJwtService jwtService,
         IOptions<FrontendSettings> frontendOptions,
         IOptions<JwtSettings> jwtOptions
@@ -23,8 +24,10 @@ namespace Expensify.API.ServiceClasses
         private readonly IPasswordService _passwordService = passwordService;
         private readonly ISecurityService _securityService = securityService;
         private readonly IEmailService _emailService = emailService;
+        private readonly IAccountResolver _accountResolver = accountResolver;
         private readonly IOptions<FrontendSettings> _frontendSettings = frontendOptions;
         private readonly IOptions<JwtSettings> _jwtSettings = jwtOptions;
+
 
         public IAccountService AccountService => field ?? new AccountService(_context);
         public IAuthService AuthService =>
@@ -38,9 +41,9 @@ namespace Expensify.API.ServiceClasses
                 _frontendSettings,
                 _jwtSettings
             );
-        public IDashboardService DashboardService => field ?? new DashboardService(_context);
+        public IDashboardService DashboardService => field ?? new DashboardService(_context, _accountResolver);
         public IExpenseService ExpenseService => field ?? new ExpenseService(_context);
-        public IIncomeService IncomeService => field ?? new IncomeService(_context);
+        public IIncomeService IncomeService => field ?? new IncomeService(_context, _accountResolver);
         public IJwtService JwtService => field ?? new JwtService(configuration);
         public IPasswordService PasswordService => field ?? new PasswordService();
     }
