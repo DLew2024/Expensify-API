@@ -96,6 +96,7 @@ public class AccountService(ApplicationDbContext context) : IAccountService
         }
     }
 
+    // Make sure user cant delete account if only one is left 
     public async Task<Result<bool>> DeleteAccount(
         Guid userId,
         Guid accountId,
