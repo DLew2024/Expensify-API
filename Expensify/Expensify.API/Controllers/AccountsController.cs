@@ -78,7 +78,6 @@ public class AccountsController : AuthorizationControllerBase
         );
     }
 
-   
     [HttpPut("{accountId:guid}")]
     public async Task<IActionResult> UpdateAccount(
         Guid accountId,
@@ -89,7 +88,6 @@ public class AccountsController : AuthorizationControllerBase
         throw new NotImplementedException();
     }
 
-  
     [HttpDelete("{accountId:guid}")]
     public async Task<IActionResult> DeleteAccount(
         Guid accountId,
@@ -123,7 +121,6 @@ public class AccountsController : AuthorizationControllerBase
         throw new NotImplementedException();
     }
 
-  
     [HttpPatch("{accountId:guid}/hide")]
     public async Task<IActionResult> HideAccount(
         Guid accountId,
@@ -133,7 +130,6 @@ public class AccountsController : AuthorizationControllerBase
         throw new NotImplementedException();
     }
 
-   
     [HttpPatch("{accountId:guid}/unhide")]
     public async Task<IActionResult> UnhideAccount(
         Guid accountId,
@@ -143,7 +139,6 @@ public class AccountsController : AuthorizationControllerBase
         throw new NotImplementedException();
     }
 
-  
     [HttpPatch("{accountId:guid}/close")]
     public async Task<IActionResult> CloseAccount(
         Guid accountId,
@@ -153,7 +148,6 @@ public class AccountsController : AuthorizationControllerBase
         throw new NotImplementedException();
     }
 
-  
     [HttpPatch("{accountId:guid}/reopen")]
     public async Task<IActionResult> ReopenAccount(
         Guid accountId,
@@ -163,7 +157,6 @@ public class AccountsController : AuthorizationControllerBase
         throw new NotImplementedException();
     }
 
-    
     [HttpGet("net-worth")]
     public async Task<IActionResult> GetNetWorth(CancellationToken cancellationToken)
     {

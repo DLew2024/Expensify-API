@@ -1,6 +1,7 @@
 ﻿using Expensify.API.Configurations;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.ServiceClasses.Interfaces.Resolvers;
+using Expensify.API.ServiceClasses.Resolvers;
 using Expensify.DataAccessLayer;
 using Expensify.Services.Interfaces;
 using Microsoft.Extensions.Options;
@@ -14,6 +15,7 @@ namespace Expensify.API.ServiceClasses
         IPasswordService passwordService,
         ISecurityService securityService,
         IAccountResolver accountResolver,
+        IAccountTypeResolver accountTypeResolver,
         ITransactionResolver transactionResolver,
         IJwtService jwtService,
         IOptions<FrontendSettings> frontendOptions,
@@ -28,10 +30,12 @@ namespace Expensify.API.ServiceClasses
         private readonly IEmailService _emailService = emailService;
         private readonly IAccountResolver _accountResolver = accountResolver;
         private readonly ITransactionResolver _transactionResolver = transactionResolver;
+        private readonly IAccountTypeResolver _accountTypeResolver = accountTypeResolver;
         private readonly IOptions<FrontendSettings> _frontendSettings = frontendOptions;
         private readonly IOptions<JwtSettings> _jwtSettings = jwtOptions;
 
-        public IAccountService AccountService => field ?? new AccountService(_context);
+        public IAccountService AccountService =>
+            field ?? new AccountService(_context, _accountTypeResolver);
         public IAuthService AuthService =>
             field
             ?? new AuthService(
@@ -44,7 +48,7 @@ namespace Expensify.API.ServiceClasses
                 _jwtSettings
             );
         public IDashboardService DashboardService =>
-            field ?? new DashboardService(_context, _accountResolver);
+            field ?? new DashboardService(_context, _accountResolver, _transactionResolver);
         public IExpenseService ExpenseService =>
             field ?? new ExpenseService(_context, _accountResolver, _transactionResolver);
         public IIncomeService IncomeService =>

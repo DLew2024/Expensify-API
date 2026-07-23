@@ -1,9 +1,8 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
-namespace Expensify.API.ServiceClasses.Interfaces
+namespace Expensify.API.ServiceClasses.Interfaces;
+
+public interface IJwtService
 {
-    public interface IJwtService
-    {
-        string GenerateToken(User user);
-    }
+    string GenerateToken(User user);
 }

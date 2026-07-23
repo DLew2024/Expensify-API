@@ -135,16 +135,20 @@ public class TransactionDTO
 
     [Required]
     public long TransactionDate { get; set; }
+
+    [Required]
     public string Merchant { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Notes { get; set; } = string.Empty;
-    public required PaymentMethodDTO PaymentMethod { get; set; }
-    public required CategoryDTO Category { get; set; }
-    public TransactionPostedStatus Status { get; set; }
-    public bool IsRecurring { get; set; }
-    public Guid RecurringTransactionId { get; set; }
-    public List<string> Tags { get; set; } = [];
     public string Icon { get; set; } = string.Empty;
+    public TransactionPostedStatus Status { get; set; }
+
+    //public List<string> Tags { get; set; } = [];
+    //public Guid RecurringTransactionId { get; set; }
+    // Not implmented yet
+    //public required CategoryDTO Category { get; set; }
+    //public required PaymentMethodDTO PaymentMethod { get; set; }
+    //public bool IsRecurring { get; set; }
 
     public static readonly Expression<Func<Transaction, TransactionDTO>> Projection =
         transaction => new TransactionDTO
@@ -156,30 +160,29 @@ public class TransactionDTO
             Merchant = transaction.MerchantName,
             Description = transaction.Description,
             Notes = transaction.Notes ?? string.Empty,
-
-            PaymentMethod =
-                transaction.PaymentMethod != null
-                    ? new PaymentMethodDTO
-                    {
-                        Id = transaction.PaymentMethod.Id,
-                        Name = transaction.PaymentMethod.Name,
-                    }
-                    : new PaymentMethodDTO { Id = Guid.Empty, Name = string.Empty },
-
-            Category =
-                transaction.Category != null
-                    ? new CategoryDTO
-                    {
-                        Id = transaction.Category.Id,
-                        Name = transaction.Category.Name,
-                    }
-                    : new CategoryDTO { Id = Guid.Empty, Name = string.Empty },
-
             Status = transaction.Status,
-            IsRecurring = transaction.IsRecurring,
-            RecurringTransactionId = transaction.RecurringTransactionId,
-            Tags = transaction.Tags,
             Icon = transaction.Icon,
+
+            // Not implmented yet
+            //Tags = transaction.Tags,
+            //RecurringTransactionId = transaction.RecurringTransactionId,
+            //IsRecurring = transaction.IsRecurring,
+            //PaymentMethod =
+            //    transaction.PaymentMethod != null
+            //        ? new PaymentMethodDTO
+            //        {
+            //            Id = transaction.PaymentMethod.Id,
+            //            Name = transaction.PaymentMethod.Name,
+            //        }
+            //        : new PaymentMethodDTO { Id = Guid.Empty, Name = string.Empty },
+            //Category =
+            //    transaction.Category != null
+            //        ? new CategoryDTO
+            //        {
+            //            Id = transaction.Category.Id,
+            //            Name = transaction.Category.Name,
+            //        }
+            //        : new CategoryDTO { Id = Guid.Empty, Name = string.Empty },
         };
 }
 

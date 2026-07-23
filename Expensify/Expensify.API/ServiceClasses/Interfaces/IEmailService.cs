@@ -1,11 +1,10 @@
-﻿namespace Expensify.API.ServiceClasses.Interfaces
+﻿namespace Expensify.API.ServiceClasses.Interfaces;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task SendPasswordResetEmail(
-            string toEmail,
-            string resetLink,
-            CancellationToken cancellationToken
-        );
-    }
+    Task SendPasswordResetEmail(
+        string toEmail,
+        string resetLink,
+        CancellationToken cancellationToken
+    );
 }

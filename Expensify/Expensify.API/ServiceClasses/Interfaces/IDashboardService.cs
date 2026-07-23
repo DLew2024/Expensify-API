@@ -1,14 +1,13 @@
 ﻿using Expensify.API.DTOs.DashboardDTOs;
 using LanguageExt.Common;
 
-namespace Expensify.API.ServiceClasses.Interfaces
+namespace Expensify.API.ServiceClasses.Interfaces;
+
+public interface IDashboardService
 {
-    public interface IDashboardService
-    {
-        Task<Result<DashboardDataResponseDTO>> GetDashboardData(
-            Guid userId,
-            Guid? accountId,
-            CancellationToken cancellationToken
-        );
-    }
+    Task<Result<DashboardDataResponseDTO>> GetDashboardData(
+        Guid userId,
+        Guid? accountId,
+        CancellationToken cancellationToken
+    );
 }

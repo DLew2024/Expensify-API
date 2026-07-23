@@ -75,5 +75,32 @@ namespace Expensify.API.ServiceClasses.Resolvers
                 .Select(TransactionDTO.Projection)
                 .ToListAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Resolves all non-deleted transactions for a specific account belonging to the specified user.
+        /// Transactions are projected directly to <see cref="TransactionDTO"/> objects.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user who owns the transactions.</param>
+        /// <param name="accountId">The unique identifier of the account associated with the transactions.</param>
+        /// <param name="cancellationToken">Token used to cancel the asynchronous operation.</param>
+        /// <returns>
+        /// An array of transactions associated with the specified user and account.
+        /// </returns>
+        public async Task<TransactionDTO[]> ResolveTransactionsByUserAndAccount(
+            Guid userId,
+            Guid accountId,
+            CancellationToken cancellationToken
+        )
+        {
+            return await _context
+                .Transactions.AsNoTracking()
+                .Where(transaction =>
+                    transaction.UserId == userId
+                    && transaction.AccountId == accountId
+                    && !transaction.IsDeleted
+                )
+                .Select(TransactionDTO.Projection)
+                .ToArrayAsync(cancellationToken);
+        }
     }
 }

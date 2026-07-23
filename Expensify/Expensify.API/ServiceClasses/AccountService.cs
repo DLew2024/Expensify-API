@@ -1,5 +1,7 @@
-﻿using Expensify.API.DTOs.AccountDTOs;
+﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.DTOs.AccountDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.ServiceClasses.Interfaces.Resolvers;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
 using LanguageExt.Common;
@@ -7,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.API.ServiceClasses;
 
-public class AccountService(ApplicationDbContext context) : IAccountService
+public class AccountService(ApplicationDbContext context, IAccountTypeResolver accountTypeResolver)
+    : IAccountService
 {
     private readonly ApplicationDbContext _context = context;
+    private readonly IAccountTypeResolver _accountTypeResolver = accountTypeResolver;
 
     public async Task<Result<AccountResponseDTO>> CreateAccount(
         Guid userId,
@@ -19,16 +23,11 @@ public class AccountService(ApplicationDbContext context) : IAccountService
     {
         try
         {
-            var accountType = await _context
-                .AccountTypes.AsNoTracking()
-                .FirstOrDefaultAsync(
-                    accountType =>
-                        accountType.Id == request.AccountTypeId
-                        && accountType.IsActive
-                        && !accountType.IsDeleted
-                        && (accountType.IsSystemDefault || accountType.UserId == userId),
-                    cancellationToken
-                );
+            var accountType = await _accountTypeResolver.ResolveAccountTypeById(
+                userId,
+                request.AccountTypeId,
+                cancellationToken
+            );
 
             if (accountType == null)
             {
@@ -96,13 +95,49 @@ public class AccountService(ApplicationDbContext context) : IAccountService
         }
     }
 
-    // Make sure user cant delete account if only one is left 
+    // Make sure user cant delete account if only one is left
     public async Task<Result<bool>> DeleteAccount(
         Guid userId,
         Guid accountId,
         CancellationToken cancellationToken
     )
     {
+        var account = await _context
+            .Accounts.AsNoTracking()
+            .FirstOrDefaultAsync(
+                account =>
+                    account.Id == accountId && account.UserId == userId && !account.IsDeleted,
+                cancellationToken
+            );
+
+        if (account is null)
+        {
+            return new Result<bool>(
+                new EntityNotFoundException($"Account with id '{accountId}' was not found.")
+            );
+        }
+
+        if (account.IsDefault)
+        {
+            return new Result<bool>(
+                new ValidationException(
+                    "The default account cannot be deleted. Set another account as the default first."
+                )
+            );
+        }
+
+        var accountCount = await _context.Accounts.CountAsync(
+            account => account.UserId == userId && !account.IsDeleted && account.IsActive,
+            cancellationToken
+        );
+
+        if (accountCount <= 1)
+        {
+            return new Result<bool>(
+                new ValidationException("You must have at least one active account.")
+            );
+        }
+
         var closedDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
         var affectedRows = await _context
@@ -118,14 +153,7 @@ public class AccountService(ApplicationDbContext context) : IAccountService
                 cancellationToken
             );
 
-        if (affectedRows == 0)
-        {
-            return new Result<bool>(
-                new EntityNotFoundException($"Account with id '{accountId}' was not found.")
-            );
-        }
-
-        return new Result<bool>(true);
+        return new Result<bool>(affectedRows > 0);
     }
 
     public async Task<Result<IEnumerable<AccountResponseDTO>>> GetAccounts(

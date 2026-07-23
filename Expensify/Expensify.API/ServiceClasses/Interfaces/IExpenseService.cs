@@ -1,6 +1,5 @@
 ﻿using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.DTOs.ExpenseDTOs;
-using Expensify.API.DTOs.IncomeDTOs;
 using LanguageExt.Common;
 
 namespace Expensify.API.ServiceClasses.Interfaces;

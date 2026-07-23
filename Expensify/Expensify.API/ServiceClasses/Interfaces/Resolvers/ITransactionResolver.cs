@@ -18,4 +18,9 @@ public interface ITransactionResolver
         TransactionType transactionType,
         CancellationToken cancellationToken
     );
+    Task<TransactionDTO[]> ResolveTransactionsByUserAndAccount(
+        Guid userId,
+        Guid accountId,
+        CancellationToken cancellationToken
+    );
 }

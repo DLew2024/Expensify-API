@@ -35,11 +35,6 @@ public class CreateAccountDTO
     [Required]
     public string LastFourDigits { get; set; } = string.Empty;
 
-    /// <summary>
-    /// The currency used by the account.
-    /// </summary>
-    [Required]
-    public CurrencyCode CurrencyCode { get; set; } = CurrencyCode.USD;
 
     /// <summary>
     /// The initial balance of the account.
@@ -52,15 +47,7 @@ public class CreateAccountDTO
     /// </summary>
     public bool IncludeInNetWorth { get; set; } = true;
 
-    /// <summary>
-    /// Maximum borrowable amount for credit-based accounts.
-    /// </summary>
-    public decimal CreditLimit { get; set; } = 0;
 
-    /// <summary>
-    /// Annual interest rate or APR associated with the account.
-    /// </summary>
-    public decimal InterestRate { get; set; } = 0;
 
     /// <summary>
     /// Optional notes associated with the account.
@@ -78,6 +65,20 @@ public class CreateAccountDTO
     [Required]
     public bool IsDefault { get; set; }
 
+    ///// <summary>
+    ///// The currency used by the account.
+    ///// </summary>
+    //[Required]
+    //public CurrencyCode CurrencyCode { get; set; } = CurrencyCode.USD;
+    ///// <summary>
+    ///// Annual interest rate or APR associated with the account.
+    ///// </summary>
+    //public decimal InterestRate { get; set; } = 0;
+    ///// <summary>
+    ///// Maximum borrowable amount for credit-based accounts.
+    ///// </summary>
+    //public decimal CreditLimit { get; set; } = 0;
+
     public Account ToEntity(Guid userId)
     {
         return new Account
@@ -87,17 +88,18 @@ public class CreateAccountDTO
             AccountTypeId = AccountTypeId,
             InstitutionName = InstitutionName.Trim(),
             LastFourDigits = LastFourDigits.Trim(),
-            CurrencyCode = CurrencyCode,
             CurrentBalance = InitialBalance,
             AvailableBalance = InitialBalance,
             IncludeInNetWorth = IncludeInNetWorth,
-            CreditLimit = CreditLimit,
-            InterestRate = InterestRate,
             Notes = Notes.Trim(),
             Icon = Icon.Trim(),
             IsDefault = false,
             IsActive = true,
             IsHidden = false,
+            CreatedBy = userId,
+            //CurrencyCode = CurrencyCode,
+            //CreditLimit = CreditLimit,
+            //InterestRate = InterestRate,
         };
     }
 
@@ -109,14 +111,15 @@ public class CreateAccountDTO
             AccountTypeId = account.AccountTypeId,
             InstitutionName = account.InstitutionName,
             LastFourDigits = account.LastFourDigits ?? string.Empty,
-            CurrencyCode = account.CurrencyCode,
             InitialBalance = account.CurrentBalance,
             IncludeInNetWorth = account.IncludeInNetWorth,
-            CreditLimit = account.CreditLimit ?? 0,
-            InterestRate = account.InterestRate ?? 0,
             Notes = account.Notes ?? string.Empty,
             Icon = account.Icon ?? string.Empty,
             IsDefault = account.IsDefault,
+
+            //CreditLimit = account.CreditLimit ?? 0,
+            //InterestRate = account.InterestRate ?? 0,
+            //CurrencyCode = account.CurrencyCode,
         };
     }
 }

@@ -91,6 +91,7 @@ builder.Services.AddScoped<IIncomeService, IncomeService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IAccountResolver, AccountResolver>();
+builder.Services.AddScoped<IAccountTypeResolver, AccountTypeResolver>();
 builder.Services.AddScoped<ITransactionResolver, TransactionResolver>();
 builder.Services.AddScoped<IService, Service>();
 builder.Services.AddScoped(typeof(ValidationFilter<>));
