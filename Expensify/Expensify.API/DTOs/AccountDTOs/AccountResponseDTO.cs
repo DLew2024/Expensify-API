@@ -92,6 +92,9 @@ public class AccountResponseDTO
     /// Icon associated with the account.
     /// </summary>
     public string Icon { get; set; } = string.Empty;
+    
+    [Required]
+    public bool IsDefault { get; set; }
 
     /// <summary>
     /// Projection used to convert an account entity into an account response DTO.
@@ -115,5 +118,6 @@ public class AccountResponseDTO
             InterestRate = account.InterestRate,
             Notes = account.Notes ?? string.Empty,
             Icon = account.Icon ?? string.Empty,
+            IsDefault = account.IsDefault
         };
 }

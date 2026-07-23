@@ -75,6 +75,7 @@ public class CreateAccountDTO
     /// <summary>
     /// Verify if account is default
     /// </summary>
+    [Required]
     public bool IsDefault { get; set; }
 
     public Account ToEntity(Guid userId)
