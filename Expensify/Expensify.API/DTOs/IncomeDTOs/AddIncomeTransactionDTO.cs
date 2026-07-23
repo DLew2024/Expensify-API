@@ -13,16 +13,6 @@ public class AddIncomeTransactionDTO
     public Guid AccountId { get; set; }
 
     /// <summary>
-    /// Optional budget to associate with the income.
-    /// </summary>
-    public Guid? BudgetId { get; set; }
-
-    /// <summary>
-    /// Optional income category, such as Salary, Bonus, or Interest.
-    /// </summary>
-    public Guid? CategoryId { get; set; }
-
-    /// <summary>
     /// The amount of income received.
     /// </summary>
     [Required]
@@ -66,14 +56,22 @@ public class AddIncomeTransactionDTO
 
     public string Icon { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Optional budget to associate with the income.
+    /// </summary>
+    public Guid? BudgetId { get; set; }
+
+    /// <summary>
+    /// Optional income category, such as Salary, Bonus, or Interest.
+    /// </summary>
+    public Guid? CategoryId { get; set; }
+
     public Transaction ToTransaction(Guid userId, decimal accountBalanceAfterTransaction)
     {
         return new Transaction
         {
             UserId = userId,
             AccountId = AccountId,
-            BudgetId = BudgetId,
-            CategoryId = CategoryId,
             Amount = Amount,
             AccountBalanceAfterTransaction = accountBalanceAfterTransaction,
             Type = TransactionType.Income,
@@ -85,6 +83,8 @@ public class AddIncomeTransactionDTO
             IsRecurring = IsRecurring,
             PaymentMethodId = PaymentMethodId,
             Tags = Tags,
+            BudgetId = BudgetId,
+            CategoryId = CategoryId,
             CreatedBy = userId,
             LastUpdatedBy = userId,
         };

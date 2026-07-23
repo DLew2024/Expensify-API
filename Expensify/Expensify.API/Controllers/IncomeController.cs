@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Expensify.API.DTOs.DashboardDTOs;
+﻿using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.DTOs.IncomeDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
@@ -17,7 +16,7 @@ public class IncomeController : AuthorizationControllerBase
         _service = service;
     }
 
-    [HttpPost("add", Name = "AddIncome")]
+    [HttpPost("add")]
     [ServiceFilter(typeof(ValidationFilter<AddIncomeTransactionDTO>))]
     public async Task<ActionResult<IncomeTransactionResponseDTO>> AddIncome(
         AddIncomeTransactionDTO request,
@@ -41,7 +40,7 @@ public class IncomeController : AuthorizationControllerBase
         );
     }
 
-    [HttpGet("downloadExcel", Name = "DownloadIncomeExcel")]
+    [HttpGet("downloadExcel")]
     public async Task<IActionResult> DownloadIncomeExcel(CancellationToken cancellationToken)
     {
         var result = await _service.IncomeService.DownloadIncomeExcel(
@@ -78,13 +77,12 @@ public class IncomeController : AuthorizationControllerBase
                 error switch
                 {
                     EntityNotFoundException ex => NotFound(ex.Message),
-
                     _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                 }
         );
     }
 
-    [HttpDelete("{id}", Name = "DeleteIncome")]
+    [HttpDelete("{incomeId: guid}")]
     public async Task<IActionResult> DeleteIncome(
         Guid incomeId,
         CancellationToken cancellationToken

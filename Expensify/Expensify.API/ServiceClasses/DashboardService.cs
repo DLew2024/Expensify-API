@@ -1,5 +1,6 @@
 ﻿using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.ServiceClasses.Interfaces.Resolvers;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
 using LanguageExt.Common;
@@ -7,16 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.Services.Interfaces
 {
-    public class DashboardService : IDashboardService
+    public class DashboardService(ApplicationDbContext context, IAccountResolver accountResolver)
+        : IDashboardService
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IAccountResolver _accountResolver;
-
-        public DashboardService(ApplicationDbContext context, IAccountResolver accountResolver)
-        {
-            _context = context;
-            _accountResolver = accountResolver;
-        }
+        private readonly ApplicationDbContext _context = context;
+        private readonly IAccountResolver _accountResolver = accountResolver;
 
         public async Task<Result<DashboardDataResponseDTO>> GetDashboardData(
             Guid userId,
@@ -33,7 +29,7 @@ namespace Expensify.Services.Interfaces
                     );
                 }
 
-                var resolvedAccountId = await _accountResolver.ResolveAccountId(
+                var resolvedAccountId = await _accountResolver.ResolveAccountIdByUserId(
                     userId,
                     accountId,
                     cancellationToken

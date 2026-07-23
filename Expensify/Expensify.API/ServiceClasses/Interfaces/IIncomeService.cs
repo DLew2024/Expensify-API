@@ -16,7 +16,6 @@ namespace Expensify.API.ServiceClasses.Interfaces
             Guid? accountId,
             CancellationToken cancellationToken
         );
-
         Task<Result<bool>> DeleteIncome(
             Guid userId,
             Guid incomeId,

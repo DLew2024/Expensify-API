@@ -1,24 +1,18 @@
-﻿using System.Security.Claims;
+﻿using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.DTOs.ExpenseDTOs;
-using Expensify.API.DTOs.IncomeDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
-using LanguageExt.ClassInstances;
-using LanguageExt.Pipes;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.API.Controllers
 {
-    public class ExpenseController : AuthorizationControllerBase
+    public class ExpenseController(IService service) : AuthorizationControllerBase
     {
-        private readonly IService _service;
+        private readonly IService _service = service;
 
-        public ExpenseController(IService service)
-        {
-            _service = service;
-        }
-
-        [HttpPost("add", Name = "AddExpense")]
+        [HttpPost("add")]
+        //[ServiceFilter(typeof(ValidationFilter<AddExpenseTransactionDTO>))] // Must implement
         public async Task<ActionResult<ExpenseTransactionResponseDTO>> AddExpense(
             AddExpenseTransactionDTO request,
             CancellationToken cancellationToken
@@ -41,55 +35,67 @@ namespace Expensify.API.Controllers
             );
         }
 
-        [HttpGet("downloadExcel", Name = "DownloadExpenseExcel")]
-        public async Task<ActionResult<bool>> DownloadExpenseExcel(
-            DownloadExpenseExcelDTO request,
-            CancellationToken cancellationToken
-        )
+        [HttpGet("downloadExcel")]
+        public async Task<IActionResult> DownloadExpenseExcel(CancellationToken cancellationToken)
         {
             var result = await _service.ExpenseService.DownloadExpenseExcel(
-                request,
+                CurrentUserId,
                 cancellationToken
             );
-            return result.Match<ActionResult<bool>>(
-                success => StatusCode(StatusCodes.Status200OK, success),
+
+            return result.Match<IActionResult>(
+                fileBytes =>
+                    File(
+                        fileBytes,
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "expense_details.xlsx"
+                    ),
+                error => StatusCode(StatusCodes.Status500InternalServerError, error.Message)
+            );
+        }
+
+        [HttpGet("getAll")]
+        public async Task<ActionResult<List<TransactionDTO>>> GetAllExpenses(
+            [FromQuery] Guid? accountId,
+            CancellationToken cancellationToken
+        )
+        {
+            var result = await _service.ExpenseService.GetAllExpense(
+                CurrentUserId,
+                accountId,
+                cancellationToken
+            );
+
+            return result.Match<ActionResult<List<TransactionDTO>>>(
+                success => Ok(success),
                 error =>
                     error switch
                     {
+                        EntityNotFoundException ex => NotFound(ex.Message),
                         _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                     }
             );
         }
 
-        [HttpGet("getAll", Name = "GetAllExpenses")]
-        public async Task<ActionResult<bool>> GetAllExpenses(
-            GetExpenseIncomeDTO request,
+        [HttpDelete("{expenseId:guid}")]
+        public async Task<IActionResult> DeleteExpense(
+            Guid expenseId,
             CancellationToken cancellationToken
         )
         {
-            var result = await _service.ExpenseService.GetAllExpense(request, cancellationToken);
-            return result.Match<ActionResult<bool>>(
-                success => StatusCode(StatusCodes.Status200OK, success),
-                error =>
-                    error switch
-                    {
-                        _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
-                    }
+            var result = await _service.ExpenseService.DeleteExpense(
+                CurrentUserId,
+                expenseId,
+                cancellationToken
             );
-        }
 
-        [HttpDelete(":{id}", Name = "Delete Expense")]
-        public async Task<ActionResult<bool>> DeleteExpense(
-            Guid id,
-            CancellationToken cancellationToken
-        )
-        {
-            var result = await _service.ExpenseService.DeleteExpense(id, cancellationToken);
-            return result.Match<ActionResult<bool>>(
-                success => StatusCode(StatusCodes.Status204NoContent, id),
+            return result.Match<IActionResult>(
+                _ => NoContent(),
                 error =>
                     error switch
                     {
+                        EntityNotFoundException ex => NotFound(ex.Message),
+                        ValidationException ex => BadRequest(ex.Message),
                         _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message),
                     }
             );

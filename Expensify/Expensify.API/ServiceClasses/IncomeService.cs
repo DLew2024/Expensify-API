@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.DTOs.IncomeDTOs;
+using Expensify.API.ServiceClasses.Helpers;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.ServiceClasses.Interfaces.Resolvers;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Enums;
@@ -10,11 +12,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.API.ServiceClasses;
 
-public class IncomeService(ApplicationDbContext context, IAccountResolver accountResolver)
-    : IIncomeService
+public class IncomeService(
+    ApplicationDbContext context,
+    IAccountResolver accountResolver,
+    ITransactionResolver transactionResolver
+) : IIncomeService
 {
     private readonly ApplicationDbContext _context = context;
     private readonly IAccountResolver _accountResolver = accountResolver;
+    private readonly ITransactionResolver _transactionResolver = transactionResolver;
     private readonly ILogger<IncomeService> _logger;
 
     public async Task<Result<IncomeTransactionResponseDTO>> AddIncome(
@@ -30,9 +36,9 @@ public class IncomeService(ApplicationDbContext context, IAccountResolver accoun
             );
         }
 
-        var userAccount = await _context.Accounts.FirstOrDefaultAsync(
-            account =>
-                account.Id == request.AccountId && account.UserId == userId && !account.IsDeleted,
+        var userAccount = await _accountResolver.ResolveAccountByUserId(
+            userId,
+            request.AccountId,
             cancellationToken
         );
 
@@ -124,6 +130,7 @@ public class IncomeService(ApplicationDbContext context, IAccountResolver accoun
             var incomeTransaction = request.ToTransaction(userId, newBalance);
 
             userAccount.CurrentBalance = newBalance;
+            userAccount.AvailableBalance = newBalance;
 
             _context.Transactions.Add(incomeTransaction);
 
@@ -179,17 +186,47 @@ public class IncomeService(ApplicationDbContext context, IAccountResolver accoun
         }
     }
 
-    public Task<Result<bool>> DeleteIncome(
+    public async Task<Result<bool>> DeleteIncome(
         Guid userId,
         Guid incomeId,
         CancellationToken cancellationToken
     )
     {
-        // Find and delete income by id
-        // Return message to indicate success
+        var income = await _transactionResolver.ResolveTransactionByUserIdAndType(
+            userId,
+            incomeId,
+            TransactionType.Income,
+            cancellationToken
+        );
 
-        // Catch error return 500
-        throw new NotImplementedException();
+        if (income is null)
+        {
+            return new Result<bool>(
+                new EntityNotFoundException(
+                    $"Income transaction with id '{incomeId}' was not found."
+                )
+            );
+        }
+
+        var account = await _accountResolver.ResolveAccountByTransactionId(
+            userId,
+            incomeId,
+            cancellationToken
+        );
+
+        if (account is null)
+        {
+            return new Result<bool>(
+                new EntityNotFoundException($"Account with id '{income.AccountId}' was not found.")
+            );
+        }
+
+        TransactionHelper.ReverseTransactionBalance(account, income);
+        TransactionHelper.SoftDeleteTransaction(income, userId);
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 
     public async Task<Result<byte[]>> DownloadIncomeExcel(
@@ -221,7 +258,7 @@ public class IncomeService(ApplicationDbContext context, IAccountResolver accoun
     {
         try
         {
-            var resolvedAccountId = await _accountResolver.ResolveAccountId(
+            var resolvedAccountId = await _accountResolver.ResolveAccountIdByUserId(
                 userId,
                 accountId,
                 cancellationToken
@@ -238,19 +275,15 @@ public class IncomeService(ApplicationDbContext context, IAccountResolver accoun
                 );
             }
 
-            var transactions = await _context
-                .Transactions.AsNoTracking()
-                .Where(transaction =>
-                    transaction.UserId == userId
-                    && transaction.AccountId == resolvedAccountId.Value
-                    && transaction.Type == TransactionType.Income
-                    && !transaction.IsDeleted
-                )
-                .OrderByDescending(transaction => transaction.TransactionDate)
-                .Select(TransactionDTO.Projection)
-                .ToListAsync(cancellationToken);
+            var icomeTransactions =
+                await _transactionResolver.ResolveTransactionsByUser_Account_Type_OrderedByDateDESC(
+                    userId,
+                    resolvedAccountId.Value,
+                    TransactionType.Income,
+                    cancellationToken
+                );
 
-            return new Result<List<TransactionDTO>>(transactions);
+            return new Result<List<TransactionDTO>>(icomeTransactions);
         }
         catch (Exception ex)
         {

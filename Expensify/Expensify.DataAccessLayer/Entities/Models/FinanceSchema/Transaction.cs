@@ -83,7 +83,6 @@ public class Transaction : Identifiable
     /// </summary>
     public string? Notes { get; set; }
 
-    
     /// <summary>
     /// The payment method associated with this transaction.
     /// </summary>

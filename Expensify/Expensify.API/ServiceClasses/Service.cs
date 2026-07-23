@@ -1,5 +1,6 @@
 ﻿using Expensify.API.Configurations;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.ServiceClasses.Interfaces.Resolvers;
 using Expensify.DataAccessLayer;
 using Expensify.Services.Interfaces;
 using Microsoft.Extensions.Options;
@@ -13,6 +14,7 @@ namespace Expensify.API.ServiceClasses
         IPasswordService passwordService,
         ISecurityService securityService,
         IAccountResolver accountResolver,
+        ITransactionResolver transactionResolver,
         IJwtService jwtService,
         IOptions<FrontendSettings> frontendOptions,
         IOptions<JwtSettings> jwtOptions
@@ -25,9 +27,9 @@ namespace Expensify.API.ServiceClasses
         private readonly ISecurityService _securityService = securityService;
         private readonly IEmailService _emailService = emailService;
         private readonly IAccountResolver _accountResolver = accountResolver;
+        private readonly ITransactionResolver _transactionResolver = transactionResolver;
         private readonly IOptions<FrontendSettings> _frontendSettings = frontendOptions;
         private readonly IOptions<JwtSettings> _jwtSettings = jwtOptions;
-
 
         public IAccountService AccountService => field ?? new AccountService(_context);
         public IAuthService AuthService =>
@@ -41,9 +43,11 @@ namespace Expensify.API.ServiceClasses
                 _frontendSettings,
                 _jwtSettings
             );
-        public IDashboardService DashboardService => field ?? new DashboardService(_context, _accountResolver);
-        public IExpenseService ExpenseService => field ?? new ExpenseService(_context);
-        public IIncomeService IncomeService => field ?? new IncomeService(_context, _accountResolver);
+        public IDashboardService DashboardService =>
+            field ?? new DashboardService(_context, _accountResolver);
+        public IExpenseService ExpenseService => field ?? new ExpenseService(_context, _accountResolver, _transactionResolver);
+        public IIncomeService IncomeService =>
+            field ?? new IncomeService(_context, _accountResolver, _transactionResolver);
         public IJwtService JwtService => field ?? new JwtService(configuration);
         public IPasswordService PasswordService => field ?? new PasswordService();
     }
