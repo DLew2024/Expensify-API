@@ -1,9 +1,9 @@
-﻿using Expensify.API.DTOs.DashboardDTOs;
+﻿using System.ComponentModel.DataAnnotations;
+using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.DTOs.ExpenseDTOs;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace Expensify.API.Controllers
 {

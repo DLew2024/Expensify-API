@@ -5,7 +5,7 @@ namespace Expensify.API.ServiceClasses.Interfaces;
 
 public interface IAccountService
 {
-    Task<Result<CreateAccountResponseDTO>> CreateAccount(
+    Task<Result<AccountResponseDTO>> CreateAccount(
         Guid userId,
         CreateAccountDTO request,
         CancellationToken cancellationToken

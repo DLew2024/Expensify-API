@@ -120,4 +120,28 @@ public class AccountResponseDTO
             Icon = account.Icon ?? string.Empty,
             IsDefault = account.IsDefault,
         };
+
+    public static AccountResponseDTO FromEntity(Account account, string accountTypeName)
+    {
+        return new AccountResponseDTO
+        {
+            Id = account.Id,
+            Name = account.Name,
+            InstitutionName = account.InstitutionName ?? string.Empty,
+            LastFourDigits = account.LastFourDigits ?? string.Empty,
+            AccountTypeId = account.AccountTypeId,
+            AccountTypeName = accountTypeName,
+            CurrencyCode = account.CurrencyCode,
+            CurrentBalance = account.CurrentBalance,
+            AvailableBalance = account.AvailableBalance,
+            IncludeInNetWorth = account.IncludeInNetWorth,
+            IsActive = account.IsActive,
+            IsHidden = account.IsHidden,
+            CreditLimit = account.CreditLimit,
+            InterestRate = account.InterestRate,
+            Notes = account.Notes ?? string.Empty,
+            Icon = account.Icon ?? string.Empty,
+            IsDefault = account.IsDefault,
+        };
+    }
 }

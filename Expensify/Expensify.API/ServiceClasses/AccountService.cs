@@ -11,7 +11,7 @@ public class AccountService(ApplicationDbContext context) : IAccountService
 {
     private readonly ApplicationDbContext _context = context;
 
-    public async Task<Result<CreateAccountResponseDTO>> CreateAccount(
+    public async Task<Result<AccountResponseDTO>> CreateAccount(
         Guid userId,
         CreateAccountDTO request,
         CancellationToken cancellationToken
@@ -32,7 +32,7 @@ public class AccountService(ApplicationDbContext context) : IAccountService
 
             if (accountType == null)
             {
-                return new Result<CreateAccountResponseDTO>(
+                return new Result<AccountResponseDTO>(
                     new EntityNotFoundException(
                         "The selected account type could not be found or is unavailable."
                     )
@@ -52,11 +52,11 @@ public class AccountService(ApplicationDbContext context) : IAccountService
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CreateAccountResponseDTO.FromEntity(account, accountType.Name);
+            return AccountResponseDTO.FromEntity(account, accountType.Name);
         }
         catch (Exception ex)
         {
-            return new Result<CreateAccountResponseDTO>(ex);
+            return new Result<AccountResponseDTO>(ex);
         }
     }
 

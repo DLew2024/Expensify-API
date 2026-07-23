@@ -45,7 +45,8 @@ namespace Expensify.API.ServiceClasses
             );
         public IDashboardService DashboardService =>
             field ?? new DashboardService(_context, _accountResolver);
-        public IExpenseService ExpenseService => field ?? new ExpenseService(_context, _accountResolver, _transactionResolver);
+        public IExpenseService ExpenseService =>
+            field ?? new ExpenseService(_context, _accountResolver, _transactionResolver);
         public IIncomeService IncomeService =>
             field ?? new IncomeService(_context, _accountResolver, _transactionResolver);
         public IJwtService JwtService => field ?? new JwtService(configuration);
