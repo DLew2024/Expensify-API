@@ -82,7 +82,7 @@ public class IncomeController : AuthorizationControllerBase
         );
     }
 
-    [HttpDelete("{incomeId: guid}")]
+    [HttpDelete("{incomeId:guid}")]
     public async Task<IActionResult> DeleteIncome(
         Guid incomeId,
         CancellationToken cancellationToken
