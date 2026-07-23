@@ -23,15 +23,10 @@ public class Transaction : Identifiable
     public required Guid AccountId { get; set; }
 
     /// <summary>
-    /// The budget this transaction contributes to, if applicable.
+    /// The merchant or payee associated with the transaction.
+    /// Example: Walmart, Amazon, Starbucks.
     /// </summary>
-    public Guid? BudgetId { get; set; }
-
-    /// <summary>
-    /// The category assigned to this transaction.
-    /// Null for transactions that do not require categorization, such as transfers.
-    /// </summary>
-    public Guid? CategoryId { get; set; }
+    public required string MerchantName { get; set; }
 
     /// <summary>
     /// The monetary amount of the transaction.
@@ -68,21 +63,27 @@ public class Transaction : Identifiable
     public required string Description { get; set; } = string.Empty;
 
     /// <summary>
-    /// The merchant or payee associated with the transaction.
-    /// Example: Walmart, Amazon, Starbucks.
+    /// Indicates whether this transaction is part of a recurring series.
     /// </summary>
-    public required string MerchantName { get; set; }
+    public bool IsRecurring { get; set; }
+
+    /// <summary>
+    /// The budget this transaction contributes to, if applicable.
+    /// </summary>
+    public Guid? BudgetId { get; set; }
+
+    /// <summary>
+    /// The category assigned to this transaction.
+    /// Null for transactions that do not require categorization, such as transfers.
+    /// </summary>
+    public Guid? CategoryId { get; set; }
 
     /// <summary>
     /// Optional notes entered by the user.
     /// </summary>
     public string? Notes { get; set; }
 
-    /// <summary>
-    /// Indicates whether this transaction is part of a recurring series.
-    /// </summary>
-    public bool IsRecurring { get; set; }
-
+    
     /// <summary>
     /// The payment method associated with this transaction.
     /// </summary>
@@ -114,12 +115,12 @@ public class Transaction : Identifiable
     /// Navigation property for the associated budget.
     /// Null if the transaction is not assigned to a budget.
     /// </summary>
-    public Budget? Budget { get; set; }
+    public Budget Budget { get; set; } = null!;
 
     /// <summary>
     /// Navigation property for the assigned category.
     /// </summary>
-    public Category? Category { get; set; }
+    public Category Category { get; set; } = null!;
 
     /// <summary>
     /// The related transaction created as part of the same transfer.
@@ -130,7 +131,7 @@ public class Transaction : Identifiable
     /// <summary>
     /// Navigation property for the linked transfer transaction.
     /// </summary>
-    public Transaction? LinkedTransaction { get; set; }
+    public Transaction LinkedTransaction { get; set; } = null!;
 
     public Guid RecurringTransactionId { get; set; }
 
