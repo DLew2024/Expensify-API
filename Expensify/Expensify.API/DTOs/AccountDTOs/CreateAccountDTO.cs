@@ -20,7 +20,13 @@ public class CreateAccountDTO
     /// The unique identifier of the account type.
     /// </summary>
     [Required]
-    public Guid AccountTypeId { get; set; }
+    public Guid? AccountTypeId { get; set; }
+
+    /// <summary>
+    /// The unique identifier of the currency used by the account.
+    /// </summary>
+    [Required]
+    public Guid? CurrencyCodeId { get; set; }
 
     /// <summary>
     /// The name of the financial institution.
@@ -62,12 +68,6 @@ public class CreateAccountDTO
     [Required]
     public bool IsDefault { get; set; }
 
-    /// <summary>
-    /// The unique identifier of the currency used by the account.
-    /// </summary>
-    [Required]
-    public Guid CurrencyCodeId { get; set; }
-
     ///// <summary>
     ///// Annual interest rate or APR associated with the account.
     ///// </summary>
@@ -79,11 +79,22 @@ public class CreateAccountDTO
 
     public Account ToEntity(Guid userId)
     {
+        if (AccountTypeId is null)
+        {
+            throw new ValidationException("An account type is required.");
+        }
+
+        if (CurrencyCodeId is null)
+        {
+            throw new ValidationException("A currency is required.");
+        }
+
         return new Account
         {
             UserId = userId,
             Name = Name.Trim(),
-            AccountTypeId = AccountTypeId,
+            AccountTypeId = AccountTypeId.Value,
+            CurrencyCodeId = CurrencyCodeId.Value,
             InstitutionName = InstitutionName.Trim(),
             LastFourDigits = LastFourDigits.Trim(),
             CurrentBalance = InitialBalance,
@@ -95,7 +106,6 @@ public class CreateAccountDTO
             IsActive = true,
             IsHidden = false,
             CreatedBy = userId,
-            CurrencyCodeId = CurrencyCodeId,
             //CreditLimit = CreditLimit,
             //InterestRate = InterestRate,
         };
