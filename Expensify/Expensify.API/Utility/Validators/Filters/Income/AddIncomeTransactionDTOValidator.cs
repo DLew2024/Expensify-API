@@ -14,15 +14,15 @@ public class AddIncomeTransactionDTOValidator : AbstractValidator<AddIncomeTrans
     {
         RuleFor(x => x.AccountId).NotEmpty().WithMessage("An account is required.");
 
-        RuleFor(x => x.BudgetId)
-            .NotEqual(Guid.Empty)
-            .When(x => x.BudgetId.HasValue)
-            .WithMessage("Budget ID must be valid.");
+        //RuleFor(x => x.BudgetId)
+        //    .NotEqual(Guid.Empty)
+        //    .When(x => x.BudgetId.HasValue)
+        //    .WithMessage("Budget ID must be valid.");
 
-        RuleFor(x => x.CategoryId)
-            .NotEqual(Guid.Empty)
-            .When(x => x.CategoryId.HasValue)
-            .WithMessage("Category ID must be valid.");
+        //RuleFor(x => x.CategoryId)
+        //    .NotEqual(Guid.Empty)
+        //    .When(x => x.CategoryId.HasValue)
+        //    .WithMessage("Category ID must be valid.");
 
         RuleFor(x => x.Amount)
             .GreaterThan(0)
@@ -54,13 +54,13 @@ public class AddIncomeTransactionDTOValidator : AbstractValidator<AddIncomeTrans
             .When(x => x.PaymentMethodId.HasValue)
             .WithMessage("Payment method ID must be valid.");
 
-        RuleForEach(x => x.Tags)
-            .NotEmpty()
-            .WithMessage("Tags cannot be empty.")
-            .MaximumLength(MaximumTagLength)
-            .WithMessage($"Each tag cannot exceed {MaximumTagLength} characters.");
+        //RuleForEach(x => x.Tags)
+        //    .NotEmpty()
+        //    .WithMessage("Tags cannot be empty.")
+        //    .MaximumLength(MaximumTagLength)
+        //    .WithMessage($"Each tag cannot exceed {MaximumTagLength} characters.");
 
-        RuleFor(x => x.Tags).Must(HaveUniqueTags).WithMessage("Tags must be unique.");
+        //RuleFor(x => x.Tags).Must(HaveUniqueTags).WithMessage("Tags must be unique.");
     }
 
     private static bool HaveUniqueTags(List<string> tags)

@@ -35,14 +35,14 @@ public class AddIncomeTransactionDTO
     public required string Source { get; set; }
 
     /// <summary>
-    /// Optional notes entered by the user.
+    /// The URL to the emoji icon
     /// </summary>
-    public string? Notes { get; set; }
+    public string Icon { get; set; } = string.Empty;
 
     /// <summary>
-    /// Indicates whether the income belongs to a recurring series.
+    /// Optional notes entered by the user.
     /// </summary>
-    public bool IsRecurring { get; set; }
+    public string Notes { get; set; } = string.Empty;
 
     /// <summary>
     /// Optional payment method used to receive the income.
@@ -52,19 +52,23 @@ public class AddIncomeTransactionDTO
     /// <summary>
     /// Optional tags used to organize the income transaction.
     /// </summary>
-    public List<string> Tags { get; set; } = [];
-
-    public string Icon { get; set; } = string.Empty;
+    //public List<string> Tags { get; set; } = [];
 
     /// <summary>
     /// Optional budget to associate with the income.
     /// </summary>
-    public Guid? BudgetId { get; set; }
+    //public Guid? BudgetId { get; set; }
 
     /// <summary>
     /// Optional income category, such as Salary, Bonus, or Interest.
     /// </summary>
-    public Guid? CategoryId { get; set; }
+    //public Guid? CategoryId { get; set; }
+
+    /// <summary>
+    /// Indicates whether the income belongs to a recurring series.
+    /// </summary>
+    //public bool IsRecurring { get; set; }
+
 
     public Transaction ToTransaction(Guid userId, decimal accountBalanceAfterTransaction)
     {
@@ -74,19 +78,20 @@ public class AddIncomeTransactionDTO
             AccountId = AccountId,
             Amount = Amount,
             AccountBalanceAfterTransaction = accountBalanceAfterTransaction,
+            MerchantName = Source,
             Type = TransactionType.Income,
             Status = TransactionPostedStatus.Posted,
             TransactionDate = TransactionDate,
             Description = Description,
-            MerchantName = Source,
+            Icon =Icon,
             Notes = Notes,
-            IsRecurring = IsRecurring,
-            PaymentMethodId = PaymentMethodId,
-            Tags = Tags,
-            BudgetId = BudgetId,
-            CategoryId = CategoryId,
             CreatedBy = userId,
             LastUpdatedBy = userId,
+            PaymentMethodId = PaymentMethodId,
+            //IsRecurring = IsRecurring,
+            //CategoryId = CategoryId,
+            //BudgetId = BudgetId,
+            //Tags = Tags,
         };
     }
 }
