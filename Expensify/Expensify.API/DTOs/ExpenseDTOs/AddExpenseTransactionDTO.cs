@@ -47,24 +47,24 @@ public class AddExpenseTransactionDTO
     /// <summary>
     /// Optional payment method used to transaction the expense.
     /// </summary>
-    public Guid? PaymentMethodId { get; set; }
-
-    /// <summary>
-    /// Optional tags used to organize the expense transaction.
-    /// </summary>
-    public List<string> Tags { get; set; } = [];
+    public required Guid? PaymentMethodId { get; set; }
 
     public string Icon { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Optional budget to associate with the expnse.
-    /// </summary>
-    public Guid? BudgetId { get; set; }
+    ///// <summary>
+    ///// Optional budget to associate with the expnse.
+    ///// </summary>
+    //public Guid? BudgetId { get; set; }
 
-    /// <summary>
-    /// Optional expense category, such as Rent, Travel, or Interest.
-    /// </summary>
-    public Guid? CategoryId { get; set; }
+    ///// <summary>
+    ///// Optional expense category, such as Rent, Travel, or Interest.
+    ///// </summary>
+    //public Guid? CategoryId { get; set; }
+
+    ///// <summary>
+    ///// Optional tags used to organize the expense transaction.
+    ///// </summary>
+    //public List<string> Tags { get; set; } = [];
 
     public Transaction ToTransaction(Guid userId, decimal accountBalanceAfterTransaction)
     {
@@ -82,12 +82,12 @@ public class AddExpenseTransactionDTO
             Notes = Notes?.Trim(),
             IsRecurring = IsRecurring,
             PaymentMethodId = PaymentMethodId,
-            Tags = Tags,
             Icon = Icon.Trim(),
-            BudgetId = BudgetId,
-            CategoryId = CategoryId,
             CreatedBy = userId,
             LastUpdatedBy = userId,
+            //Tags = Tags,
+            //BudgetId = BudgetId,
+            //CategoryId = CategoryId,
         };
     }
 }
