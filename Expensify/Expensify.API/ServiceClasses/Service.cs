@@ -1,7 +1,6 @@
 ﻿using Expensify.API.Configurations;
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.ServiceClasses.Interfaces.Resolvers;
-using Expensify.API.ServiceClasses.Resolvers;
 using Expensify.DataAccessLayer;
 using Expensify.Services.Interfaces;
 using Microsoft.Extensions.Options;
@@ -53,6 +52,8 @@ namespace Expensify.API.ServiceClasses
             field ?? new ExpenseService(_context, _accountResolver, _transactionResolver);
         public IIncomeService IncomeService =>
             field ?? new IncomeService(_context, _accountResolver, _transactionResolver);
+        public IReferenceDataService ReferenceDataService =>
+            field ?? new ReferenceDataService(_context);
         public IJwtService JwtService => field ?? new JwtService(configuration);
         public IPasswordService PasswordService => field ?? new PasswordService();
     }

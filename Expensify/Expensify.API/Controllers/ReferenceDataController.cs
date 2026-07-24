@@ -19,7 +19,12 @@ public class ReferenceDataController(IService service) : AuthorizationController
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        var result = await _service.ReferenceDataService.GetCurrencies(cancellationToken);
+
+        return result.Match<ActionResult<CurrencyCodeDTO[]>>(
+            success => Ok(success),
+            error => StatusCode(StatusCodes.Status500InternalServerError, error.Message)
+        );
     }
 
     [HttpGet("account-types")]
@@ -27,7 +32,15 @@ public class ReferenceDataController(IService service) : AuthorizationController
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        var result = await _service.ReferenceDataService.GetAccountTypes(
+            CurrentUserId,
+            cancellationToken
+        );
+
+        return result.Match<ActionResult<AccountTypeDTO[]>>(
+            success => Ok(success),
+            error => StatusCode(StatusCodes.Status500InternalServerError, error.Message)
+        );
     }
 
     [HttpGet("payment-methods")]
@@ -35,7 +48,15 @@ public class ReferenceDataController(IService service) : AuthorizationController
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        var result = await _service.ReferenceDataService.GetPaymentMethods(
+            CurrentUserId,
+            cancellationToken
+        );
+
+        return result.Match<ActionResult<PaymentMethodDTO[]>>(
+            success => Ok(success),
+            error => StatusCode(StatusCodes.Status500InternalServerError, error.Message)
+        );
     }
 
     [HttpGet("categories")]
@@ -43,6 +64,14 @@ public class ReferenceDataController(IService service) : AuthorizationController
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        var result = await _service.ReferenceDataService.GetCategories(
+            CurrentUserId,
+            cancellationToken
+        );
+
+        return result.Match<ActionResult<CategoryDTO[]>>(
+            success => Ok(success),
+            error => StatusCode(StatusCodes.Status500InternalServerError, error.Message)
+        );
     }
 }

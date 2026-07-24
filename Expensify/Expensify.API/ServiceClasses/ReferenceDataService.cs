@@ -65,7 +65,8 @@ public class ReferenceDataService(ApplicationDbContext context) : IReferenceData
             var paymentMethods = await _context
                 .PaymentMethods.AsNoTracking()
                 .Where(paymentMethod =>
-                    !paymentMethod.IsDeleted
+                    paymentMethod.IsActive
+                    && !paymentMethod.IsDeleted
                     && (paymentMethod.IsSystemDefault || paymentMethod.UserId == userId)
                 )
                 .OrderBy(paymentMethod => paymentMethod.Name)
