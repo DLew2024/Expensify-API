@@ -35,6 +35,11 @@ public class AddIncomeTransactionDTO
     public required string Source { get; set; }
 
     /// <summary>
+    /// Optional payment method used to receive the income.
+    /// </summary>
+    public required Guid? PaymentMethodId { get; set; }
+
+    /// <summary>
     /// The URL to the emoji icon
     /// </summary>
     public string Icon { get; set; } = string.Empty;
@@ -43,11 +48,6 @@ public class AddIncomeTransactionDTO
     /// Optional notes entered by the user.
     /// </summary>
     public string Notes { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Optional payment method used to receive the income.
-    /// </summary>
-    public Guid? PaymentMethodId { get; set; }
 
     /// <summary>
     /// Optional tags used to organize the income transaction.

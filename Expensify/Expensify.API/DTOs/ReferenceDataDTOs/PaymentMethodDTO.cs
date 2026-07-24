@@ -5,7 +5,7 @@ namespace Expensify.API.DTOs.ReferenceDataDTOs;
 
 public class PaymentMethodDTO
 {
-    public Guid? Id { get; set; }
+    public required Guid Id { get; set; }
 
     public required string Name { get; set; } = string.Empty;
 
