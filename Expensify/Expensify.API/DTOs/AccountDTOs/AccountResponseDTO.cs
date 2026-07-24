@@ -45,10 +45,6 @@ public class AccountResponseDTO
 
     public Guid CurrencyCodeId { get; set; }
 
-    public string CurrencyCode { get; set; } = string.Empty;
-
-    public string CurrencySymbol { get; set; } = string.Empty;
-
     /// <summary>
     /// The current balance of the account.
     /// </summary>
@@ -110,8 +106,6 @@ public class AccountResponseDTO
             AccountTypeId = account.AccountTypeId,
             AccountTypeName = account.AccountType.Name,
             CurrencyCodeId = account.CurrencyCodeId,
-            CurrencyCode = account.CurrencyCode.Code,
-            CurrencySymbol = account.CurrencyCode.Symbol,
             CurrentBalance = account.CurrentBalance,
             AvailableBalance = account.AvailableBalance,
             IncludeInNetWorth = account.IncludeInNetWorth,
