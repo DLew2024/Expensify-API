@@ -3,7 +3,9 @@ using Expensify.API.Configurations;
 using Expensify.API.Development;
 using Expensify.API.Migrations.Extenstions;
 using Expensify.API.ServiceClasses;
+using Expensify.API.ServiceClasses.Conversion;
 using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.ServiceClasses.Interfaces.Conversion;
 using Expensify.API.ServiceClasses.Interfaces.Resolvers;
 using Expensify.API.ServiceClasses.Resolvers;
 using Expensify.API.Utility.Validators.Filters;
@@ -93,6 +95,10 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IAccountResolver, AccountResolver>();
 builder.Services.AddScoped<IAccountTypeResolver, AccountTypeResolver>();
 builder.Services.AddScoped<ITransactionResolver, TransactionResolver>();
+builder.Services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
+
+// If you later on we use HttpClient, register the provider with AddHttpClient instead: builder.Services.AddHttpClient<IExchangeRateProvider, ExchangeRateProvider>();
+builder.Services.AddScoped<IExchangeRateProvider, ExchangeRateProvider>();
 builder.Services.AddScoped<IService, Service>();
 builder.Services.AddScoped(typeof(ValidationFilter<>));
 

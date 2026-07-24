@@ -35,7 +35,6 @@ public class CreateAccountDTO
     [Required]
     public string LastFourDigits { get; set; } = string.Empty;
 
-
     /// <summary>
     /// The initial balance of the account.
     /// </summary>
@@ -46,8 +45,6 @@ public class CreateAccountDTO
     /// Indicates whether the account should be included when calculating net worth.
     /// </summary>
     public bool IncludeInNetWorth { get; set; } = true;
-
-
 
     /// <summary>
     /// Optional notes associated with the account.
@@ -97,6 +94,7 @@ public class CreateAccountDTO
             IsActive = true,
             IsHidden = false,
             CreatedBy = userId,
+
             //CurrencyCode = CurrencyCode,
             //CreditLimit = CreditLimit,
             //InterestRate = InterestRate,
