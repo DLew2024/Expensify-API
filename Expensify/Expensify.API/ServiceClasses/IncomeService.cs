@@ -110,7 +110,6 @@ public class IncomeService(
             var paymentMethodExists = await _context.PaymentMethods.AnyAsync(
                 paymentMethod =>
                     paymentMethod.Id == request.PaymentMethodId.Value
-                    && paymentMethod.UserId == userId
                     && !paymentMethod.IsDeleted,
                 cancellationToken
             );
