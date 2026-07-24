@@ -23,9 +23,18 @@ public class AccountService(ApplicationDbContext context, IAccountTypeResolver a
     {
         try
         {
+            if (request.AccountTypeId is null)
+            {
+                return new Result<AccountResponseDTO>(
+                   new ValidationException(
+                       "The AccountTypeId could not null."
+                   )
+               );
+            } 
+
             var accountType = await _accountTypeResolver.ResolveAccountTypeById(
                 userId,
-                request.AccountTypeId,
+                request.AccountTypeId.Value,
                 cancellationToken
             );
 

@@ -135,8 +135,6 @@ public class AccountResponseDTO
             AccountTypeId = account.AccountTypeId,
             AccountTypeName = accountTypeName,
             CurrencyCodeId = account.CurrencyCodeId,
-            CurrencyCode = account.CurrencyCode.Code,
-            CurrencySymbol = account.CurrencyCode.Symbol,
             CurrentBalance = account.CurrentBalance,
             AvailableBalance = account.AvailableBalance,
             IncludeInNetWorth = account.IncludeInNetWorth,
