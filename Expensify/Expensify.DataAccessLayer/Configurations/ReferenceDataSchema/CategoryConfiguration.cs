@@ -1,9 +1,9 @@
-﻿using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
+﻿using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Expensify.DataAccessLayer.Utility.Constants;
 
-namespace Expensify.DataAccessLayer.Configurations.ReferenceSchema;
+namespace Expensify.DataAccessLayer.Configurations.ReferenceDataSchema;
 
 /// <summary>
 /// Configures the database mapping for the <see cref="Category"/> entity.
@@ -18,9 +18,8 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     /// </param>
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        // Maps the entity to the categories table
-        // in the reference schema.
-        builder.ToTable("categories", "reference");
+        // Maps categories to the reference_data schema.
+        builder.ToTable("categories", "reference_data");
 
         // Configures the primary key.
         builder.HasKey(category => category.Id).HasName("pk_categories");
@@ -31,18 +30,16 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .IsRequired()
             .HasMaxLength(DatabaseLengths.Name);
 
-        // Configures the optional category description.
+        // Configures the category type.
+        builder.Property(category => category.Type).IsRequired();
+
+        // Configures the optional description.
         builder
             .Property(category => category.Description)
             .HasMaxLength(DatabaseLengths.Description);
 
-        // Configures the active-status flag.
-        builder.Property(category => category.IsActive).IsRequired();
-
-        // Configures the system-default flag.
-        builder.Property(category => category.IsSystemDefault).IsRequired();
-
-        // One user can create many categories.
+        // A category may belong to a user.
+        // UserId is null for system-default categories.
         builder
             .HasOne(category => category.User)
             .WithMany(user => user.Categories)
@@ -51,16 +48,14 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .OnDelete(DeleteBehavior.Cascade);
 
         // One category can be assigned to many transactions.
-        // Restrict prevents deleting a category that is still
-        // referenced by transaction history.
         builder
             .HasMany(category => category.Transactions)
             .WithOne(transaction => transaction.Category)
             .HasForeignKey(transaction => transaction.CategoryId)
             .HasConstraintName("fk_transactions_categories_category_id")
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
 
-        // One category can belong to many budget-category relationships.
+        // One category can participate in many budget-category relationships.
         builder
             .HasMany(category => category.BudgetCategories)
             .WithOne(budgetCategory => budgetCategory.Category)
@@ -68,15 +63,25 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasConstraintName("fk_budget_categories_categories_category_id")
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Prevents a user from creating duplicate category names.
+        // Prevents duplicate user-created category names of the same type.
         builder
-            .HasIndex(category => new { category.UserId, category.Name })
+            .HasIndex(category => new
+            {
+                category.UserId,
+                category.Name,
+                category.Type,
+            })
             .IsUnique()
-            .HasDatabaseName("ux_categories_user_id_name");
+            .HasDatabaseName("ux_categories_user_id_name_type");
 
-        // Improves queries that retrieve active categories for a user.
+        // Improves lookups for active categories by user and type.
         builder
-            .HasIndex(category => new { category.UserId, category.IsActive })
-            .HasDatabaseName("ix_categories_user_id_is_active");
+            .HasIndex(category => new
+            {
+                category.UserId,
+                category.Type,
+                category.IsActive,
+            })
+            .HasDatabaseName("ix_categories_user_id_type_is_active");
     }
 }

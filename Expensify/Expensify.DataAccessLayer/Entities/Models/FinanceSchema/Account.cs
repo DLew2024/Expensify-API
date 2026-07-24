@@ -1,6 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
-using Expensify.DataAccessLayer.Enums;
+using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
 
 namespace Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 
@@ -41,13 +41,18 @@ public class Account : Auditable
     /// The last four digits of the account number for display purposes only.
     /// Example: "4821".
     /// </summary>
-    public string? LastFourDigits { get; set; } = string.Empty;
+    public string LastFourDigits { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The unique identifier of the currency used by this account.
+    /// </summary>
+    public Guid CurrencyCodeId { get; set; }
 
     /// <summary>
     /// The currency used by this account.
     /// Example: USD, EUR, GBP.
     /// </summary>
-    public CurrencyCode CurrencyCode { get; set; } = CurrencyCode.USD;
+    public CurrencyCode CurrencyCode { get; set; } = null!;
 
     /// <summary>
     /// Cached current balance for dashboard and account list performance.

@@ -1,7 +1,8 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
+using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
-namespace Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+namespace Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
 
 /// <summary>
 /// Represents a payment method that can be associated with transactions.
@@ -24,7 +25,12 @@ public class PaymentMethod : Auditable
     /// <summary>
     /// The user who owns this payment method.
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
+
+    /// <summary>
+    /// Navigation property for the owner of the payment method.
+    /// </summary>
+    public User? User { get; set; }
 
     /// <summary>
     /// Optional description of the payment method.
@@ -42,11 +48,6 @@ public class PaymentMethod : Auditable
     /// Indicates whether this payment method is active.
     /// </summary>
     public bool IsActive { get; set; } = true;
-
-    /// <summary>
-    /// Navigation property for the owner of the payment method.
-    /// </summary>
-    public User User { get; set; } = null!;
 
     /// <summary>
     /// Transactions that use this payment method.

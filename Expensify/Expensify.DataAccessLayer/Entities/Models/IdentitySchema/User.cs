@@ -1,6 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
-using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
+using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
 using static Expensify.DataAccessLayer.Utility.Constants;
 
 namespace Expensify.DataAccessLayer.Entities.Models.IdentitySchema;

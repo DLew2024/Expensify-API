@@ -1,7 +1,7 @@
 ﻿using Expensify.DataAccessLayer.Entities.AbstractClasses;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.GoalsSchema;
 
 /// <summary>
 /// Represents a type of financial goal.

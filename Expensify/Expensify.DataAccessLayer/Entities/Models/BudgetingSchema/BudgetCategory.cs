@@ -1,4 +1,4 @@
-﻿using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
+﻿using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
 
 namespace Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 

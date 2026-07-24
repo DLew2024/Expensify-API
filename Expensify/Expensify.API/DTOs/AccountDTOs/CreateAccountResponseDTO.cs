@@ -38,10 +38,7 @@ public class CreateAccountResponseDTO
     /// </summary>
     public string? LastFourDigits { get; set; }
 
-    /// <summary>
-    /// The currency used by the account.
-    /// </summary>
-    public CurrencyCode CurrencyCode { get; set; }
+    public Guid CurrencyCodeId { get; set; }
 
     /// <summary>
     /// The current balance of the account.
@@ -98,7 +95,7 @@ public class CreateAccountResponseDTO
             AccountTypeName = accountTypeName,
             InstitutionName = account.InstitutionName,
             LastFourDigits = account.LastFourDigits,
-            CurrencyCode = account.CurrencyCode,
+            CurrencyCodeId = account.CurrencyCodeId,
             CurrentBalance = account.CurrentBalance,
             AvailableBalance = account.AvailableBalance,
             IncludeInNetWorth = account.IncludeInNetWorth,

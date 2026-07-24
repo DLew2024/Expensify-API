@@ -1,7 +1,7 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
-using Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
+using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.DataAccessLayer;
@@ -15,11 +15,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
     public virtual DbSet<Transaction> Transactions { get; set; }
     public virtual DbSet<Account> Accounts { get; set; }
-    public virtual DbSet<Category> Categories { get; set; }
     public virtual DbSet<Budget> Budgets { get; set; }
+    public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<CurrencyCode> CurrencyCodes { get; set; }
     public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
     public virtual DbSet<AccountType> AccountTypes { get; set; }
-    public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<Category> Categories { get; set; }
 
     /// <summary>
     ///  public virtual DbSet<BudgetMember> BudgetMembers { get; set; }

@@ -43,10 +43,11 @@ public class AccountResponseDTO
     /// </summary>
     public string AccountTypeName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// The currency code used by the account.
-    /// </summary>
-    public CurrencyCode CurrencyCode { get; set; } = 0;
+    public Guid CurrencyCodeId { get; set; }
+
+    public string CurrencyCode { get; set; } = string.Empty;
+
+    public string CurrencySymbol { get; set; } = string.Empty;
 
     /// <summary>
     /// The current balance of the account.
@@ -108,7 +109,9 @@ public class AccountResponseDTO
             LastFourDigits = account.LastFourDigits ?? string.Empty,
             AccountTypeId = account.AccountTypeId,
             AccountTypeName = account.AccountType.Name,
-            CurrencyCode = account.CurrencyCode,
+            CurrencyCodeId = account.CurrencyCodeId,
+            CurrencyCode = account.CurrencyCode.Code,
+            CurrencySymbol = account.CurrencyCode.Symbol,
             CurrentBalance = account.CurrentBalance,
             AvailableBalance = account.AvailableBalance,
             IncludeInNetWorth = account.IncludeInNetWorth,
@@ -131,7 +134,9 @@ public class AccountResponseDTO
             LastFourDigits = account.LastFourDigits ?? string.Empty,
             AccountTypeId = account.AccountTypeId,
             AccountTypeName = accountTypeName,
-            CurrencyCode = account.CurrencyCode,
+            CurrencyCodeId = account.CurrencyCodeId,
+            CurrencyCode = account.CurrencyCode.Code,
+            CurrencySymbol = account.CurrencyCode.Symbol,
             CurrentBalance = account.CurrentBalance,
             AvailableBalance = account.AvailableBalance,
             IncludeInNetWorth = account.IncludeInNetWorth,

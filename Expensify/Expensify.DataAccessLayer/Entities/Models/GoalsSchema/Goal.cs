@@ -2,7 +2,7 @@
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
-namespace Expensify.DataAccessLayer.Entities.Models;
+namespace Expensify.DataAccessLayer.Entities.Models.GoalsSchema;
 
 /// <summary>
 /// Represents a financial goal that a user is working toward.

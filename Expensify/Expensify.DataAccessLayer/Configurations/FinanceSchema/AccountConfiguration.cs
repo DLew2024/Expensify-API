@@ -6,7 +6,8 @@ using static Expensify.DataAccessLayer.Utility.Constants;
 namespace Expensify.DataAccessLayer.Configurations.FinanceSchema;
 
 /// <summary>
-/// Configures the database mapping for the <see cref="Account"/> entity.
+/// Configures the database mapping, relationships, constraints,
+/// precision rules, and indexes for the <see cref="Account"/> entity.
 /// </summary>
 public class AccountConfiguration : IEntityTypeConfiguration<Account>
 {
@@ -18,47 +19,51 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
     /// </param>
     public void Configure(EntityTypeBuilder<Account> builder)
     {
-        // Maps accounts to the finance schema.
+        // Maps the Account entity to the accounts table in the finance schema.
         builder.ToTable("accounts", "finance");
 
-        // Configures the primary key.
+        // Configures the primary key for the accounts table.
         builder.HasKey(account => account.Id).HasName("pk_accounts");
 
-        // Configures required string properties.
+        // Configures the account name as required with a maximum allowed length.
         builder.Property(account => account.Name).IsRequired().HasMaxLength(DatabaseLengths.Name);
 
-        // Configures optional string properties.
+        // Configures the financial institution name as required.
         builder
             .Property(account => account.InstitutionName)
             .IsRequired()
             .HasMaxLength(DatabaseLengths.InstitutionName);
 
+        // Configures the last four digits of the account number as required.
         builder
             .Property(account => account.LastFourDigits)
             .IsRequired()
             .HasMaxLength(DatabaseLengths.LastFourDigits);
 
+        // Configures optional notes associated with the account.
         builder.Property(account => account.Notes).HasMaxLength(DatabaseLengths.Notes);
 
-        // Configures the optional account Icon URL.
+        // Configures the optional icon URL associated with the account.
         builder.Property(account => account.Icon).HasMaxLength(DatabaseLengths.Url);
 
-        // Stores the currency code as an integer.
-        builder.Property(account => account.CurrencyCode).IsRequired();
-
-        // Configures monetary precision.
+        // Configures the current account balance with fixed monetary precision.
         builder.Property(account => account.CurrentBalance).IsRequired().HasPrecision(18, 2);
 
+        // Configures the available account balance with fixed monetary precision.
         builder.Property(account => account.AvailableBalance).IsRequired().HasPrecision(18, 2);
 
+        // Configures the optional credit limit with fixed monetary precision.
         builder.Property(account => account.CreditLimit).HasPrecision(18, 2);
 
-        // Supports percentage values such as 12.75.
+        // Configures the optional interest rate.
+        // Supports percentage values such as 12.75%.
         builder.Property(account => account.InterestRate).HasPrecision(5, 2);
 
         // Uses PostgreSQL's xmin system column for optimistic concurrency control.
+        // This helps prevent conflicting updates from silently overwriting each other.
         builder.Property<uint>("xmin").IsRowVersion();
 
+        // Configures the relationship between accounts and users.
         // One user can own many accounts.
         builder
             .HasOne(account => account.User)
@@ -67,7 +72,19 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
             .HasConstraintName("fk_accounts_users_user_id")
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Configures the relationship between accounts and currency codes.
+        // Each account must reference one currency from the seeded reference data.
+        // Currency records cannot be deleted while accounts still reference them.
+        builder
+            .HasOne(account => account.CurrencyCode)
+            .WithMany()
+            .HasForeignKey(account => account.CurrencyCodeId)
+            .HasConstraintName("fk_accounts_currency_codes_currency_code_id")
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Configures the relationship between accounts and account types.
         // One account type can be assigned to many accounts.
+        // Account types cannot be deleted while accounts still reference them.
         builder
             .HasOne(account => account.AccountType)
             .WithMany(accountType => accountType.Accounts)
@@ -75,35 +92,45 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
             .HasConstraintName("fk_accounts_account_types_account_type_id")
             .OnDelete(DeleteBehavior.Restrict);
 
+        // Configures the relationship between accounts and transactions.
         // One account can contain many transactions.
+        //
+        // Restricts physical deletion of an account while transactions still
+        // reference it, preserving historical financial records.
+        // Accounts should be soft-deleted using IsDeleted instead.
         builder
             .HasMany(account => account.Transactions)
             .WithOne(transaction => transaction.Account)
             .HasForeignKey(transaction => transaction.AccountId)
             .HasConstraintName("fk_transactions_accounts_account_id")
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
-        // Improves filtering active accounts for a user.
+        // Improves queries that retrieve active accounts for a specific user.
         builder
             .HasIndex(account => new { account.UserId, account.IsActive })
             .HasDatabaseName("ix_accounts_user_id_is_active");
 
-        // Improves filtering hidden accounts for a user.
+        // Improves queries that retrieve hidden or visible accounts for a user.
         builder
             .HasIndex(account => new { account.UserId, account.IsHidden })
             .HasDatabaseName("ix_accounts_user_id_is_hidden");
 
-        // Improves account lookups by account type.
+        // Improves account lookups and filtering by account type.
         builder
             .HasIndex(account => account.AccountTypeId)
             .HasDatabaseName("ix_accounts_account_type_id");
+
+        // Improves account lookups and filtering by currency.
+        builder
+            .HasIndex(account => account.CurrencyCodeId)
+            .HasDatabaseName("ix_accounts_currency_code_id");
 
         // Configures whether the account is the user's default account.
         // Defaults to false when no value is explicitly provided.
         builder.Property(account => account.IsDefault).IsRequired().HasDefaultValue(false);
 
-        // Ensures each user can have only one account marked as the default.
-        // The partial unique index applies only to accounts where IsDefault is true.
+        // Ensures that each user can have only one default account.
+        // The partial unique index applies only to rows where IsDefault is true.
         builder
             .HasIndex(account => account.UserId)
             .IsUnique()

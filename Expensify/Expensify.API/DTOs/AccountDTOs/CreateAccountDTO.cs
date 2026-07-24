@@ -62,11 +62,12 @@ public class CreateAccountDTO
     [Required]
     public bool IsDefault { get; set; }
 
-    ///// <summary>
-    ///// The currency used by the account.
-    ///// </summary>
-    //[Required]
-    //public CurrencyCode CurrencyCode { get; set; } = CurrencyCode.USD;
+    /// <summary>
+    /// The unique identifier of the currency used by the account.
+    /// </summary>
+    [Required]
+    public Guid CurrencyCodeId { get; set; }
+
     ///// <summary>
     ///// Annual interest rate or APR associated with the account.
     ///// </summary>
@@ -94,8 +95,7 @@ public class CreateAccountDTO
             IsActive = true,
             IsHidden = false,
             CreatedBy = userId,
-
-            //CurrencyCode = CurrencyCode,
+            CurrencyCodeId = CurrencyCodeId,
             //CreditLimit = CreditLimit,
             //InterestRate = InterestRate,
         };

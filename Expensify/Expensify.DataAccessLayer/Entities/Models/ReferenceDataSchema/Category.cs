@@ -4,7 +4,7 @@ using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Enums;
 
-namespace Expensify.DataAccessLayer.Entities.Models.ReferenceSchema;
+namespace Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
 
 /// <summary>
 /// Represents a category used to organize transactions and budgets.

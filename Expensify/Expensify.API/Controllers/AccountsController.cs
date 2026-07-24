@@ -17,14 +17,9 @@ namespace Expensify.API.Controllers;
 /// - Hide/unhide accounts
 /// - Calculate net worth
 /// </summary>
-public class AccountsController : AuthorizationControllerBase
+public class AccountsController(IService service) : AuthorizationControllerBase
 {
-    private readonly IService _service;
-
-    public AccountsController(IService service)
-    {
-        _service = service;
-    }
+    private readonly IService _service = service;
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AccountResponseDTO>>> GetUserAccounts(

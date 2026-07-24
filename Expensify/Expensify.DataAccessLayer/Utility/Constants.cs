@@ -30,5 +30,7 @@ public static class Constants
         public const int LastFourDigits = 4;
         public const int TokenHash = 128;
         public const int RoleName = 20;
+        public const int CurrencySymbol = 10;
+        public const int CurrencyCode = 3;
     }
 }
