@@ -2,7 +2,6 @@
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.ServiceClasses.Interfaces.Resolvers;
 using Expensify.DataAccessLayer;
-using Expensify.Services.Interfaces;
 using Microsoft.Extensions.Options;
 
 namespace Expensify.API.ServiceClasses

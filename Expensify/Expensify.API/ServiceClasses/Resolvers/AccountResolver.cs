@@ -26,17 +26,17 @@ public class AccountResolver(ApplicationDbContext context) : IAccountResolver
     /// </returns>
     public async Task<Guid?> ResolveAccountIdByUserId(
         Guid userId,
-        Guid? accountId,
+        Guid accountId,
         CancellationToken cancellationToken
     )
     {
         return await _context
             .Accounts.AsNoTracking()
             .Where(account =>
-                account.UserId == userId
+                account.Id == accountId
+                && account.UserId == userId
                 && !account.IsDeleted
                 && account.IsActive
-                && (accountId.HasValue ? account.Id == accountId.Value : account.IsDefault)
             )
             .Select(account => (Guid?)account.Id)
             .FirstOrDefaultAsync(cancellationToken);
@@ -59,7 +59,7 @@ public class AccountResolver(ApplicationDbContext context) : IAccountResolver
     /// </returns>
     public async Task<Account?> ResolveAccountByUserId(
         Guid userId,
-        Guid? accountId,
+        Guid accountId,
         CancellationToken cancellationToken
     )
     {
@@ -67,10 +67,10 @@ public class AccountResolver(ApplicationDbContext context) : IAccountResolver
             .Accounts.AsNoTracking()
             .FirstOrDefaultAsync(
                 account =>
-                    account.UserId == userId
-                    && !account.IsDeleted
+                    account.Id == accountId
+                    && account.UserId == userId
                     && account.IsActive
-                    && (accountId.HasValue ? account.Id == accountId.Value : account.IsDefault),
+                    && !account.IsDeleted,
                 cancellationToken
             );
     }

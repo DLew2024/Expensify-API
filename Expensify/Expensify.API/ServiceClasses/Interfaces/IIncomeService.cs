@@ -13,7 +13,7 @@ namespace Expensify.API.ServiceClasses.Interfaces
         );
         public Task<Result<List<TransactionDTO>>> GetAllIncome(
             Guid userId,
-            Guid? accountId,
+            Guid accountId,
             CancellationToken cancellationToken
         );
         Task<Result<bool>> DeleteIncome(

@@ -109,8 +109,7 @@ public class IncomeService(
         {
             var paymentMethodExists = await _context.PaymentMethods.AnyAsync(
                 paymentMethod =>
-                    paymentMethod.Id == request.PaymentMethodId.Value
-                    && !paymentMethod.IsDeleted,
+                    paymentMethod.Id == request.PaymentMethodId.Value && !paymentMethod.IsDeleted,
                 cancellationToken
             );
 
@@ -251,7 +250,7 @@ public class IncomeService(
 
     public async Task<Result<List<TransactionDTO>>> GetAllIncome(
         Guid userId,
-        Guid? accountId,
+        Guid accountId,
         CancellationToken cancellationToken
     )
     {
@@ -266,10 +265,7 @@ public class IncomeService(
             if (!resolvedAccountId.HasValue)
             {
                 return new Result<List<TransactionDTO>>(
-                    new EntityNotFoundException(
-                        accountId.HasValue
-                            ? "The selected account could not be found or is unavailable."
-                            : "No default account could be found."
+                    new EntityNotFoundException("The selected account could not be found or is unavailable."
                     )
                 );
             }

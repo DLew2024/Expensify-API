@@ -28,7 +28,7 @@ namespace Expensify.API.Controllers
 
         [HttpGet]
         public async Task<ActionResult<DashboardDataResponseDTO>> GetDashboardData(
-            [FromQuery] Guid? accountId,
+            [FromQuery] Guid accountId,
             CancellationToken cancellationToken
         )
         {

@@ -56,7 +56,7 @@ namespace Expensify.API.Controllers
 
         [HttpGet("getAll")]
         public async Task<ActionResult<List<TransactionDTO>>> GetAllExpenses(
-            [FromQuery] Guid? accountId,
+            [FromQuery] Guid accountId,
             CancellationToken cancellationToken
         )
         {

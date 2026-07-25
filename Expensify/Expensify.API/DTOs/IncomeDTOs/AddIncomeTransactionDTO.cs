@@ -69,7 +69,6 @@ public class AddIncomeTransactionDTO
     /// </summary>
     //public bool IsRecurring { get; set; }
 
-
     public Transaction ToTransaction(Guid userId, decimal accountBalanceAfterTransaction)
     {
         return new Transaction
@@ -83,7 +82,7 @@ public class AddIncomeTransactionDTO
             Status = TransactionPostedStatus.Posted,
             TransactionDate = TransactionDate,
             Description = Description,
-            Icon =Icon,
+            Icon = Icon,
             Notes = Notes,
             CreatedBy = userId,
             LastUpdatedBy = userId,

@@ -246,7 +246,7 @@ namespace Expensify.API.ServiceClasses
 
         public async Task<Result<List<TransactionDTO>>> GetAllExpense(
             Guid userId,
-            Guid? accountId,
+            Guid accountId,
             CancellationToken cancellationToken
         )
         {
@@ -262,9 +262,7 @@ namespace Expensify.API.ServiceClasses
                 {
                     return new Result<List<TransactionDTO>>(
                         new EntityNotFoundException(
-                            accountId.HasValue
-                                ? "The selected account could not be found or is unavailable."
-                                : "No default account could be found."
+                            "The selected account could not be found or is unavailable."
                         )
                     );
                 }

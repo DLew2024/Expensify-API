@@ -7,7 +7,7 @@ public interface IDashboardService
 {
     Task<Result<DashboardDataResponseDTO>> GetDashboardData(
         Guid userId,
-        Guid? accountId,
+        Guid accountId,
         CancellationToken cancellationToken
     );
 }
