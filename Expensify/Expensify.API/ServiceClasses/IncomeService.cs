@@ -36,7 +36,7 @@ public class IncomeService(
             );
         }
 
-        var userAccount = await _accountResolver.ResolveAccountByUserId(
+        var userAccount = await _accountResolver.ResolveAccountByUserIdWithTracking(
             userId,
             request.AccountId,
             cancellationToken
@@ -56,61 +56,11 @@ public class IncomeService(
             );
         }
 
-        //if (request.BudgetId.HasValue)
-        //{
-        //    var canUseBudget = await _context.Budgets.AnyAsync(
-        //        budget =>
-        //            budget.Id == request.BudgetId.Value
-        //            && budget.IsActive
-        //            && !budget.IsDeleted
-        //            && (
-        //                budget.OwnerUserId == userId
-        //                || budget.Members.Any(member =>
-        //                    member.UserId == userId
-        //                    && !member.IsDeleted
-        //                    && (
-        //                        member.Role == BudgetMemberRole.Admin
-        //                        || member.Role == BudgetMemberRole.Editor
-        //                    )
-        //                )
-        //            ),
-        //        cancellationToken
-        //    );
-
-        //    if (!canUseBudget)
-        //    {
-        //        return new Result<IncomeTransactionResponseDTO>(
-        //            new EntityNotFoundException("The requested budget could not be found.")
-        //        );
-        //    }
-        //}
-
-        //if (request.CategoryId.HasValue)
-        //{
-        //    var categoryExists = await _context.Categories.AnyAsync(
-        //        category =>
-        //            category.Id == request.CategoryId.Value
-        //            && !category.IsDeleted
-        //            && category.IsActive
-        //            && category.Type == CategoryType.Income
-        //            && (category.UserId == userId || category.IsSystemDefault),
-        //        cancellationToken
-        //    );
-
-        //    if (!categoryExists)
-        //    {
-        //        return new Result<IncomeTransactionResponseDTO>(
-        //            new EntityNotFoundException("The requested category could not be found.")
-        //        );
-        //    }
-        //}
-
         if (request.PaymentMethodId.HasValue)
         {
             var paymentMethodExists = await _context.PaymentMethods.AnyAsync(
                 paymentMethod =>
-                    paymentMethod.Id == request.PaymentMethodId.Value
-                    && !paymentMethod.IsDeleted,
+                    paymentMethod.Id == request.PaymentMethodId.Value && !paymentMethod.IsDeleted,
                 cancellationToken
             );
 
@@ -220,7 +170,6 @@ public class IncomeService(
             );
         }
 
-        TransactionHelper.ReverseTransactionBalance(account, income);
         TransactionHelper.SoftDeleteTransaction(income, userId);
 
         await _context.SaveChangesAsync(cancellationToken);
@@ -251,7 +200,7 @@ public class IncomeService(
 
     public async Task<Result<List<TransactionDTO>>> GetAllIncome(
         Guid userId,
-        Guid? accountId,
+        Guid accountId,
         CancellationToken cancellationToken
     )
     {
@@ -267,9 +216,7 @@ public class IncomeService(
             {
                 return new Result<List<TransactionDTO>>(
                     new EntityNotFoundException(
-                        accountId.HasValue
-                            ? "The selected account could not be found or is unavailable."
-                            : "No default account could be found."
+                        "The selected account could not be found or is unavailable."
                     )
                 );
             }

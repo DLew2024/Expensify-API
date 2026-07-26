@@ -26,17 +26,17 @@ public class AccountResolver(ApplicationDbContext context) : IAccountResolver
     /// </returns>
     public async Task<Guid?> ResolveAccountIdByUserId(
         Guid userId,
-        Guid? accountId,
+        Guid accountId,
         CancellationToken cancellationToken
     )
     {
         return await _context
             .Accounts.AsNoTracking()
             .Where(account =>
-                account.UserId == userId
+                account.Id == accountId
+                && account.UserId == userId
                 && !account.IsDeleted
                 && account.IsActive
-                && (accountId.HasValue ? account.Id == accountId.Value : account.IsDefault)
             )
             .Select(account => (Guid?)account.Id)
             .FirstOrDefaultAsync(cancellationToken);
@@ -59,7 +59,7 @@ public class AccountResolver(ApplicationDbContext context) : IAccountResolver
     /// </returns>
     public async Task<Account?> ResolveAccountByUserId(
         Guid userId,
-        Guid? accountId,
+        Guid accountId,
         CancellationToken cancellationToken
     )
     {
@@ -67,12 +67,38 @@ public class AccountResolver(ApplicationDbContext context) : IAccountResolver
             .Accounts.AsNoTracking()
             .FirstOrDefaultAsync(
                 account =>
-                    account.UserId == userId
-                    && !account.IsDeleted
+                    account.Id == accountId
+                    && account.UserId == userId
                     && account.IsActive
-                    && (accountId.HasValue ? account.Id == accountId.Value : account.IsDefault),
+                    && !account.IsDeleted,
                 cancellationToken
             );
+    }
+
+    /// <summary>
+    /// Resolves an active, non-deleted account belonging to the specified user.
+    /// The returned entity is tracked by Entity Framework and is intended for update operations.
+    /// </summary>
+    /// <param name="userId">The identifier of the account owner.</param>
+    /// <param name="accountId">The identifier of the account to resolve.</param>
+    /// <param name="cancellationToken">A token used to cancel the asynchronous operation.</param>
+    /// <returns>
+    /// The matching <see cref="Account"/> if found; otherwise, <see langword="null"/>.
+    /// </returns>
+    public async Task<Account?> ResolveAccountByUserIdWithTracking(
+        Guid userId,
+        Guid accountId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await _context.Accounts.FirstOrDefaultAsync(
+            account =>
+                account.Id == accountId
+                && account.UserId == userId
+                && account.IsActive
+                && !account.IsDeleted,
+            cancellationToken
+        );
     }
 
     /// <summary>

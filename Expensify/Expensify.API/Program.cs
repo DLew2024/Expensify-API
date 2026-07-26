@@ -11,7 +11,6 @@ using Expensify.API.ServiceClasses.Resolvers;
 using Expensify.API.Utility.Validators.Filters;
 using Expensify.API.Utility.Validators.Filters.Auth;
 using Expensify.API.Utility.Validators.Filters.Income;
-using Expensify.Services.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

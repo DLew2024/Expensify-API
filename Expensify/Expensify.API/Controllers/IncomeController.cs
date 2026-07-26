@@ -61,7 +61,7 @@ public class IncomeController : AuthorizationControllerBase
 
     [HttpGet("getAll")]
     public async Task<ActionResult<List<TransactionDTO>>> GetAllIncome(
-        [FromQuery] Guid? accountId,
+        [FromQuery] Guid accountId,
         CancellationToken cancellationToken
     )
     {

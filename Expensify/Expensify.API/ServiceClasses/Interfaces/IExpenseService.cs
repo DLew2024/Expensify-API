@@ -13,7 +13,7 @@ public interface IExpenseService
     );
     Task<Result<List<TransactionDTO>>> GetAllExpense(
         Guid userId,
-        Guid? accountId,
+        Guid accountId,
         CancellationToken cancellationToken
     );
     Task<Result<bool>> DeleteExpense(
