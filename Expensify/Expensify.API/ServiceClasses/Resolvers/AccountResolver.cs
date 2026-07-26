@@ -76,6 +76,32 @@ public class AccountResolver(ApplicationDbContext context) : IAccountResolver
     }
 
     /// <summary>
+    /// Resolves an active, non-deleted account belonging to the specified user.
+    /// The returned entity is tracked by Entity Framework and is intended for update operations.
+    /// </summary>
+    /// <param name="userId">The identifier of the account owner.</param>
+    /// <param name="accountId">The identifier of the account to resolve.</param>
+    /// <param name="cancellationToken">A token used to cancel the asynchronous operation.</param>
+    /// <returns>
+    /// The matching <see cref="Account"/> if found; otherwise, <see langword="null"/>.
+    /// </returns>
+    public async Task<Account?> ResolveAccountByUserIdWithTracking(
+        Guid userId,
+        Guid accountId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await _context.Accounts.FirstOrDefaultAsync(
+            account =>
+                account.Id == accountId
+                && account.UserId == userId
+                && account.IsActive
+                && !account.IsDeleted,
+            cancellationToken
+        );
+    }
+
+    /// <summary>
     /// Resolves the active account associated with a specific transaction.
     /// Ensures both the transaction and account belong to the specified user
     /// and have not been soft deleted.

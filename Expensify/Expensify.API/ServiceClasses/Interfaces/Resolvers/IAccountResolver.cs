@@ -14,6 +14,11 @@ public interface IAccountResolver
         Guid accountId,
         CancellationToken cancellationToken
     );
+    Task<Account?> ResolveAccountByUserIdWithTracking(
+        Guid userId,
+        Guid accountId,
+        CancellationToken cancellationToken
+    );
     Task<Account?> ResolveAccountByTransactionId(
         Guid userId,
         Guid transactionId,

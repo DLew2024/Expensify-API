@@ -56,55 +56,6 @@ namespace Expensify.API.ServiceClasses
                 );
             }
 
-            //if (request.BudgetId.HasValue)
-            //{
-            //    var canUseBudget = await _context.Budgets.AnyAsync(
-            //        budget =>
-            //            budget.Id == request.BudgetId.Value
-            //            && budget.IsActive
-            //            && !budget.IsDeleted
-            //            && (
-            //                budget.OwnerUserId == userId
-            //                || budget.Members.Any(member =>
-            //                    member.UserId == userId
-            //                    && !member.IsDeleted
-            //                    && (
-            //                        member.Role == BudgetMemberRole.Admin
-            //                        || member.Role == BudgetMemberRole.Editor
-            //                    )
-            //                )
-            //            ),
-            //        cancellationToken
-            //    );
-
-            //    if (!canUseBudget)
-            //    {
-            //        return new Result<ExpenseTransactionResponseDTO>(
-            //            new EntityNotFoundException("The requested budget could not be found.")
-            //        );
-            //    }
-            //}
-
-            //if (request.CategoryId.HasValue)
-            //{
-            //    var categoryExists = await _context.Categories.AnyAsync(
-            //        category =>
-            //            category.Id == request.CategoryId.Value
-            //            && !category.IsDeleted
-            //            && category.IsActive
-            //            && category.Type == CategoryType.Expense
-            //            && (category.UserId == userId || category.IsSystemDefault),
-            //        cancellationToken
-            //    );
-
-            //    if (!categoryExists)
-            //    {
-            //        return new Result<ExpenseTransactionResponseDTO>(
-            //            new EntityNotFoundException("The requested category could not be found.")
-            //        );
-            //    }
-            //}
-
             if (request.PaymentMethodId.HasValue)
             {
                 var paymentMethodExists = await _context.PaymentMethods.AnyAsync(
@@ -224,7 +175,6 @@ namespace Expensify.API.ServiceClasses
                 );
             }
 
-            TransactionHelper.ReverseTransactionBalance(account, expense);
             TransactionHelper.SoftDeleteTransaction(expense, userId);
 
             await _context.SaveChangesAsync(cancellationToken);

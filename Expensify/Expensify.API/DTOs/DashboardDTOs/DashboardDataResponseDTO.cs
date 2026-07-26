@@ -75,7 +75,7 @@ public class DashboardDataResponseDTO
         {
             Account = account,
 
-            TotalBalance = account.CurrentBalance + totalIncome - totalExpenses,
+            TotalBalance = account.CurrentBalance,
             TotalIncome = totalIncome,
             TotalExpenses = totalExpenses,
 
