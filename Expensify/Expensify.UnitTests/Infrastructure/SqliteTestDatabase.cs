@@ -1,30 +1,29 @@
 ﻿using Expensify.DataAccessLayer;
 using Microsoft.Data.Sqlite;
 
-namespace Expensify.UnitTests.Infrastructure
+namespace Expensify.UnitTests.Infrastructure;
+
+public sealed class SqliteTestDatabase : IAsyncDisposable
 {
-    public sealed class SqliteTestDatabase : IAsyncDisposable
+    private readonly SqliteConnection _connection;
+
+    public ApplicationDbContext Context { get; }
+
+    public SqliteTestDatabase()
     {
-        private readonly SqliteConnection _connection;
+        _connection = new SqliteConnection("Data Source=:memory:");
+        _connection.Open();
 
-        public ApplicationDbContext Context { get; }
+        Context = TestDbContextFactory.Create(_connection);
 
-        public SqliteTestDatabase()
-        {
-            _connection = new SqliteConnection("Data Source=:memory:");
-            _connection.Open();
+        Context.Database.EnsureCreated();
+    }
 
-            Context = TestDbContextFactory.Create(_connection);
+    public async ValueTask DisposeAsync()
+    {
+        await Context.DisposeAsync();
+        await _connection.DisposeAsync();
 
-            Context.Database.EnsureCreated();
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await Context.DisposeAsync();
-            await _connection.DisposeAsync();
-
-            GC.SuppressFinalize(this);
-        }
+        GC.SuppressFinalize(this);
     }
 }
