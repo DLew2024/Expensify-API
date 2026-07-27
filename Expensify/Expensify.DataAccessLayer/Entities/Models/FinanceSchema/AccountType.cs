@@ -13,7 +13,7 @@ public class AccountType : Auditable
     /// Initializes a new instance of the <see cref="AccountType"/> class.
     /// Required by Entity Framework.
     /// </summary>
-    protected AccountType() { }
+    public AccountType() { }
 
     /// <summary>
     /// Initializes a new account type with the specified name.
