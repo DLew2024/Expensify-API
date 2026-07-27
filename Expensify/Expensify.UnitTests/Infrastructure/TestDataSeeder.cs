@@ -13,9 +13,7 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
 
     public async Task<Role> GetOrCreateUserRoleAsync()
     {
-        var existingRole = await _context.Roles.FirstOrDefaultAsync(role =>
-            role.Name == "User"
-        );
+        var existingRole = await _context.Roles.FirstOrDefaultAsync(role => role.Name == "User");
 
         if (existingRole is not null)
         {
@@ -60,9 +58,7 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
     public async Task<AccountType> GetOrCreateCheckingAccountTypeAsync(Guid userId)
     {
         var existingAccountType = await _context.AccountTypes.FirstOrDefaultAsync(accountType =>
-            accountType.Name == "Checking"
-            && accountType.IsSystemDefault
-            && !accountType.IsDeleted
+            accountType.Name == "Checking" && accountType.IsSystemDefault && !accountType.IsDeleted
         );
 
         if (existingAccountType is not null)
