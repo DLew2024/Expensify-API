@@ -1,7 +1,3 @@
-﻿
+﻿namespace Expensify.UnitTests.IntergrationTests.Conversion;
 
-namespace Expensify.UnitTests.IntergrationTests.Conversion;
-
-internal class CurrencyConversionTests
-{
-}
+internal class CurrencyConversionTests { }

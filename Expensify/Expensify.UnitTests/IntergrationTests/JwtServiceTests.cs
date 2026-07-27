@@ -1,7 +1,3 @@
-﻿
+﻿namespace Expensify.UnitTests.IntergrationTests;
 
-namespace Expensify.UnitTests.IntergrationTests;
-
-internal class JwtServiceTests
-{
-}
+internal class JwtServiceTests { }

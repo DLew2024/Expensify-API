@@ -1,7 +1,3 @@
-﻿
+﻿namespace Expensify.UnitTests.IntergrationTests.Reslovers;
 
-namespace Expensify.UnitTests.IntergrationTests.Reslovers;
-
-internal class TransactionResolverTests
-{
-}
+internal class TransactionResolverTests { }

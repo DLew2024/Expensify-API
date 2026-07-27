@@ -1,7 +1,3 @@
-﻿
+﻿namespace Expensify.UnitTests.IntergrationTests;
 
-namespace Expensify.UnitTests.IntergrationTests;
-
-public class AccountServiceTests
-{
-}
+public class AccountServiceTests { }
