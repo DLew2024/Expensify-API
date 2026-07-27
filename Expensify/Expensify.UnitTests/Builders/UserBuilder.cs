@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
+﻿using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 
 namespace Expensify.UnitTests.Builders;
 
 public sealed class UserBuilder
 {
     private Guid _id = Guid.NewGuid();
+
     private Role? _role;
+
     private string _fullName = "Test User";
-    private string _email = $"test-{Guid.NewGuid()}@example.com";
+    private string _email = $"test-{Guid.NewGuid()}@test.com";
     private string _password = "TestPassword123!";
 
     public UserBuilder WithId(Guid id)

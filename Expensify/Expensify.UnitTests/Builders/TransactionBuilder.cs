@@ -6,6 +6,7 @@ namespace Expensify.UnitTests.Builders;
 public sealed class TransactionBuilder
 {
     private Guid _id = Guid.NewGuid();
+
     private Account? _account;
 
     private decimal _amount = 100m;
