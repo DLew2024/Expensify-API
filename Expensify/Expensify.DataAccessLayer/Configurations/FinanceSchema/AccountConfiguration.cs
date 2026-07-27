@@ -59,10 +59,6 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         // Supports percentage values such as 12.75%.
         builder.Property(account => account.InterestRate).HasPrecision(5, 2);
 
-        // Uses PostgreSQL's xmin system column for optimistic concurrency control.
-        // This helps prevent conflicting updates from silently overwriting each other.
-        builder.Property<uint>("xmin").IsRowVersion();
-
         // Configures the relationship between accounts and users.
         // One user can own many accounts.
         builder

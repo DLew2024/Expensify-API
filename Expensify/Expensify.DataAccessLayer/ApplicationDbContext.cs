@@ -35,5 +35,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        if (Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
+        {
+            // Uses PostgreSQL's xmin system column for optimistic concurrency control.
+            // This helps prevent conflicting updates from silently overwriting each other.
+            modelBuilder.Entity<Account>().Property<uint>("xmin").IsRowVersion();
+        }
     }
 }
