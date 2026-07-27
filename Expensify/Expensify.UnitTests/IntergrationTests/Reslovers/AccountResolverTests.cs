@@ -1,5 +1,6 @@
 ﻿using Expensify.API.ServiceClasses.Resolvers;
 using Expensify.UnitTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.UnitTests.IntergrationTests.Reslovers;
 
@@ -208,6 +209,206 @@ public sealed class AccountResolverTests : IAsyncDisposable
 
         // Act
         var result = await _resolver.ResolveAccountByUserId(
+            userId,
+            accountId,
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    // ResolveAccountByUserIdWithTracking
+    [Fact]
+    public async Task ResolveAccountByUserIdWithTracking_ReturnsTrackedAccount()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var accountId = Guid.NewGuid();
+
+        await _seeder.CreateAccountAsync(
+            accountId: accountId,
+            userId: userId
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByUserIdWithTracking(
+            userId,
+            accountId,
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.NotNull(result);
+
+        var entry = _database.Context.Entry(result);
+
+        Assert.Equal(EntityState.Unchanged, entry.State);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByUserIdWithTracking_PersistsChanges_WhenEntityIsModified()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var accountId = Guid.NewGuid();
+
+        var account = await _seeder.CreateAccountAsync(
+            accountId: accountId,
+            userId: userId
+        );
+
+        // Act
+        var trackedAccount = await _resolver.ResolveAccountByUserIdWithTracking(
+            userId,
+            accountId,
+            CancellationToken.None
+        );
+
+        Assert.NotNull(trackedAccount);
+
+        trackedAccount.Name = "Updated Account";
+
+        await _database.Context.SaveChangesAsync();
+
+        // Assert
+        var updatedAccount = await _database.Context.Accounts
+            .AsNoTracking()
+            .FirstAsync(account => account.Id == accountId);
+
+        Assert.Equal("Updated Account", updatedAccount.Name);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByUserIdWithTracking_ReturnsAccount_WhenAccountIsValid()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var accountId = Guid.NewGuid();
+
+        var expectedAccount = await _seeder.CreateAccountAsync(
+            accountId: accountId,
+            userId: userId,
+            isActive: true,
+            isDeleted: false
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByUserIdWithTracking(
+            userId,
+            accountId,
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expectedAccount.Id, result.Id);
+        Assert.Equal(expectedAccount.UserId, result.UserId);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByUserIdWithTracking_ReturnsNull_WhenAccountDoesNotExist()
+    {
+        // Act
+        var result = await _resolver.ResolveAccountByUserIdWithTracking(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByUserIdWithTracking_ReturnsNull_WhenAccountBelongsToAnotherUser()
+    {
+        // Arrange
+        var accountOwnerId = Guid.NewGuid();
+        var requestingUserId = Guid.NewGuid();
+        var accountId = Guid.NewGuid();
+
+        await _seeder.CreateAccountAsync(
+            accountId: accountId,
+            userId: accountOwnerId
+   
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByUserIdWithTracking(
+            requestingUserId,
+            accountId,
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByUserIdWithTracking_ReturnsNull_WhenAccountIsInactive()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var accountId = Guid.NewGuid();
+
+        await _seeder.CreateAccountAsync(
+            accountId: accountId,
+            userId: userId,
+            isActive: false
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByUserIdWithTracking(
+            userId,
+            accountId,
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByUserIdWithTracking_ReturnsNull_WhenAccountIsSoftDeleted()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var accountId = Guid.NewGuid();
+
+        await _seeder.CreateAccountAsync(
+            accountId: accountId,
+            userId: userId,
+            isDeleted: true
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByUserIdWithTracking(
+            userId,
+            accountId,
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByUserIdWithTracking_ReturnsNull_WhenAccountIsInactiveAndSoftDeleted()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var accountId = Guid.NewGuid();
+
+        await _seeder.CreateAccountAsync(
+            accountId: accountId,
+            userId: userId,
+            isActive: false,
+            isDeleted: true
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByUserIdWithTracking(
             userId,
             accountId,
             CancellationToken.None
