@@ -3,11 +3,6 @@
 namespace Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 
 [Serializable]
-public class RequiredPropertyException : Exception
+public class RequiredPropertyException(string message) : Exception(message)
 {
-    public RequiredPropertyException(string message)
-        : base(message) { }
-
-    protected RequiredPropertyException(SerializationInfo info, StreamingContext ctxt)
-        : base(info, ctxt) { }
 }

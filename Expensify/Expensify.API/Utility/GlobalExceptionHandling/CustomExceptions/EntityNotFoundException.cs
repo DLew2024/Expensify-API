@@ -3,11 +3,6 @@
 namespace Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 
 [Serializable]
-public class EntityNotFoundException : Exception
+public class EntityNotFoundException(string message) : Exception(message)
 {
-    public EntityNotFoundException(string message)
-        : base(message) { }
-
-    protected EntityNotFoundException(SerializationInfo info, StreamingContext ctxt)
-        : base(info, ctxt) { }
 }
