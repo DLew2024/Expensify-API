@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.UnitTests.Builders;
@@ -8,11 +9,13 @@ public sealed class TransactionBuilder
     private Guid _id = Guid.NewGuid();
 
     private Account? _account;
+    private User? _user;
 
     private decimal _amount = 100m;
     private readonly string _MerchantName = "Test Transaction";
     private string _description = "Test transaction";
     private long _transactionDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    private bool _isDeleted = false;
 
     public TransactionBuilder WithId(Guid id)
     {
@@ -23,6 +26,18 @@ public sealed class TransactionBuilder
     public TransactionBuilder WithAccount(Account account)
     {
         _account = account;
+        return this;
+    }
+
+    public TransactionBuilder WithUser(User user)
+    {
+        _user = user;
+        return this;
+    }
+
+    public TransactionBuilder WithDeletedStatus(bool isDeleted)
+    {
+        _isDeleted = isDeleted;
         return this;
     }
 
@@ -46,6 +61,13 @@ public sealed class TransactionBuilder
 
     public Transaction Build(TransactionType transactionType)
     {
+        if (_user is null)
+        {
+            throw new InvalidOperationException(
+                "A user must be provided before building a transaction."
+            );
+        }
+
         if (_account is null)
         {
             throw new InvalidOperationException(
@@ -69,7 +91,7 @@ public sealed class TransactionBuilder
             Description = _description,
             TransactionDate = _transactionDate,
 
-            IsDeleted = false,
+            IsDeleted = _isDeleted,
             CreatedBy = _account.UserId,
             LastUpdatedBy = _account.UserId,
 

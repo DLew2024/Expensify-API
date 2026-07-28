@@ -1,4 +1,5 @@
 ﻿using Expensify.API.ServiceClasses.Resolvers;
+using Expensify.DataAccessLayer.Enums;
 using Expensify.UnitTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +31,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(accountId: accountId, userId: userId);
+        await _seeder.GetOrCreateAccountAsync(accountId: accountId, userId: userId);
 
         // Act
         var result = await _resolver.ResolveAccountIdByUserId(
@@ -65,7 +66,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var accountOwnerId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(accountId: accountId, userId: accountOwnerId);
+        await _seeder.GetOrCreateAccountAsync(accountId: accountId, userId: accountOwnerId);
 
         var requestingUserId = Guid.NewGuid();
 
@@ -87,7 +88,11 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(accountId: accountId, userId: userId, isActive: false);
+        await _seeder.GetOrCreateAccountAsync(
+            accountId: accountId,
+            userId: userId,
+            isActive: false
+        );
 
         // Act
         var result = await _resolver.ResolveAccountIdByUserId(
@@ -107,7 +112,11 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(accountId: accountId, userId: userId, isDeleted: true);
+        await _seeder.GetOrCreateAccountAsync(
+            accountId: accountId,
+            userId: userId,
+            isDeleted: true
+        );
 
         // Act
         var result = await _resolver.ResolveAccountIdByUserId(
@@ -128,7 +137,10 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        var userAccount = await _seeder.CreateAccountAsync(accountId: accountId, userId: userId);
+        var userAccount = await _seeder.GetOrCreateAccountAsync(
+            accountId: accountId,
+            userId: userId
+        );
 
         // Act
         var result = await _resolver.ResolveAccountByUserId(
@@ -163,7 +175,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var accountOwnerId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(accountId: accountId, userId: accountOwnerId);
+        await _seeder.GetOrCreateAccountAsync(accountId: accountId, userId: accountOwnerId);
 
         var requestingUserId = Guid.NewGuid();
 
@@ -185,7 +197,11 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(accountId: accountId, userId: userId, isActive: false);
+        await _seeder.GetOrCreateAccountAsync(
+            accountId: accountId,
+            userId: userId,
+            isActive: false
+        );
 
         // Act
         var result = await _resolver.ResolveAccountByUserId(
@@ -205,7 +221,11 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(accountId: accountId, userId: userId, isDeleted: true);
+        await _seeder.GetOrCreateAccountAsync(
+            accountId: accountId,
+            userId: userId,
+            isDeleted: true
+        );
 
         // Act
         var result = await _resolver.ResolveAccountByUserId(
@@ -226,10 +246,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(
-            accountId: accountId,
-            userId: userId
-        );
+        await _seeder.GetOrCreateAccountAsync(accountId: accountId, userId: userId);
 
         // Act
         var result = await _resolver.ResolveAccountByUserIdWithTracking(
@@ -253,10 +270,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        var account = await _seeder.CreateAccountAsync(
-            accountId: accountId,
-            userId: userId
-        );
+        var account = await _seeder.GetOrCreateAccountAsync(accountId: accountId, userId: userId);
 
         // Act
         var trackedAccount = await _resolver.ResolveAccountByUserIdWithTracking(
@@ -272,8 +286,8 @@ public sealed class AccountResolverTests : IAsyncDisposable
         await _database.Context.SaveChangesAsync();
 
         // Assert
-        var updatedAccount = await _database.Context.Accounts
-            .AsNoTracking()
+        var updatedAccount = await _database
+            .Context.Accounts.AsNoTracking()
             .FirstAsync(account => account.Id == accountId);
 
         Assert.Equal("Updated Account", updatedAccount.Name);
@@ -286,7 +300,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        var expectedAccount = await _seeder.CreateAccountAsync(
+        var expectedAccount = await _seeder.GetOrCreateAccountAsync(
             accountId: accountId,
             userId: userId,
             isActive: true,
@@ -328,11 +342,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var requestingUserId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(
-            accountId: accountId,
-            userId: accountOwnerId
-   
-        );
+        await _seeder.GetOrCreateAccountAsync(accountId: accountId, userId: accountOwnerId);
 
         // Act
         var result = await _resolver.ResolveAccountByUserIdWithTracking(
@@ -352,7 +362,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(
+        await _seeder.GetOrCreateAccountAsync(
             accountId: accountId,
             userId: userId,
             isActive: false
@@ -376,7 +386,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(
+        await _seeder.GetOrCreateAccountAsync(
             accountId: accountId,
             userId: userId,
             isDeleted: true
@@ -400,7 +410,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var accountId = Guid.NewGuid();
 
-        await _seeder.CreateAccountAsync(
+        await _seeder.GetOrCreateAccountAsync(
             accountId: accountId,
             userId: userId,
             isActive: false,
@@ -419,7 +429,147 @@ public sealed class AccountResolverTests : IAsyncDisposable
     }
 
     // ResolveAccountByTransactionId
+    [Fact]
+    public async Task ResolveAccountByTransactionId_ValidTransactionValidUser_ReturnsAccount()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var transactionId = Guid.NewGuid();
 
+        var transaction = await _seeder.CreateTransactionAsync(
+            transactionType: TransactionType.Income,
+            transactionId: transactionId,
+            userId: userId
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByTransactionId(
+            userId,
+            transactionId,
+            cancellationToken: CancellationToken.None
+        );
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(transaction.AccountId, result.Id);
+        Assert.Equal(result.UserId, userId);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByTransactionId_TransactionDoesNotExist_ReturnsNull()
+    {
+        // Act
+        var result = await _resolver.ResolveAccountByTransactionId(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByTransactionId_InvalidTransactionId_ReturnsNull()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var transactionId = Guid.NewGuid();
+        var invalidTransactionId = Guid.NewGuid();
+
+        await _seeder.CreateTransactionAsync(
+            transactionType: TransactionType.Income,
+            transactionId: transactionId,
+            userId: userId
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByTransactionId(
+            userId,
+            invalidTransactionId,
+            cancellationToken: CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByTransactionId_TransactionBelongsToAnotherUser_ReturnsNull()
+    {
+        // Arrange
+        var transactionOwnerId = Guid.NewGuid();
+        var transactionId = Guid.NewGuid();
+        var requestingUserId = Guid.NewGuid();
+
+        await _seeder.CreateTransactionAsync(
+            transactionType: TransactionType.Income,
+            transactionId: transactionId,
+            userId: transactionOwnerId
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByTransactionId(
+            requestingUserId,
+            transactionId,
+            cancellationToken: CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByTransactionId_TransactionIsSoftDeleted_ReturnsNull()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var transactionId = Guid.NewGuid();
+
+        await _seeder.CreateTransactionAsync(
+            transactionType: TransactionType.Income,
+            transactionId: transactionId,
+            userId: userId,
+            isDeleted: true
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByTransactionId(
+            userId,
+            transactionId,
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task ResolveAccountByTransactionId_AccountIsSoftDeleted_ReturnsNull()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var transactionId = Guid.NewGuid();
+
+        var account = await _seeder.GetOrCreateAccountAsync(userId: userId, isDeleted: true);
+
+        await _seeder.CreateTransactionAsync(
+            transactionType: TransactionType.Income,
+            transactionId: transactionId,
+            userId: userId,
+            accountId: account.Id
+        );
+
+        // Act
+        var result = await _resolver.ResolveAccountByTransactionId(
+            userId,
+            transactionId,
+            CancellationToken.None
+        );
+
+        // Assert
+        Assert.Null(result);
+    }
 
     public async ValueTask DisposeAsync()
     {

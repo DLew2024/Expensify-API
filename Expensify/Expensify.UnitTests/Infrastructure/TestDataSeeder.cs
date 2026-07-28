@@ -1,7 +1,9 @@
-﻿using Expensify.DataAccessLayer;
+﻿using System.Xml.Linq;
+using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
+using Expensify.DataAccessLayer.Enums;
 using Expensify.UnitTests.Builders;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +13,7 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
 {
     private readonly ApplicationDbContext _context = context;
 
-    public async Task<Role> GetOrCreateUserRoleAsync()
+    public async Task<Role> GetOrCreateUserRoleAsync(string name = "User")
     {
         var existingRole = await _context.Roles.FirstOrDefaultAsync(role => role.Name == "User");
 
@@ -20,7 +22,7 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
             return existingRole;
         }
 
-        var role = new Role { Id = Guid.NewGuid(), Name = "User" };
+        var role = new Role { Id = Guid.NewGuid(), Name = name };
 
         _context.Roles.Add(role);
         await _context.SaveChangesAsync();
@@ -28,7 +30,13 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         return role;
     }
 
-    public async Task<CurrencyCode> GetOrCreateUsdCurrencyAsync()
+    public async Task<CurrencyCode> GetOrCreateCurrencyCodeAsync(
+        string code = "USD",
+        string name = "US Dollar",
+        string symbol = "$",
+        bool isActive = true,
+        bool isDeleted = false
+    )
     {
         var existingCurrency = await _context.CurrencyCodes.FirstOrDefaultAsync(currency =>
             currency.Code == "USD"
@@ -42,11 +50,11 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         var currency = new CurrencyCode
         {
             Id = Guid.NewGuid(),
-            Name = "US Dollar",
-            Code = "USD",
-            Symbol = "$",
-            IsActive = true,
-            IsDeleted = false,
+            Name = name,
+            Code = code,
+            Symbol = symbol,
+            IsActive = isActive,
+            IsDeleted = isDeleted,
         };
 
         _context.CurrencyCodes.Add(currency);
@@ -55,7 +63,13 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         return currency;
     }
 
-    public async Task<AccountType> GetOrCreateCheckingAccountTypeAsync(Guid userId)
+    public async Task<AccountType> GetOrCreateAccountTypeAsync(
+        Guid userId,
+        string name = "Checking",
+        bool isSystemDefault = true,
+        bool isDeleted = false,
+        bool IsActive = true
+    )
     {
         var existingAccountType = await _context.AccountTypes.FirstOrDefaultAsync(accountType =>
             accountType.Name == "Checking" && accountType.IsSystemDefault && !accountType.IsDeleted
@@ -69,10 +83,10 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         var accountType = new AccountType
         {
             Id = Guid.NewGuid(),
-            Name = "Checking",
-            IsActive = true,
-            IsDeleted = false,
-            IsSystemDefault = true,
+            Name = name,
+            IsActive = IsActive,
+            IsDeleted = isDeleted,
+            IsSystemDefault = isSystemDefault,
             CreatedBy = userId,
             LastUpdatedBy = userId,
         };
@@ -83,8 +97,15 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         return accountType;
     }
 
-    public async Task<User> CreateUserAsync(Guid? userId = null)
+    public async Task<User> GetOrCreateUserAsync(Guid? userId = null)
     {
+        var existingUser = await _context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+
+        if (existingUser is not null)
+        {
+            return existingUser;
+        }
+
         var role = await GetOrCreateUserRoleAsync();
 
         var user = new UserBuilder().WithId(userId ?? Guid.NewGuid()).WithRole(role).Build();
@@ -95,7 +116,7 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         return user;
     }
 
-    public async Task<Account> CreateAccountAsync(
+    public async Task<Account> GetOrCreateAccountAsync(
         Guid? accountId = null,
         Guid? userId = null,
         bool isActive = true,
@@ -103,9 +124,18 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         bool isDefault = false
     )
     {
-        var user = await CreateUserAsync(userId);
-        var currency = await GetOrCreateUsdCurrencyAsync();
-        var accountType = await GetOrCreateCheckingAccountTypeAsync(user.Id);
+        var existingAccount = await _context.Accounts.FirstOrDefaultAsync(account =>
+            account.Id == accountId && account.UserId == userId
+        );
+
+        if (existingAccount is not null)
+        {
+            return existingAccount;
+        }
+
+        var user = await GetOrCreateUserAsync(userId);
+        var currency = await GetOrCreateCurrencyCodeAsync();
+        var accountType = await GetOrCreateAccountTypeAsync(user.Id);
 
         var account = new AccountBuilder()
             .WithId(accountId ?? Guid.NewGuid())
@@ -121,5 +151,31 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         await _context.SaveChangesAsync();
 
         return account;
+    }
+
+    public async Task<Transaction> CreateTransactionAsync(
+        TransactionType transactionType,
+        Guid? userId = null,
+        Guid? transactionId = null,
+        Guid? accountId = null,
+        decimal amount = 100m,
+        bool isDeleted = false
+    )
+    {
+        var user = await GetOrCreateUserAsync(userId);
+        var account = await GetOrCreateAccountAsync(accountId: accountId, userId: user.Id);
+
+        var transaction = new TransactionBuilder()
+            .WithId(transactionId ?? Guid.NewGuid())
+            .WithUser(user)
+            .WithAccount(account)
+            .WithAmount(amount)
+            .WithDeletedStatus(isDeleted)
+            .Build(transactionType);
+
+        _context.Transactions.Add(transaction);
+        await _context.SaveChangesAsync();
+
+        return transaction;
     }
 }
