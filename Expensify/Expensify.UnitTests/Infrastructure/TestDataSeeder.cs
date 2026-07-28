@@ -64,15 +64,16 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
     }
 
     public async Task<AccountType> GetOrCreateAccountTypeAsync(
-        Guid userId,
-        string name = "Checking",
-        bool isSystemDefault = true,
+        Guid? userId = null,
+        Guid? accountTypeId = null,
+        string name = "Test Checking Account",
+        bool isActive = true,
         bool isDeleted = false,
-        bool IsActive = true
+        bool isSystemDefault = false
     )
     {
         var existingAccountType = await _context.AccountTypes.FirstOrDefaultAsync(accountType =>
-            accountType.Name == "Checking" && accountType.IsSystemDefault && !accountType.IsDeleted
+            accountType.Id == accountTypeId
         );
 
         if (existingAccountType is not null)
@@ -80,16 +81,16 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
             return existingAccountType;
         }
 
-        var accountType = new AccountType
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            IsActive = IsActive,
-            IsDeleted = isDeleted,
-            IsSystemDefault = isSystemDefault,
-            CreatedBy = userId,
-            LastUpdatedBy = userId,
-        };
+        var user = await GetOrCreateUserAsync(userId);
+
+        var accountType = new AccountTypeBuilder()
+            .WithId(accountTypeId ?? Guid.NewGuid())
+            .WithUser(user)
+            .WithName(name)
+            .WithSystemDefault(isSystemDefault)
+            .WithDeletedStatus(isDeleted)
+            .WithActiveStatus(isActive)
+            .Build();
 
         _context.AccountTypes.Add(accountType);
         await _context.SaveChangesAsync();
@@ -135,7 +136,7 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
 
         var user = await GetOrCreateUserAsync(userId);
         var currency = await GetOrCreateCurrencyCodeAsync();
-        var accountType = await GetOrCreateAccountTypeAsync(user.Id);
+        var accountType = await GetOrCreateAccountTypeAsync(userId: user.Id);
 
         var account = new AccountBuilder()
             .WithId(accountId ?? Guid.NewGuid())

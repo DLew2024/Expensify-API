@@ -12,7 +12,7 @@ public sealed class AccountBuilder
     private AccountType? _accountType;
     private CurrencyCode? _currency;
 
-    private string _name = "Test Checking Account";
+    private string _name = "Test User Account";
     private string _institutionName = "Test Bank";
     private readonly string _lastFourDigits = "1234";
 
