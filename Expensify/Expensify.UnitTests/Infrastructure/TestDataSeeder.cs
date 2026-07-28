@@ -154,15 +154,25 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         return account;
     }
 
-    public async Task<Transaction> CreateTransactionAsync(
+    public async Task<Transaction> GetOrCreateTransactionAsync(
         TransactionType transactionType,
         Guid? userId = null,
         Guid? transactionId = null,
         Guid? accountId = null,
+        long? transactionDate = null,
         decimal amount = 100m,
         bool isDeleted = false
     )
     {
+        var existingAccount = await _context.Transactions.FirstOrDefaultAsync(transaction =>
+            transaction.Id == transactionId && transaction.Type == transactionType
+        );
+
+        if (existingAccount is not null)
+        {
+            return existingAccount;
+        }
+
         var user = await GetOrCreateUserAsync(userId);
         var account = await GetOrCreateAccountAsync(accountId: accountId, userId: user.Id);
 
@@ -172,6 +182,7 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
             .WithAccount(account)
             .WithAmount(amount)
             .WithDeletedStatus(isDeleted)
+            .WithTransactionDate(transactionDate ?? DateTimeOffset.UtcNow.ToUnixTimeSeconds())
             .Build(transactionType);
 
         _context.Transactions.Add(transaction);

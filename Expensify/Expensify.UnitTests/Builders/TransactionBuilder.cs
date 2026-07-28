@@ -13,7 +13,7 @@ public sealed class TransactionBuilder
 
     private decimal _amount = 100m;
     private readonly string _MerchantName = "Test Transaction";
-    private string _description = "Test transaction";
+    private string _description = "Test Transaction";
     private long _transactionDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     private bool _isDeleted = false;
 

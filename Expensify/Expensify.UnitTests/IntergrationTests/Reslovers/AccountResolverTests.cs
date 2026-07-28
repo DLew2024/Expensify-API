@@ -436,7 +436,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var transactionId = Guid.NewGuid();
 
-        var transaction = await _seeder.CreateTransactionAsync(
+        var transaction = await _seeder.GetOrCreateTransactionAsync(
             transactionType: TransactionType.Income,
             transactionId: transactionId,
             userId: userId
@@ -477,7 +477,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var transactionId = Guid.NewGuid();
         var invalidTransactionId = Guid.NewGuid();
 
-        await _seeder.CreateTransactionAsync(
+        await _seeder.GetOrCreateTransactionAsync(
             transactionType: TransactionType.Income,
             transactionId: transactionId,
             userId: userId
@@ -502,7 +502,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var transactionId = Guid.NewGuid();
         var requestingUserId = Guid.NewGuid();
 
-        await _seeder.CreateTransactionAsync(
+        await _seeder.GetOrCreateTransactionAsync(
             transactionType: TransactionType.Income,
             transactionId: transactionId,
             userId: transactionOwnerId
@@ -526,7 +526,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
         var userId = Guid.NewGuid();
         var transactionId = Guid.NewGuid();
 
-        await _seeder.CreateTransactionAsync(
+        await _seeder.GetOrCreateTransactionAsync(
             transactionType: TransactionType.Income,
             transactionId: transactionId,
             userId: userId,
@@ -553,7 +553,7 @@ public sealed class AccountResolverTests : IAsyncDisposable
 
         var account = await _seeder.GetOrCreateAccountAsync(userId: userId, isDeleted: true);
 
-        await _seeder.CreateTransactionAsync(
+        await _seeder.GetOrCreateTransactionAsync(
             transactionType: TransactionType.Income,
             transactionId: transactionId,
             userId: userId,
