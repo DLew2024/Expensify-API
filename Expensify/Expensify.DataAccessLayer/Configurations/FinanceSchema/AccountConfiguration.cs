@@ -123,7 +123,11 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         // Configures whether the account is the user's default account.
         // Defaults to false when no value is explicitly provided.
-        builder.Property(account => account.IsDefault).IsRequired().HasDefaultValue(false);
+        builder
+            .Property(account => account.IsDefault)
+            .HasColumnName("is_default")
+            .IsRequired()
+            .HasDefaultValue(false);
 
         // Ensures that each user can have only one default account.
         // The partial unique index applies only to rows where IsDefault is true.

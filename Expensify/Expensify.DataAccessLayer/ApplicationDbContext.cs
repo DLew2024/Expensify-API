@@ -36,6 +36,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
+        // For unit tests
+        if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+        {
+            modelBuilder
+                .Entity<Account>()
+                .HasIndex(account => account.UserId)
+                .IsUnique()
+                .HasFilter("\"is_default\" = 1")
+                .HasDatabaseName("ux_accounts_user_default");
+        }
+
         if (Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
         {
             // Uses PostgreSQL's xmin system column for optimistic concurrency control.

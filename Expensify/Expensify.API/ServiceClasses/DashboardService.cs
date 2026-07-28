@@ -2,18 +2,15 @@
 using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.ServiceClasses.Interfaces.Resolvers;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
-using Expensify.DataAccessLayer;
 using LanguageExt.Common;
 
 namespace Expensify.API.ServiceClasses;
 
 public class DashboardService(
-    ApplicationDbContext context,
     IAccountResolver accountResolver,
     ITransactionResolver transactionResolver
 ) : IDashboardService
 {
-    private readonly ApplicationDbContext _context = context;
     private readonly IAccountResolver _accountResolver = accountResolver;
     private readonly ITransactionResolver _transactionResolver = transactionResolver;
 
