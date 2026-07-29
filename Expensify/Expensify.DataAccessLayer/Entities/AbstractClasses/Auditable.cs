@@ -9,13 +9,16 @@ public abstract class Auditable : IAuditableEntity
     {
         Id = Guid.NewGuid();
         CreateDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        UpdatedDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     }
 
     protected Auditable(string name)
         : this()
     {
+        Id = Guid.NewGuid();
         Name = name;
         CreateDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        UpdatedDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     }
 
     [Column(Order = 1)]

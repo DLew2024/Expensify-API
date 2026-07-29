@@ -3,6 +3,7 @@ using Expensify.API.ServiceClasses;
 using Expensify.API.ServiceClasses.Interfaces.Resolvers;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.UnitTests.IntergrationTests;
 
@@ -67,7 +68,7 @@ public class DashboardServiceTests
         DashboardDataResponseDTO? response = null;
         Exception? error = null;
 
-        result.Match(
+        var isSuccess = result.Match(
             success =>
             {
                 response = success;
@@ -81,8 +82,9 @@ public class DashboardServiceTests
         );
 
         // Assert
-        Assert.Null(error);
+        Assert.True(isSuccess);
         Assert.NotNull(response);
+        Assert.Null(error);
 
         Assert.Equal(accountId, response.Account?.Id);
         Assert.Equal("Checking", response.Account?.Name);
@@ -124,7 +126,7 @@ public class DashboardServiceTests
         // Assert
         Exception? error = null;
 
-        result.Match(
+        var isSuccess = result.Match(
             success => true,
             exception =>
             {
@@ -133,6 +135,7 @@ public class DashboardServiceTests
             }
         );
 
+        Assert.False(isSuccess);
         Assert.IsType<EntityNotFoundException>(error);
 
         _transactionResolverMock.Verify(
@@ -167,7 +170,7 @@ public class DashboardServiceTests
         // Assert
         Exception? error = null;
 
-        result.Match(
+        var isSuccess = result.Match(
             success => true,
             exception =>
             {
@@ -176,6 +179,7 @@ public class DashboardServiceTests
             }
         );
 
+        Assert.False(isSuccess);
         Assert.Same(expectedException, error);
 
         _transactionResolverMock.Verify(
@@ -228,7 +232,7 @@ public class DashboardServiceTests
         // Assert
         Exception? error = null;
 
-        result.Match(
+        var isSuccess = result.Match(
             success => true,
             exception =>
             {
@@ -237,6 +241,7 @@ public class DashboardServiceTests
             }
         );
 
+        Assert.False(isSuccess);
         Assert.Same(expectedException, error);
     }
 
@@ -289,5 +294,98 @@ public class DashboardServiceTests
                 ),
             Times.Once
         );
+    }
+
+    [Fact]
+    public void Create_TransactionsProvided_CalculatesDashboardDataCorrectly()
+    {
+        // Arrange
+        var now = DateTimeOffset.UtcNow;
+
+        var account = new AccountSummaryDTO
+        {
+            Id = Guid.NewGuid(),
+            Name = "Checking",
+            CurrentBalance = 1250.00m,
+        };
+
+        var recentIncome = new TransactionDTO
+        {
+            Id = Guid.NewGuid(),
+            Amount = 500.00m,
+            Type = TransactionType.Income,
+            TransactionDate = now.AddDays(-5).ToUnixTimeSeconds(),
+            Merchant = "Employer",
+        };
+
+        var recentExpense = new TransactionDTO
+        {
+            Id = Guid.NewGuid(),
+            Amount = 125.00m,
+            Type = TransactionType.Expense,
+            TransactionDate = now.AddDays(-10).ToUnixTimeSeconds(),
+            Merchant = "Grocery Store",
+        };
+
+        var olderExpense = new TransactionDTO
+        {
+            Id = Guid.NewGuid(),
+            Amount = 75.00m,
+            Type = TransactionType.Expense,
+            TransactionDate = now.AddDays(-45).ToUnixTimeSeconds(),
+            Merchant = "Utility Company",
+        };
+
+        var expiredIncome = new TransactionDTO
+        {
+            Id = Guid.NewGuid(),
+            Amount = 200.00m,
+            Type = TransactionType.Income,
+            TransactionDate = now.AddDays(-70).ToUnixTimeSeconds(),
+            Merchant = "Previous Employer",
+        };
+
+        TransactionDTO[] transactions = [olderExpense, recentIncome, expiredIncome, recentExpense];
+
+        // Act
+        var result = DashboardDataResponseDTO.Create(account, transactions);
+
+        // Assert
+        Assert.Equal(1250.00m, result.TotalBalance);
+
+        Assert.Equal(700.00m, result.TotalIncome);
+        Assert.Equal(200.00m, result.TotalExpenses);
+
+        Assert.NotNull(result.Account);
+        Assert.Equal(account.Id, result.Account.Id);
+        Assert.Equal("Checking", result.Account.Name);
+
+        Assert.NotNull(result.Last30DaysOfIncome);
+        Assert.Equal(500.00m, result.Last30DaysOfIncome.TotalBalance);
+        Assert.Single(result.Last30DaysOfIncome.Transactions);
+        Assert.Equal(recentIncome.Id, result.Last30DaysOfIncome.Transactions[0].Id);
+
+        Assert.NotNull(result.Last60DaysOfIncome);
+        Assert.Equal(500.00m, result.Last60DaysOfIncome.TotalBalance);
+        Assert.Single(result.Last60DaysOfIncome.Transactions);
+
+        Assert.NotNull(result.Last30DaysOfExpenses);
+        Assert.Equal(125.00m, result.Last30DaysOfExpenses.TotalBalance);
+        Assert.Single(result.Last30DaysOfExpenses.Transactions);
+        Assert.Equal(recentExpense.Id, result.Last30DaysOfExpenses.Transactions[0].Id);
+
+        Assert.NotNull(result.Last60DaysOfExpenses);
+        Assert.Equal(200.00m, result.Last60DaysOfExpenses.TotalBalance);
+        Assert.Equal(2, result.Last60DaysOfExpenses.Transactions.Length);
+
+        Assert.Equal(4, result.RecentTransactions.Length);
+
+        Assert.Equal(recentIncome.Id, result.RecentTransactions[0].Id);
+
+        Assert.Equal(recentExpense.Id, result.RecentTransactions[1].Id);
+
+        Assert.Equal(olderExpense.Id, result.RecentTransactions[2].Id);
+
+        Assert.Equal(expiredIncome.Id, result.RecentTransactions[3].Id);
     }
 }

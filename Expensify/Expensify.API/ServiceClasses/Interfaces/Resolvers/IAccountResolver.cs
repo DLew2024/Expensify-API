@@ -14,6 +14,7 @@ public interface IAccountResolver
         Guid accountId,
         CancellationToken cancellationToken
     );
+    Task<List<Account>> ResolveAccountsByUserId(Guid userId, CancellationToken cancellationToken);
     Task<Account?> ResolveAccountByUserIdWithTracking(
         Guid userId,
         Guid accountId,
@@ -24,4 +25,5 @@ public interface IAccountResolver
         Guid transactionId,
         CancellationToken cancellationToken
     );
+    Task<bool> HasExistingAccountsByUserId(Guid userId, CancellationToken cancellationToken);
 }

@@ -143,13 +143,6 @@ public class TransactionDTO
     public string Icon { get; set; } = string.Empty;
     public TransactionPostedStatus Status { get; set; }
 
-    //public List<string> Tags { get; set; } = [];
-    //public Guid RecurringTransactionId { get; set; }
-    // Not implmented yet
-    //public required CategoryDTO Category { get; set; }
-    //public required PaymentMethodDTO PaymentMethod { get; set; }
-    //public bool IsRecurring { get; set; }
-
     public static readonly Expression<Func<Transaction, TransactionDTO>> Projection =
         transaction => new TransactionDTO
         {
@@ -162,26 +155,5 @@ public class TransactionDTO
             Notes = transaction.Notes ?? string.Empty,
             Status = transaction.Status,
             Icon = transaction.Icon,
-
-            // Not implmented yet
-            //Tags = transaction.Tags,
-            //RecurringTransactionId = transaction.RecurringTransactionId,
-            //IsRecurring = transaction.IsRecurring,
-            //PaymentMethod =
-            //    transaction.PaymentMethod != null
-            //        ? new PaymentMethodDTO
-            //        {
-            //            Id = transaction.PaymentMethod.Id,
-            //            Name = transaction.PaymentMethod.Name,
-            //        }
-            //        : new PaymentMethodDTO { Id = Guid.Empty, Name = string.Empty },
-            //Category =
-            //    transaction.Category != null
-            //        ? new CategoryDTO
-            //        {
-            //            Id = transaction.Category.Id,
-            //            Name = transaction.Category.Name,
-            //        }
-            //        : new CategoryDTO { Id = Guid.Empty, Name = string.Empty },
         };
 }

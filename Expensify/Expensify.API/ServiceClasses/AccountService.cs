@@ -9,11 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.API.ServiceClasses;
 
-public class AccountService(ApplicationDbContext context, IAccountTypeResolver accountTypeResolver)
-    : IAccountService
+public class AccountService(
+    ApplicationDbContext context,
+    IAccountTypeResolver accountTypeResolver,
+    IAccountResolver accountResolver
+) : IAccountService
 {
     private readonly ApplicationDbContext _context = context;
     private readonly IAccountTypeResolver _accountTypeResolver = accountTypeResolver;
+    private readonly IAccountResolver _accountResolver = accountResolver;
 
     public async Task<Result<AccountResponseDTO>> CreateAccount(
         Guid userId,
@@ -45,8 +49,8 @@ public class AccountService(ApplicationDbContext context, IAccountTypeResolver a
                 );
             }
 
-            var hasExistingAccounts = await _context.Accounts.AnyAsync(
-                account => account.UserId == userId && !account.IsDeleted,
+            var hasExistingAccounts = await _accountResolver.HasExistingAccountsByUserId(
+                userId,
                 cancellationToken
             );
 
@@ -55,7 +59,6 @@ public class AccountService(ApplicationDbContext context, IAccountTypeResolver a
             account.IsDefault = !hasExistingAccounts;
 
             _context.Accounts.Add(account);
-
             await _context.SaveChangesAsync(cancellationToken);
 
             return AccountResponseDTO.FromEntity(account, accountType.Name);
@@ -74,9 +77,10 @@ public class AccountService(ApplicationDbContext context, IAccountTypeResolver a
     {
         try
         {
-            var accounts = await _context
-                .Accounts.Where(account => account.UserId == userId && !account.IsDeleted)
-                .ToListAsync(cancellationToken);
+            var accounts = await _accountResolver.ResolveAccountsByUserId(
+                userId,
+                cancellationToken
+            );
 
             var newDefaultAccount = accounts.FirstOrDefault(account => account.Id == accountId);
 

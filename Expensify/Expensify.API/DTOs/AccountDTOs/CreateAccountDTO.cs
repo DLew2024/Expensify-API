@@ -62,21 +62,6 @@ public class CreateAccountDTO
     /// </summary>
     public string Icon { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Verify if account is default
-    /// </summary>
-    [Required]
-    public bool IsDefault { get; set; }
-
-    ///// <summary>
-    ///// Annual interest rate or APR associated with the account.
-    ///// </summary>
-    //public decimal InterestRate { get; set; } = 0;
-    ///// <summary>
-    ///// Maximum borrowable amount for credit-based accounts.
-    ///// </summary>
-    //public decimal CreditLimit { get; set; } = 0;
-
     public Account ToEntity(Guid userId)
     {
         if (AccountTypeId is null)
@@ -102,12 +87,11 @@ public class CreateAccountDTO
             IncludeInNetWorth = IncludeInNetWorth,
             Notes = Notes.Trim(),
             Icon = Icon.Trim(),
-            IsDefault = false,
             IsActive = true,
             IsHidden = false,
+            IsDefault = false,
             CreatedBy = userId,
-            //CreditLimit = CreditLimit,
-            //InterestRate = InterestRate,
+            LastUpdatedBy = userId,
         };
     }
 
@@ -123,11 +107,6 @@ public class CreateAccountDTO
             IncludeInNetWorth = account.IncludeInNetWorth,
             Notes = account.Notes ?? string.Empty,
             Icon = account.Icon ?? string.Empty,
-            IsDefault = account.IsDefault,
-
-            //CreditLimit = account.CreditLimit ?? 0,
-            //InterestRate = account.InterestRate ?? 0,
-            //CurrencyCode = account.CurrencyCode,
         };
     }
 }

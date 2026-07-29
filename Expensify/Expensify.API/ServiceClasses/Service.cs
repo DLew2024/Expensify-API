@@ -33,7 +33,7 @@ namespace Expensify.API.ServiceClasses
         private readonly IOptions<JwtSettings> _jwtSettings = jwtOptions;
 
         public IAccountService AccountService =>
-            field ?? new AccountService(_context, _accountTypeResolver);
+            field ?? new AccountService(_context, _accountTypeResolver, _accountResolver);
         public IAuthService AuthService =>
             field
             ?? new AuthService(

@@ -30,37 +30,23 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         return role;
     }
 
-    public async Task<CurrencyCode> GetOrCreateCurrencyCodeAsync(
-        string code = "USD",
-        string name = "US Dollar",
-        string symbol = "$",
-        bool isActive = true,
-        bool isDeleted = false
-    )
+    public async Task<User> GetOrCreateUserAsync(Guid? userId = null)
     {
-        var existingCurrency = await _context.CurrencyCodes.FirstOrDefaultAsync(currency =>
-            currency.Code == "USD"
-        );
+        var existingUser = await _context.Users.FirstOrDefaultAsync(user => user.Id == userId);
 
-        if (existingCurrency is not null)
+        if (existingUser is not null)
         {
-            return existingCurrency;
+            return existingUser;
         }
 
-        var currency = new CurrencyCode
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Code = code,
-            Symbol = symbol,
-            IsActive = isActive,
-            IsDeleted = isDeleted,
-        };
+        var role = await GetOrCreateUserRoleAsync();
 
-        _context.CurrencyCodes.Add(currency);
+        var user = new UserBuilder().WithId(userId ?? Guid.NewGuid()).WithRole(role).Build();
+
+        _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        return currency;
+        return user;
     }
 
     public async Task<AccountType> GetOrCreateAccountTypeAsync(
@@ -98,25 +84,6 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         return accountType;
     }
 
-    public async Task<User> GetOrCreateUserAsync(Guid? userId = null)
-    {
-        var existingUser = await _context.Users.FirstOrDefaultAsync(user => user.Id == userId);
-
-        if (existingUser is not null)
-        {
-            return existingUser;
-        }
-
-        var role = await GetOrCreateUserRoleAsync();
-
-        var user = new UserBuilder().WithId(userId ?? Guid.NewGuid()).WithRole(role).Build();
-
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        return user;
-    }
-
     public async Task<Account> GetOrCreateAccountAsync(
         Guid? accountId = null,
         Guid? userId = null,
@@ -152,6 +119,40 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         await _context.SaveChangesAsync();
 
         return account;
+    }
+
+    public async Task<CurrencyCode> GetOrCreateCurrencyCodeAsync(
+        Guid? currencyCodeId = null,
+        string code = "Test USD",
+        string name = "US Dollar",
+        string symbol = "$",
+        bool isActive = true,
+        bool isDeleted = false
+    )
+    {
+        var existingCurrency = await _context.CurrencyCodes.FirstOrDefaultAsync(currency =>
+            currency.Code == "Test USD"
+        );
+
+        if (existingCurrency is not null)
+        {
+            return existingCurrency;
+        }
+
+        var currency = new CurrencyCode
+        {
+            Id = currencyCodeId ?? Guid.NewGuid(),
+            Name = name,
+            Code = code,
+            Symbol = symbol,
+            IsActive = isActive,
+            IsDeleted = isDeleted,
+        };
+
+        _context.CurrencyCodes.Add(currency);
+        await _context.SaveChangesAsync();
+
+        return currency;
     }
 
     public async Task<Transaction> GetOrCreateTransactionAsync(

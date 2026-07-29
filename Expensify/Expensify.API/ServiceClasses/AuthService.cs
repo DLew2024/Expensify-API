@@ -5,7 +5,6 @@ using Expensify.API.ServiceClasses.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.API.Utility.Validators;
 using Expensify.DataAccessLayer;
-using Expensify.DataAccessLayer.Entities.Models;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Enums;
 using LanguageExt.Common;

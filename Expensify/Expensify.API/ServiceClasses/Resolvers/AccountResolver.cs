@@ -75,6 +75,18 @@ public class AccountResolver(ApplicationDbContext context) : IAccountResolver
             );
     }
 
+    public async Task<List<Account>> ResolveAccountsByUserId(
+        Guid userId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await _context
+            .Accounts.Where(account =>
+                account.UserId == userId && account.IsActive && !account.IsDeleted
+            )
+            .ToListAsync(cancellationToken);
+    }
+
     /// <summary>
     /// Resolves an active, non-deleted account belonging to the specified user.
     /// The returned entity is tracked by Entity Framework and is intended for update operations.
@@ -129,5 +141,26 @@ public class AccountResolver(ApplicationDbContext context) : IAccountResolver
                 account => account.UserId == userId && !account.IsDeleted,
                 cancellationToken
             );
+    }
+
+    /// <summary>
+    /// Determines whether the specified user has at least one non-deleted account.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="cancellationToken">
+    /// Token used to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> when the user has at least one non-deleted account;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public async Task<bool> HasExistingAccountsByUserId(
+        Guid userId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await _context
+            .Accounts.AsNoTracking()
+            .AnyAsync(account => account.UserId == userId && !account.IsDeleted, cancellationToken);
     }
 }
