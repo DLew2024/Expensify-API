@@ -51,7 +51,6 @@ public class AddIncomeTransactionDTOValidator : AbstractValidator<AddIncomeTrans
 
         RuleFor(x => x.PaymentMethodId)
             .NotEqual(Guid.Empty)
-            .When(x => x.PaymentMethodId.HasValue)
             .WithMessage("Payment method ID must be valid.");
 
         //RuleForEach(x => x.Tags)

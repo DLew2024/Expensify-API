@@ -56,20 +56,17 @@ public class IncomeService(
             );
         }
 
-        if (request.PaymentMethodId.HasValue)
-        {
-            var paymentMethodExists = await _context.PaymentMethods.AnyAsync(
-                paymentMethod =>
-                    paymentMethod.Id == request.PaymentMethodId.Value && !paymentMethod.IsDeleted,
-                cancellationToken
-            );
+        var paymentMethodExists = await _context.PaymentMethods.AnyAsync(
+            paymentMethod =>
+                paymentMethod.Id == request.PaymentMethodId && !paymentMethod.IsDeleted,
+            cancellationToken
+        );
 
-            if (!paymentMethodExists)
-            {
-                return new Result<IncomeTransactionResponseDTO>(
-                    new EntityNotFoundException("The requested payment method could not be found.")
-                );
-            }
+        if (!paymentMethodExists)
+        {
+            return new Result<IncomeTransactionResponseDTO>(
+                new EntityNotFoundException("The requested payment method could not be found.")
+            );
         }
 
         try

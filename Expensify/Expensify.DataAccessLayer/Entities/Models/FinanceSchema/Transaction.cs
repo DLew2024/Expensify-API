@@ -63,6 +63,16 @@ public class Transaction : Identifiable
     public required string Description { get; set; } = string.Empty;
 
     /// <summary>
+    /// The payment method associated with this transaction.
+    /// </summary>
+    public required Guid PaymentMethodId { get; set; }
+
+    /// <summary>
+    /// Emoji Url connected to the icon
+    /// </summary>
+    public string Icon { get; set; } = string.Empty;
+
+    /// <summary>
     /// Indicates whether this transaction is part of a recurring series.
     /// </summary>
     public bool IsRecurring { get; set; }
@@ -84,21 +94,16 @@ public class Transaction : Identifiable
     public string? Notes { get; set; }
 
     /// <summary>
-    /// The payment method associated with this transaction.
-    /// </summary>
-    public Guid? PaymentMethodId { get; set; }
-
-    /// <summary>
-    /// The payment method used to complete the transaction.
-    /// Example: Credit Card, Debit Card, Cash.
-    /// </summary>
-    public PaymentMethod? PaymentMethod { get; set; }
-
-    /// <summary>
     /// Optional tags used to organize or filter transactions.
     /// Example: "Vacation", "Business", "Tax Deductible".
     /// </summary>
     public List<string> Tags { get; set; } = [];
+
+    /// <summary>
+    /// The related transaction created as part of the same transfer.
+    /// Null if this transaction is not a transfer.
+    /// </summary>
+    public Guid? LinkedTransactionId { get; set; }
 
     /// <summary>
     /// Navigation property for the transaction owner.
@@ -109,6 +114,12 @@ public class Transaction : Identifiable
     /// Navigation property for the associated account.
     /// </summary>
     public Account Account { get; set; } = null!;
+
+    /// <summary>
+    /// The payment method used to complete the transaction.
+    /// Example: Credit Card, Debit Card, Cash.
+    /// </summary>
+    public PaymentMethod PaymentMethod { get; set; } = null!;
 
     /// <summary>
     /// Navigation property for the associated budget.
@@ -122,17 +133,9 @@ public class Transaction : Identifiable
     public Category Category { get; set; } = null!;
 
     /// <summary>
-    /// The related transaction created as part of the same transfer.
-    /// Null if this transaction is not a transfer.
-    /// </summary>
-    public Guid? LinkedTransactionId { get; set; }
-
-    /// <summary>
     /// Navigation property for the linked transfer transaction.
     /// </summary>
     public Transaction LinkedTransaction { get; set; } = null!;
 
     public Guid RecurringTransactionId { get; set; }
-
-    public string Icon { get; set; } = string.Empty;
 }

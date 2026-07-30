@@ -55,20 +55,17 @@ public class ExpenseService(
             );
         }
 
-        if (request.PaymentMethodId.HasValue)
-        {
-            var paymentMethodExists = await _context.PaymentMethods.AnyAsync(
-                paymentMethod =>
-                    paymentMethod.Id == request.PaymentMethodId.Value && !paymentMethod.IsDeleted,
-                cancellationToken
-            );
+        var paymentMethodExists = await _context.PaymentMethods.AnyAsync(
+            paymentMethod =>
+                paymentMethod.Id == request.PaymentMethodId && !paymentMethod.IsDeleted,
+            cancellationToken
+        );
 
-            if (!paymentMethodExists)
-            {
-                return new Result<ExpenseTransactionResponseDTO>(
-                    new EntityNotFoundException("The requested payment method could not be found.")
-                );
-            }
+        if (!paymentMethodExists)
+        {
+            return new Result<ExpenseTransactionResponseDTO>(
+                new EntityNotFoundException("The requested payment method could not be found.")
+            );
         }
 
         try
