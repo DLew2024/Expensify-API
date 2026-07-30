@@ -1,4 +1,4 @@
-﻿using Expensify.API.ServiceClasses.Resolvers;
+﻿using Expensify.API.Services.Resolvers;
 using Expensify.UnitTests.Infrastructure;
 
 namespace Expensify.UnitTests.IntergrationTests.Reslovers;

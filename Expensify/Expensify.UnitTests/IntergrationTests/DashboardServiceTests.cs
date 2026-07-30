@@ -1,6 +1,6 @@
 ﻿using Expensify.API.DTOs.DashboardDTOs;
-using Expensify.API.ServiceClasses;
-using Expensify.API.ServiceClasses.Interfaces.Resolvers;
+using Expensify.API.Services;
+using Expensify.API.Services.Interfaces.Resolvers;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Enums;

@@ -1,3 +1,6 @@
 ﻿namespace Expensify.UnitTests.IntergrationTests;
 
-internal class IncomeServiceTests { }
+internal class IncomeServiceTests
+{
+    // Add
+}
