@@ -1,4 +1,4 @@
-﻿namespace Expensify.API.ServiceClasses.Interfaces.Conversion;
+﻿namespace Expensify.API.Services.Interfaces.Conversion;
 
 public interface IExchangeRateProvider
 {

@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Expensify.API.DTOs.AccountDTOs;
-using Expensify.API.ServiceClasses.Interfaces;
-using Expensify.API.ServiceClasses.Interfaces.Resolvers;
+using Expensify.API.Services.Interfaces;
+using Expensify.API.Services.Interfaces.Resolvers;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace Expensify.API.ServiceClasses;
+namespace Expensify.API.Services;
 
 public class AccountService(
     ApplicationDbContext context,

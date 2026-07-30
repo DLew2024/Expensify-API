@@ -1,6 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 
-namespace Expensify.API.ServiceClasses.Interfaces.Resolvers;
+namespace Expensify.API.Services.Interfaces.Resolvers;
 
 public interface IAccountTypeResolver
 {

@@ -1,11 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Services.Interfaces;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Expensify.API.ServiceClasses;
+namespace Expensify.API.Services;
 
 public class JwtService(IConfiguration configuration) : IJwtService
 {

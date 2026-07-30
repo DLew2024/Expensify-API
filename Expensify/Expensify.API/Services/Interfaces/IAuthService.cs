@@ -1,7 +1,7 @@
 ﻿using Expensify.API.DTOs.AccountDTOs;
 using LanguageExt.Common;
 
-namespace Expensify.API.ServiceClasses.Interfaces;
+namespace Expensify.API.Services.Interfaces;
 
 public interface IAccountService
 {

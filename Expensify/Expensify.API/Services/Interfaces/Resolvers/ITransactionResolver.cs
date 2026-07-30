@@ -2,7 +2,7 @@
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Enums;
 
-namespace Expensify.API.ServiceClasses.Interfaces.Resolvers;
+namespace Expensify.API.Services.Interfaces.Resolvers;
 
 public interface ITransactionResolver
 {

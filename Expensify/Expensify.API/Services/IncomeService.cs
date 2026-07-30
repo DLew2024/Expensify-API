@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.DTOs.IncomeDTOs;
-using Expensify.API.ServiceClasses.Helpers;
-using Expensify.API.ServiceClasses.Interfaces;
-using Expensify.API.ServiceClasses.Interfaces.Resolvers;
+using Expensify.API.Services.Helpers;
+using Expensify.API.Services.Interfaces;
+using Expensify.API.Services.Interfaces.Resolvers;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Enums;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace Expensify.API.ServiceClasses;
+namespace Expensify.API.Services;
 
 public class IncomeService(
     ApplicationDbContext context,

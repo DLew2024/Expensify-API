@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using Expensify.API.Configurations;
-using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Services.Interfaces;
 using Microsoft.Extensions.Options;
 
-namespace Expensify.API.ServiceClasses
+namespace Expensify.API.Services
 {
     public class EmailService : IEmailService
     {

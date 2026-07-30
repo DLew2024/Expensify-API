@@ -1,7 +1,7 @@
 ﻿using Expensify.API.DTOs.AuthDTOs;
 using LanguageExt.Common;
 
-namespace Expensify.API.ServiceClasses.Interfaces;
+namespace Expensify.API.Services.Interfaces;
 
 public interface IAuthService
 {

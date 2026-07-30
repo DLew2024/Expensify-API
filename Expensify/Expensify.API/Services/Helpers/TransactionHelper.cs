@@ -2,7 +2,7 @@
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Enums;
 
-namespace Expensify.API.ServiceClasses.Helpers
+namespace Expensify.API.Services.Helpers
 {
     public class TransactionHelper
     {

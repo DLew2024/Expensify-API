@@ -1,8 +1,8 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Services.Interfaces;
 
-namespace Expensify.API.ServiceClasses;
+namespace Expensify.API.Services;
 
 public class SecurityService : ISecurityService
 {

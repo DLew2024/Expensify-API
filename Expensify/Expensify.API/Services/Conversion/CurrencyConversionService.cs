@@ -1,6 +1,6 @@
-﻿using Expensify.API.ServiceClasses.Interfaces.Conversion;
+﻿using Expensify.API.Services.Interfaces.Conversion;
 
-namespace Expensify.API.ServiceClasses.Conversion;
+namespace Expensify.API.Services.Conversion;
 
 public class CurrencyConversionService(IExchangeRateProvider exchangeRateProvider)
     : ICurrencyConversionService

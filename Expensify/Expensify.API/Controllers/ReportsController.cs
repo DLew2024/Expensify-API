@@ -1,5 +1,5 @@
 ﻿using Expensify.API.DTOs.DashboardDTOs;
-using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expensify.API.Controllers

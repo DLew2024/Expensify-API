@@ -1,4 +1,4 @@
-﻿namespace Expensify.API.ServiceClasses.Interfaces;
+﻿namespace Expensify.API.Services.Interfaces;
 
 public interface IEmailService
 {

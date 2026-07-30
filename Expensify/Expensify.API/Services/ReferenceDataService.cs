@@ -1,10 +1,10 @@
 ﻿using Expensify.API.DTOs.ReferenceDataDTOs;
-using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Services.Interfaces;
 using Expensify.DataAccessLayer;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace Expensify.API.ServiceClasses;
+namespace Expensify.API.Services;
 
 public class ReferenceDataService(ApplicationDbContext context) : IReferenceDataService
 {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Expensify.API.Configurations;
 using Expensify.API.DTOs.AuthDTOs;
-using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Services.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.API.Utility.Validators;
 using Expensify.DataAccessLayer;
@@ -12,7 +12,7 @@ using LanguageExt.Pipes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace Expensify.API.ServiceClasses;
+namespace Expensify.API.Services;
 
 public class AuthService(
     ApplicationDbContext context,

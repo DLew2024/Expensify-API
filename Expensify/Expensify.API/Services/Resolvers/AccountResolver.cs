@@ -1,9 +1,9 @@
-﻿using Expensify.API.ServiceClasses.Interfaces.Resolvers;
+﻿using Expensify.API.Services.Interfaces.Resolvers;
 using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Expensify.API.ServiceClasses.Resolvers;
+namespace Expensify.API.Services.Resolvers;
 
 public class AccountResolver(ApplicationDbContext context) : IAccountResolver
 {
