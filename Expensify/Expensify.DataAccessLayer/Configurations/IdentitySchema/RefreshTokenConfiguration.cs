@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
+using Expensify.DataAccessLayer.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Expensify.DataAccessLayer.Utility.Constants;
@@ -21,7 +22,7 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
     {
         // Maps the entity to the refresh_tokens table
         // in the identity schema.
-        builder.ToTable("refresh_tokens", "identity");
+        builder.ToTable("refresh_tokens", Schemas.Identity);
 
         // Configures the primary key.
         builder.HasKey(token => token.Id).HasName("pk_refresh_tokens");

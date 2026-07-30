@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
+using Expensify.DataAccessLayer.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Expensify.DataAccessLayer.Utility.Constants;
@@ -20,7 +21,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
     public void Configure(EntityTypeBuilder<Account> builder)
     {
         // Maps the Account entity to the accounts table in the finance schema.
-        builder.ToTable("accounts", "finance");
+        builder.ToTable("accounts", Schemas.Finance);
 
         // Configures the primary key for the accounts table.
         builder.HasKey(account => account.Id).HasName("pk_accounts");

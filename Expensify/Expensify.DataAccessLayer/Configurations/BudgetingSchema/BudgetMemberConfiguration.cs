@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.BudgetingSchema;
+using Expensify.DataAccessLayer.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,7 +19,7 @@ public class BudgetMemberConfiguration : IEntityTypeConfiguration<BudgetMember>
     public void Configure(EntityTypeBuilder<BudgetMember> builder)
     {
         // Maps the entity to the budget_members table in the budgeting schema.
-        builder.ToTable("budget_members", "budgeting");
+        builder.ToTable("budget_members", Schemas.Budgeting);
 
         // Configures the primary key.
         builder.HasKey(member => member.Id).HasName("pk_budget_members");

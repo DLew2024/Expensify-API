@@ -2,6 +2,7 @@
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
+using Expensify.DataAccessLayer.Utility;
 using Microsoft.EntityFrameworkCore;
 
 namespace Expensify.DataAccessLayer;
@@ -31,7 +32,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     /// </summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("public");
+        modelBuilder.HasDefaultSchema(Schemas.Public);
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
@@ -47,6 +48,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasDatabaseName("ux_accounts_user_default");
         }
 
+        // For running app
         if (Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
         {
             // Uses PostgreSQL's xmin system column for optimistic concurrency control.

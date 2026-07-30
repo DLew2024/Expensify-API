@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
+using Expensify.DataAccessLayer.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Expensify.DataAccessLayer.Utility.Constants;
@@ -21,7 +22,7 @@ public class EmailVerificationTokenConfiguration : IEntityTypeConfiguration<Emai
     {
         // Maps the entity to the email_verification_tokens table
         // in the identity schema.
-        builder.ToTable("email_verification_tokens", "identity");
+        builder.ToTable("email_verification_tokens", Schemas.Identity);
 
         // Configures the primary key.
         builder.HasKey(token => token.Id).HasName("pk_email_verification_tokens");

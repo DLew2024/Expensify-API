@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
+using Expensify.DataAccessLayer.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Expensify.DataAccessLayer.Utility.Constants;
@@ -19,7 +20,7 @@ public class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod
     public void Configure(EntityTypeBuilder<PaymentMethod> builder)
     {
         // Maps the entity to the payment_methods table in the reference_data schema.
-        builder.ToTable("payment_methods", "reference_data");
+        builder.ToTable("payment_methods", Schemas.ReferenceData);
 
         // Configures the primary key.
         builder.HasKey(paymentMethod => paymentMethod.Id).HasName("pk_payment_methods");
