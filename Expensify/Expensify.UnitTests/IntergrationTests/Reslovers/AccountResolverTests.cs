@@ -574,7 +574,6 @@ public sealed class AccountResolverTests : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         await _database.DisposeAsync();
-
         GC.SuppressFinalize(this);
     }
 }
