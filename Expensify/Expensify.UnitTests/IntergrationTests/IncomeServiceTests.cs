@@ -6,7 +6,7 @@ namespace Expensify.UnitTests.IntergrationTests;
 
 public class IncomeServiceTests : IAsyncDisposable
 {
-    private readonly DatabaseSqlLite
+    private readonly DatabaseSqlLite;
     private readonly TestDataSeeder _dataSeeder;
     private readonly Mock<IAccountResolver> _accountResolver;
     private readonly Mock<ITransactionResolver> _transactionResolver;
