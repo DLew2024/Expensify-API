@@ -13,7 +13,7 @@ public class PaymentMethod : Auditable
     /// <summary>
     /// Initializes a new instance of the <see cref="PaymentMethod"/> class.
     /// </summary>
-    protected PaymentMethod() { }
+    public PaymentMethod() { }
 
     /// <summary>
     /// Initializes a new payment method with the specified name.

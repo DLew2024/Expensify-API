@@ -1,5 +1,6 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
+using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
 using Expensify.DataAccessLayer.Enums;
 
 namespace Expensify.UnitTests.Builders;
@@ -10,12 +11,13 @@ public sealed class TransactionBuilder
 
     private Account? _account;
     private User? _user;
+    private PaymentMethod? _paymentMethod;
 
     private decimal _amount = 100m;
-    private readonly string _MerchantName = "Test Transaction";
+    private readonly string _merchantName = "Test Transaction";
     private string _description = "Test Transaction";
     private long _transactionDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    private bool _isDeleted = false;
+    private bool _isDeleted;
 
     public TransactionBuilder WithId(Guid id)
     {
@@ -26,6 +28,12 @@ public sealed class TransactionBuilder
     public TransactionBuilder WithAccount(Account account)
     {
         _account = account;
+        return this;
+    }
+
+    public TransactionBuilder WithPaymentMethod(PaymentMethod paymentMethod)
+    {
+        _paymentMethod = paymentMethod;
         return this;
     }
 
@@ -75,12 +83,23 @@ public sealed class TransactionBuilder
             );
         }
 
+        if (_paymentMethod is null)
+        {
+            throw new InvalidOperationException(
+                "A payment method must be provided before building a transaction."
+            );
+        }
+
         return new Transaction
         {
             Id = _id,
-            MerchantName = _MerchantName,
+            MerchantName = _merchantName,
 
-            UserId = _account.UserId,
+            UserId = _user.Id,
+            User = _user,
+
+            PaymentMethodId = _paymentMethod.Id,
+            PaymentMethod = _paymentMethod,
 
             AccountId = _account.Id,
             Account = _account,
@@ -92,8 +111,8 @@ public sealed class TransactionBuilder
             TransactionDate = _transactionDate,
 
             IsDeleted = _isDeleted,
-            CreatedBy = _account.UserId,
-            LastUpdatedBy = _account.UserId,
+            CreatedBy = _user.Id,
+            LastUpdatedBy = _user.Id,
 
             Type = transactionType,
             Status = TransactionPostedStatus.Posted,

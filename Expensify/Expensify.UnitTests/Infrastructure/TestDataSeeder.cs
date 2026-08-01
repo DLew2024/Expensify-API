@@ -1,4 +1,5 @@
-﻿using Expensify.DataAccessLayer;
+﻿using System.Xml.Linq;
+using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
@@ -27,6 +28,33 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         await _context.SaveChangesAsync();
 
         return role;
+    }
+
+    public async Task<PaymentMethod> GetOrCreatePaymentMethodAsync(
+        Guid? paymentMethodId,
+        string name = "Test Payment Method",
+        bool isDeleted = false
+    )
+    {
+        var existingPaymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(pm =>
+            pm.Name == "Test Payment Method"
+        );
+
+        if (existingPaymentMethod is not null)
+        {
+            return existingPaymentMethod;
+        }
+
+        var paymentMethod = new PaymentMethodBuilder()
+            .WithId(paymentMethodId ?? Guid.NewGuid())
+            .WithName(name)
+            .WithDeletedStatus(isDeleted)
+            .Build();
+
+        _context.PaymentMethods.Add(paymentMethod);
+        await _context.SaveChangesAsync();
+
+        return paymentMethod;
     }
 
     public async Task<User> GetOrCreateUserAsync(Guid? userId = null)
@@ -88,7 +116,9 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
         Guid? userId = null,
         bool isActive = true,
         bool isDeleted = false,
-        bool isDefault = false
+        bool isDefault = false,
+        decimal initialBalance = 100m,
+        long? closedDate = null
     )
     {
         var existingAccount = await _context.Accounts.FirstOrDefaultAsync(account =>
@@ -112,6 +142,7 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
             .WithActiveStatus(isActive)
             .WithDeletedStatus(isDeleted)
             .WithDefaultStatus(isDefault)
+            .WithBalance(initialBalance)
             .Build();
 
         _context.Accounts.Add(account);

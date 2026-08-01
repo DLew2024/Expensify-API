@@ -1,6 +1,4 @@
 ﻿using Expensify.API.Services.Interfaces.Resolvers;
-using Expensify.API.Services.Resolvers;
-using Expensify.DataAccessLayer;
 using Expensify.UnitTests.Infrastructure;
 
 namespace Expensify.UnitTests.IntergrationTests;
@@ -16,6 +14,8 @@ public class ExpenseServiceTests : IAsyncDisposable
     {
         _database = new SqliteTestDatabase();
         _seeder = new TestDataSeeder(_database.Context);
+        _accountResolver = new Mock<IAccountResolver>();
+        _transactionResolver = new Mock<ITransactionResolver>();
     }
 
     public async ValueTask DisposeAsync()

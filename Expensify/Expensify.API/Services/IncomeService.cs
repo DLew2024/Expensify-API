@@ -93,7 +93,8 @@ public class IncomeService(
         {
             return new Result<IncomeTransactionResponseDTO>(
                 new ConflictException(
-                    "The account was modified by another request. Please try again.", exception
+                    "The account was modified by another request. Please try again.",
+                    exception
                 )
             );
         }
