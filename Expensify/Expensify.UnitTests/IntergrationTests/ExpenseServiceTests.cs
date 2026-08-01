@@ -1,3 +1,31 @@
-﻿namespace Expensify.UnitTests.IntergrationTests;
+﻿using Expensify.API.Services.Interfaces.Resolvers;
+using Expensify.API.Services.Resolvers;
+using Expensify.DataAccessLayer;
+using Expensify.UnitTests.Infrastructure;
 
-internal class ExpenseServiceTests { }
+namespace Expensify.UnitTests.IntergrationTests;
+
+public class ExpenseServiceTests : IAsyncDisposable
+{
+    private readonly Mock<IAccountResolver> _accountResolver;
+    private readonly Mock<ITransactionResolver> _transactionResolver;
+    private readonly SqliteTestDatabase _database;
+    private readonly TestDataSeeder _seeder;
+
+    public ExpenseServiceTests()
+    {
+        _database = new SqliteTestDatabase();
+        _seeder = new TestDataSeeder(_database.Context);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _database.DisposeAsync();
+        GC.SuppressFinalize(this);
+    }
+
+    // MethodName_StateUnderTest_ExpectedBehavior
+    // Arrange
+    // Act
+    // Assert
+}

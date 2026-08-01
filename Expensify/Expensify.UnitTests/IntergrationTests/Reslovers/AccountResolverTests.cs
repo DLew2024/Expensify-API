@@ -1,4 +1,4 @@
-﻿using Expensify.API.ServiceClasses.Resolvers;
+﻿using Expensify.API.Services.Resolvers;
 using Expensify.DataAccessLayer.Enums;
 using Expensify.UnitTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -574,7 +574,6 @@ public sealed class AccountResolverTests : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         await _database.DisposeAsync();
-
         GC.SuppressFinalize(this);
     }
 }

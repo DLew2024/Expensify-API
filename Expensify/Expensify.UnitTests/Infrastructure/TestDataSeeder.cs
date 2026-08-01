@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Expensify.DataAccessLayer;
+﻿using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
 using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
@@ -188,6 +187,50 @@ public sealed class TestDataSeeder(ApplicationDbContext context)
 
         _context.Transactions.Add(transaction);
         await _context.SaveChangesAsync();
+
+        return transaction;
+    }
+
+    public async Task<Transaction> GetOrCreateExpenseAsync(
+        Guid? userId = null,
+        Guid? transactionId = null,
+        Guid? accountId = null,
+        long? transactionDate = null,
+        decimal amount = 100m,
+        bool isDeleted = false
+    )
+    {
+        var transaction = await GetOrCreateTransactionAsync(
+            TransactionType.Expense,
+            transactionId: transactionId,
+            accountId: accountId,
+            userId: userId,
+            transactionDate: transactionDate,
+            amount: amount,
+            isDeleted: isDeleted
+        );
+
+        return transaction;
+    }
+
+    public async Task<Transaction> GetOrCreateIncomeAsync(
+        Guid? userId = null,
+        Guid? transactionId = null,
+        Guid? accountId = null,
+        long? transactionDate = null,
+        decimal amount = 100m,
+        bool isDeleted = false
+    )
+    {
+        var transaction = await GetOrCreateTransactionAsync(
+            TransactionType.Income,
+            transactionId: transactionId,
+            accountId: accountId,
+            userId: userId,
+            transactionDate: transactionDate,
+            amount: amount,
+            isDeleted: isDeleted
+        );
 
         return transaction;
     }

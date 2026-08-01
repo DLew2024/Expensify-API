@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;
+using Expensify.DataAccessLayer.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Expensify.DataAccessLayer.Utility.Constants;
@@ -21,7 +22,7 @@ public class PasswordResetTokenConfiguration : IEntityTypeConfiguration<Password
     {
         // Maps the entity to the password_reset_tokens table
         // in the identity schema.
-        builder.ToTable("password_reset_tokens", "identity");
+        builder.ToTable("password_reset_tokens", Schemas.Identity);
 
         // Configures the primary key.
         builder.HasKey(token => token.Id).HasName("pk_password_reset_tokens");

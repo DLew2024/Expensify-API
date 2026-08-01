@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Expensify.API.DTOs.AccountDTOs;
-using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Services.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 

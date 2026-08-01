@@ -1,4 +1,4 @@
-﻿using Expensify.API.ServiceClasses.Resolvers;
+﻿using Expensify.API.Services.Resolvers;
 using Expensify.DataAccessLayer.Enums;
 using Expensify.UnitTests.Infrastructure;
 

@@ -1,6 +1,6 @@
 ﻿using Expensify.API.DTOs.DashboardDTOs;
 using Expensify.API.DTOs.IncomeDTOs;
-using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Services.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.API.Utility.Validators.Filters;
 using Microsoft.AspNetCore.Mvc;

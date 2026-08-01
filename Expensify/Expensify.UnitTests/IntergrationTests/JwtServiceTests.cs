@@ -1,3 +1,6 @@
 ﻿namespace Expensify.UnitTests.IntergrationTests;
 
-internal class JwtServiceTests { }
+internal class JwtServiceTests
+{
+    // Add
+}

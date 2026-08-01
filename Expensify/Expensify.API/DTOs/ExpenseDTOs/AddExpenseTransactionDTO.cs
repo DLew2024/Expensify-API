@@ -45,9 +45,9 @@ public class AddExpenseTransactionDTO
     public bool IsRecurring { get; set; }
 
     /// <summary>
-    /// Optional payment method used to transaction the expense.
+    /// Payment method used to transaction the expense.
     /// </summary>
-    public required Guid? PaymentMethodId { get; set; }
+    public required Guid PaymentMethodId { get; set; }
 
     public string Icon { get; set; } = string.Empty;
 

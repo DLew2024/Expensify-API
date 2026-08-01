@@ -1,7 +1,6 @@
-﻿using System.Xml.Linq;
-using Expensify.API.DTOs.AccountDTOs;
-using Expensify.API.ServiceClasses;
-using Expensify.API.ServiceClasses.Interfaces.Resolvers;
+﻿using Expensify.API.DTOs.AccountDTOs;
+using Expensify.API.Services;
+using Expensify.API.Services.Interfaces.Resolvers;
 using Expensify.DataAccessLayer.Entities.Models.FinanceSchema;
 using Expensify.UnitTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +41,11 @@ public class AccountServiceTests : IAsyncDisposable
         var currencyCodeId = Guid.NewGuid();
 
         await _seeder.GetOrCreateUserAsync(userId);
-        await _seeder.GetOrCreateAccountTypeAsync(userId: userId, accountTypeId: accountTypeId, name: "Checking");
+        await _seeder.GetOrCreateAccountTypeAsync(
+            userId: userId,
+            accountTypeId: accountTypeId,
+            name: "Checking"
+        );
         await _seeder.GetOrCreateCurrencyCodeAsync(currencyCodeId);
 
         Assert.True(

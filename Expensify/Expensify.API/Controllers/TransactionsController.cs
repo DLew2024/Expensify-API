@@ -1,4 +1,4 @@
-﻿using Expensify.API.ServiceClasses.Interfaces;
+﻿using Expensify.API.Services.Interfaces;
 
 namespace Expensify.API.Controllers
 {

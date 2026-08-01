@@ -1,4 +1,4 @@
-﻿using Expensify.API.ServiceClasses;
+﻿using Expensify.API.Services;
 
 namespace Expensify.UnitTests.IntergrationTests;
 

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Expensify.API.Configurations;
 using Expensify.API.DTOs.AuthDTOs;
-using Expensify.API.ServiceClasses;
-using Expensify.API.ServiceClasses.Interfaces;
+using Expensify.API.Services;
+using Expensify.API.Services.Interfaces;
 using Expensify.API.Utility.GlobalExceptionHandling.CustomExceptions;
 using Expensify.DataAccessLayer;
 using Expensify.DataAccessLayer.Entities.Models.IdentitySchema;

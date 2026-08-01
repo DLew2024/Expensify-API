@@ -1,4 +1,5 @@
 ﻿using Expensify.DataAccessLayer.Entities.Models.ReferenceDataSchema;
+using Expensify.DataAccessLayer.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Expensify.DataAccessLayer.Utility.Constants;
@@ -10,7 +11,7 @@ public class CurrencyCodeConfiguration : IEntityTypeConfiguration<CurrencyCode>
     public void Configure(EntityTypeBuilder<CurrencyCode> builder)
     {
         // Maps currency codes to the reference_data schema.
-        builder.ToTable("currency_codes", "reference_data");
+        builder.ToTable("currency_codes", Schemas.ReferenceData);
 
         // Configures the primary key.
         builder.HasKey(currency => currency.Id).HasName("pk_currency_codes");
