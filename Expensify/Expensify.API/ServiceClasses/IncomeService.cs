@@ -21,7 +21,6 @@ public class IncomeService(
     private readonly ApplicationDbContext _context = context;
     private readonly IAccountResolver _accountResolver = accountResolver;
     private readonly ITransactionResolver _transactionResolver = transactionResolver;
-    private readonly ILogger<IncomeService> _logger;
 
     public async Task<Result<IncomeTransactionResponseDTO>> AddIncome(
         Guid userId,
@@ -95,42 +94,22 @@ public class IncomeService(
         }
         catch (DbUpdateConcurrencyException exception)
         {
-            _logger.LogWarning(
-                exception,
-                "A concurrency conflict occurred while adding income for user {UserId} and account {AccountId}.",
-                userId,
-                request.AccountId
-            );
-
             return new Result<IncomeTransactionResponseDTO>(
                 new ConflictException(
-                    "The account was modified by another request. Please try again."
+                    "The account was modified by another request. Please try again.", exception
                 )
             );
         }
         catch (DbUpdateException exception)
         {
-            _logger.LogError(
-                exception,
-                "A database error occurred while adding income for user {UserId} and account {AccountId}.",
-                userId,
-                request.AccountId
-            );
-
             return new Result<IncomeTransactionResponseDTO>(
-                new Exception("The income transaction could not be saved.")
+                new Exception("The income transaction could not be saved.", exception)
             );
         }
         catch (Exception exception)
         {
-            _logger.LogError(
-                exception,
-                "An error occurred while adding income for user {UserId}.",
-                userId
-            );
-
             return new Result<IncomeTransactionResponseDTO>(
-                new Exception("The income transaction could not be added.")
+                new Exception("The income transaction could not be added.", exception)
             );
         }
     }
